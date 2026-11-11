@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+*.log
+*.tsbuildinfo
+# Runtime state, credentials, generated audio, and game file backups
+data/*
+!data/skyrim-catalog.json

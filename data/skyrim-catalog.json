@@ -1,0 +1,5897 @@
+{
+  "source": "Quest Studio spreadsheet import (snapshot; stage labels may include objectives).",
+  "quests": [
+    {
+      "id": "MQ101",
+      "name": "Unbound",
+      "group": "Principal",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "160 / obj. 30",
+        "250 / obj. 100",
+        "255 / obj. 60",
+        "255 / obj. 65",
+        "315, 317, 350 / obj. 70",
+        "390, 395, 400 / obj. 75",
+        "Obj. 50"
+      ]
+    },
+    {
+      "id": "MQ102",
+      "name": "Before the Storm",
+      "group": "Principal",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "30 / obj. 30",
+        "Obj. 20",
+        "Geral da quest",
+        "A confirmar"
+      ]
+    },
+    {
+      "id": "MQ103",
+      "name": "Bleak Falls Barrow",
+      "group": "Principal",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "50 / obj. 50",
+        "180 / obj. 80",
+        "Geral da quest",
+        "A confirmar"
+      ]
+    },
+    {
+      "id": "MQ104",
+      "name": "Dragon Rising",
+      "group": "Principal",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 5",
+        "40 / obj. 15",
+        "65 / obj. 20",
+        "80 / obj. 30",
+        "90 / obj. 40",
+        "90 / obj. 50",
+        "Geral da quest",
+        "A confirmar"
+      ]
+    },
+    {
+      "id": "MQ105",
+      "name": "The Way of the Voice",
+      "group": "Principal",
+      "plugin": "Update.esm",
+      "stages": [
+        "8, 10 / obj. 10",
+        "30 / obj. 20",
+        "50 / obj. 25",
+        "58 / obj. 30",
+        "80 / obj. 40",
+        "100 / obj. 50",
+        "120 / obj. 60",
+        "140 / obj. 70",
+        "Geral da quest",
+        "A confirmar"
+      ]
+    },
+    {
+      "id": "MQ105Ustengrav",
+      "name": "The Horn of Jurgen Windcaller",
+      "group": "Principal",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "15 / obj. 15",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "50 / obj. 50",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "MQ106",
+      "name": "A Blade in the Dark",
+      "group": "Principal",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "30 / obj. 10",
+        "50 / obj. 20",
+        "102 / obj. 30",
+        "150 / obj. 40",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "MQ201",
+      "name": "Diplomatic Immunity",
+      "group": "Principal",
+      "plugin": "Update.esm",
+      "stages": [
+        "30 / obj. 5",
+        "40 / obj. 10",
+        "50 / obj. 20",
+        "70 / obj. 30",
+        "100 / obj. 40",
+        "110 / obj. 50",
+        "140 / obj. 55",
+        "140, 160, 170 / obj. 60",
+        "210 / obj. 80",
+        "230 / obj. 90",
+        "Obj. 70",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "MQ202",
+      "name": "A Cornered Rat",
+      "group": "Principal",
+      "plugin": "Update.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "50 / obj. 30",
+        "150 / obj. 40",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "MQ203",
+      "name": "Alduin's Wall",
+      "group": "Principal",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "50 / obj. 20",
+        "60 / obj. 30",
+        "200 / obj. 40",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "MQ204",
+      "name": "The Throat of the World",
+      "group": "Principal",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "70 / obj. 20",
+        "83 / obj. 25",
+        "90 / obj. 30",
+        "120 / obj. 40",
+        "135 / obj. 50",
+        "140 / obj. 60",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "MQ205",
+      "name": "Elder Knowledge",
+      "group": "Principal",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "80 / obj. 50",
+        "Geral da quest",
+        "A confirmar"
+      ]
+    },
+    {
+      "id": "MQ206",
+      "name": "Alduin's Bane",
+      "group": "Principal",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "100 / obj. 30",
+        "Geral da quest",
+        "A confirmar"
+      ]
+    },
+    {
+      "id": "MQ301",
+      "name": "The Fallen",
+      "group": "Principal",
+      "plugin": "Update.esm",
+      "stages": [
+        "10 / obj. 10",
+        "10 / obj. 11",
+        "10 / obj. 12",
+        "25 / obj. 20",
+        "30 / obj. 25",
+        "50 / obj. 30",
+        "70 / obj. 40",
+        "120 / obj. 50",
+        "150 / obj. 60",
+        "200 / obj. 70",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "MQ302",
+      "name": "Season Unending",
+      "group": "Principal",
+      "plugin": "Update.esm",
+      "stages": [
+        "10 / obj. 10",
+        "15 / obj. 20",
+        "15 / obj. 30",
+        "40 / obj. 40",
+        "55 / obj. 50",
+        "60 / obj. 60",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "MQ303",
+      "name": "The World-Eater's Eyrie",
+      "group": "Principal",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "40 / obj. 20",
+        "50 / obj. 30",
+        "180 / obj. 40",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "MQ304",
+      "name": "Sovngarde",
+      "group": "Principal",
+      "plugin": "Update.esm",
+      "stages": [
+        "10 / obj. 10",
+        "50 / obj. 20",
+        "150 / obj. 30"
+      ]
+    },
+    {
+      "id": "MQ305",
+      "name": "Dragonslayer",
+      "group": "Principal",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "100 / obj. 20",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "MQPaarthurnax",
+      "name": "Paarthurnax",
+      "group": "Principal",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 10",
+        "50 / obj. 20"
+      ]
+    },
+    {
+      "id": "C00",
+      "name": "Take Up Arms",
+      "group": "Companions",
+      "plugin": "Update.esm",
+      "stages": [
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "50 / obj. 50",
+        "Obj. 10",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "C01",
+      "name": "Proving Honor",
+      "group": "Companions",
+      "plugin": "Update.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "Obj. 110",
+        "Geral da quest",
+        "A confirmar"
+      ]
+    },
+    {
+      "id": "C02",
+      "name": "Brotherhood",
+      "group": "Companions",
+      "plugin": "Update.esm",
+      "stages": [
+        "Obj. 10"
+      ]
+    },
+    {
+      "id": "C03",
+      "name": "The Silver Hand",
+      "group": "Companions",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "5 / obj. 5",
+        "10 / obj. 10",
+        "15 / obj. 15",
+        "20 / obj. 20",
+        "25 / obj. 25",
+        "30 / obj. 30",
+        "Obj. 31",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "C04",
+      "name": "Blood's Honor",
+      "group": "Companions",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "20 / obj. 25",
+        "30 / obj. 30",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "C05",
+      "name": "Purity of Revenge",
+      "group": "Companions",
+      "plugin": "Update.esm",
+      "stages": [
+        "10 / obj. 10",
+        "10 / obj. 11",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "C06",
+      "name": "Glory of the Dead",
+      "group": "Companions",
+      "plugin": "Update.esm",
+      "stages": [
+        "10 / obj. 10",
+        "15 / obj. 15",
+        "17 / obj. 17",
+        "18 / obj. 18",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "35 / obj. 35",
+        "40 / obj. 40",
+        "50 / obj. 50",
+        "60 / obj. 60",
+        "65 / obj. 65",
+        "70 / obj. 70"
+      ]
+    },
+    {
+      "id": "CR01",
+      "name": "Animal Extermination",
+      "group": "Companions",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "CR02",
+      "name": "Animal Extermination",
+      "group": "Companions",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "CR03",
+      "name": "Animal Pelt Collection",
+      "group": "Companions",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "CR04",
+      "name": "Hired Muscle",
+      "group": "Companions",
+      "plugin": "Update.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20, 30, 40 / obj. 20"
+      ]
+    },
+    {
+      "id": "CR05",
+      "name": "Trouble in Skyrim",
+      "group": "Companions",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "CR06",
+      "name": "Family Heirloom",
+      "group": "Companions",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "CR07",
+      "name": "Escaped Criminal",
+      "group": "Companions",
+      "plugin": "Update.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "CR08",
+      "name": "Rescue Mission",
+      "group": "Companions",
+      "plugin": "Update.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "21 / obj. 21",
+        "22 / obj. 22",
+        "25, 50 / obj. 25"
+      ]
+    },
+    {
+      "id": "CR09",
+      "name": "Striking the Heart",
+      "group": "Companions",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "CR10",
+      "name": "Stealing Plans",
+      "group": "Companions",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "CR11",
+      "name": "Retrieval",
+      "group": "Companions",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "CR12",
+      "name": "Totems of Hircine",
+      "group": "Companions",
+      "plugin": "Update.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "CR13",
+      "name": "Purity",
+      "group": "Companions",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "15 / obj. 15",
+        "17 / obj. 17",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "CR14",
+      "name": "Dragon Seekers",
+      "group": "Companions",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "DA02KillObj",
+      "name": "Boethiah's Bidding",
+      "group": "Companions",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "50 / obj. 50"
+      ]
+    },
+    {
+      "id": "MG01",
+      "name": "First Lessons",
+      "group": "College of Winterhold",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "21 / obj. 21",
+        "22 / obj. 22",
+        "23 / obj. 23",
+        "24 / obj. 24",
+        "30, 50 / obj. 30",
+        "40 / obj. 40",
+        "50 / obj. 50",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "MG02",
+      "name": "Under Saarthal",
+      "group": "College of Winterhold",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20, 40 / obj. 20",
+        "25, 40 / obj. 25",
+        "30 / obj. 30",
+        "50 / obj. 50",
+        "60 / obj. 60",
+        "70 / obj. 70",
+        "Obj. 35",
+        "Obj. 40",
+        "Obj. 65",
+        "Geral da quest",
+        "A confirmar"
+      ]
+    },
+    {
+      "id": "MG03",
+      "name": "Hitting the Books",
+      "group": "College of Winterhold",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "50, 200 / obj. 50",
+        "60 / obj. 60",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "MG04",
+      "name": "Good Intentions",
+      "group": "College of Winterhold",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "15 / obj. 15",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "50 / obj. 50",
+        "Geral da quest",
+        "A confirmar"
+      ]
+    },
+    {
+      "id": "MG05",
+      "name": "Containment",
+      "group": "College of Winterhold",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20, 40 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "50 / obj. 50",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "mg06",
+      "name": "Revealing the Unseen",
+      "group": "College of Winterhold",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "25 / obj. 25",
+        "30 / obj. 30",
+        "32 / obj. 32",
+        "35 / obj. 35",
+        "37 / obj. 37",
+        "40 / obj. 40",
+        "50 / obj. 50",
+        "55 / obj. 55",
+        "60 / obj. 60",
+        "Obj. 70",
+        "Geral da quest",
+        "A confirmar"
+      ]
+    },
+    {
+      "id": "MG07",
+      "name": "The Staff of Magnus",
+      "group": "College of Winterhold",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "50, 80 / obj. 80",
+        "Obj. 30",
+        "Obj. 40",
+        "Obj. 50",
+        "Obj. 60",
+        "Obj. 70",
+        "Geral da quest",
+        "A confirmar"
+      ]
+    },
+    {
+      "id": "MG08",
+      "name": "The Eye of Magnus",
+      "group": "College of Winterhold",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "50 / obj. 50",
+        "Obj. 0",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "MGR21",
+      "name": "Shalidor's Insights",
+      "group": "College of Winterhold",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "MGR30",
+      "name": "Aftershock",
+      "group": "College of Winterhold",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "MGRAppJzargo01",
+      "name": "J'zargo's Experiment",
+      "group": "College of Winterhold",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 20",
+        "30 / obj. 30"
+      ]
+    },
+    {
+      "id": "MGRAppOnmund01",
+      "name": "Onmund's Request",
+      "group": "College of Winterhold",
+      "plugin": "Update.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40"
+      ]
+    },
+    {
+      "id": "MGRArniel01",
+      "name": "Arniel's Endeavor",
+      "group": "College of Winterhold",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "MGRArniel02",
+      "name": "Arniel's Endeavor",
+      "group": "College of Winterhold",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40"
+      ]
+    },
+    {
+      "id": "MGRArniel03",
+      "name": "Arniel's Endeavor",
+      "group": "College of Winterhold",
+      "plugin": "Update.esm",
+      "stages": [
+        "10 / obj. 10",
+        "10, 20 / obj. 20",
+        "10, 30 / obj. 30",
+        "40 / obj. 40",
+        "Obj. 13",
+        "Obj. 16"
+      ]
+    },
+    {
+      "id": "MGRArniel04",
+      "name": "Arniel's Endeavor",
+      "group": "College of Winterhold",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40"
+      ]
+    },
+    {
+      "id": "MGRejoinQuest",
+      "name": "Rejoining the College",
+      "group": "College of Winterhold",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "5 / obj. 5",
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30"
+      ]
+    },
+    {
+      "id": "MGRitual01",
+      "name": "Destruction Ritual Spell",
+      "group": "College of Winterhold",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "MGRitual02",
+      "name": "Illusion Ritual Spell",
+      "group": "College of Winterhold",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "MGRitual03",
+      "name": "Conjuration Ritual Spell",
+      "group": "College of Winterhold",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "70 / obj. 20"
+      ]
+    },
+    {
+      "id": "MGRitual04",
+      "name": "Restoration Ritual Spell",
+      "group": "College of Winterhold",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "MGRRogue",
+      "name": "Rogue Wizard",
+      "group": "College of Winterhold",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "TG00",
+      "name": "A Chance Arrangement",
+      "group": "Thieves Guild",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "8 / obj. 8",
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30, 35, 40 / obj. 30",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "TG01",
+      "name": "Taking Care of Business",
+      "group": "Thieves Guild",
+      "plugin": "Update.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "20 / obj. 30",
+        "20 / obj. 40",
+        "30 / obj. 21",
+        "40 / obj. 31",
+        "45 / obj. 41",
+        "50 / obj. 50",
+        "Geral da quest",
+        "A confirmar"
+      ]
+    },
+    {
+      "id": "TG02",
+      "name": "Loud and Clear",
+      "group": "Thieves Guild",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "40 / obj. 50",
+        "45 / obj. 45",
+        "50 / obj. 60",
+        "Obj. 47",
+        "Obj. 48",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "TG03",
+      "name": "Dampened Spirits",
+      "group": "Thieves Guild",
+      "plugin": "Update.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 45",
+        "40 / obj. 50",
+        "60 / obj. 60",
+        "70 / obj. 70",
+        "80 / obj. 80",
+        "90 / obj. 90",
+        "100 / obj. 100",
+        "110 / obj. 110",
+        "Geral da quest",
+        "A confirmar"
+      ]
+    },
+    {
+      "id": "TG04",
+      "name": "Scoundrel's Folly",
+      "group": "Thieves Guild",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20, 37 / obj. 20",
+        "20 / obj. 30",
+        "35 / obj. 35",
+        "36, 37 / obj. 37",
+        "40 / obj. 40",
+        "50 / obj. 50",
+        "60 / obj. 60",
+        "Obj. 55"
+      ]
+    },
+    {
+      "id": "TG05",
+      "name": "Speaking With Silence",
+      "group": "Thieves Guild",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "60 / obj. 50",
+        "Obj. 35"
+      ]
+    },
+    {
+      "id": "TG06",
+      "name": "Hard Answers",
+      "group": "Thieves Guild",
+      "plugin": "Update.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20, 30 / obj. 20",
+        "25 / obj. 25",
+        "25 / obj. 27",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "50 / obj. 50",
+        "60 / obj. 60",
+        "70 / obj. 70"
+      ]
+    },
+    {
+      "id": "TG07",
+      "name": "The Pursuit",
+      "group": "Thieves Guild",
+      "plugin": "Update.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "42, 50 / obj. 42",
+        "50 / obj. 50",
+        "60 / obj. 60",
+        "Obj. 41"
+      ]
+    },
+    {
+      "id": "TG08A",
+      "name": "Trinity Restored",
+      "group": "Thieves Guild",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "45 / obj. 45",
+        "50 / obj. 50",
+        "60 / obj. 60",
+        "70 / obj. 70",
+        "Obj. 42"
+      ]
+    },
+    {
+      "id": "TG08B",
+      "name": "Blindsighted",
+      "group": "Thieves Guild",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "45 / obj. 45",
+        "50 / obj. 50",
+        "60 / obj. 60"
+      ]
+    },
+    {
+      "id": "TG09",
+      "name": "Darkness Returns",
+      "group": "Thieves Guild",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "50 / obj. 50",
+        "60 / obj. 60",
+        "70 / obj. 70",
+        "Obj. 25"
+      ]
+    },
+    {
+      "id": "TGBan",
+      "name": "Reparations",
+      "group": "Thieves Guild",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 10",
+        "30 / obj. 20"
+      ]
+    },
+    {
+      "id": "TGCrown",
+      "name": "No Stone Unturned",
+      "group": "Thieves Guild",
+      "plugin": "Update.esm",
+      "stages": [
+        "5 / obj. 5",
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "50 / obj. 50",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "TGLeadership",
+      "name": "Under New Management",
+      "group": "Thieves Guild",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "60 / obj. 50"
+      ]
+    },
+    {
+      "id": "TGRBE",
+      "name": "The Burglary Job",
+      "group": "Thieves Guild",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "50 / obj. 20"
+      ]
+    },
+    {
+      "id": "TGRDU",
+      "name": "The Shill Job",
+      "group": "Thieves Guild",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "Obj. 20"
+      ]
+    },
+    {
+      "id": "TGRFO",
+      "name": "The Numbers Job",
+      "group": "Thieves Guild",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "50 / obj. 20"
+      ]
+    },
+    {
+      "id": "TGRGF",
+      "name": "The Fishing Job",
+      "group": "Thieves Guild",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "50 / obj. 20"
+      ]
+    },
+    {
+      "id": "TGRHC",
+      "name": "The Sweep Job",
+      "group": "Thieves Guild",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "50 / obj. 20"
+      ]
+    },
+    {
+      "id": "TGRNT",
+      "name": "The Bedlam Job",
+      "group": "Thieves Guild",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "50 / obj. 20"
+      ]
+    },
+    {
+      "id": "TGRSL",
+      "name": "The Heist Job",
+      "group": "Thieves Guild",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "50 / obj. 20"
+      ]
+    },
+    {
+      "id": "TGTQ01",
+      "name": "Silver Lining",
+      "group": "Thieves Guild",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40"
+      ]
+    },
+    {
+      "id": "TGTQ02",
+      "name": "The Dainty Sload",
+      "group": "Thieves Guild",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "Obj. 40"
+      ]
+    },
+    {
+      "id": "TGTQ03",
+      "name": "Imitation Amnesty",
+      "group": "Thieves Guild",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "20 / obj. 30",
+        "50 / obj. 40"
+      ]
+    },
+    {
+      "id": "TGTQ04",
+      "name": "Summerset Shadows",
+      "group": "Thieves Guild",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20, 35 / obj. 20",
+        "25, 35 / obj. 30",
+        "40 / obj. 40",
+        "50 / obj. 50",
+        "55 / obj. 60",
+        "60 / obj. 70"
+      ]
+    },
+    {
+      "id": "DarkBrotherhoodSanctuaryRepair",
+      "name": "Where You Hang Your Enemy's Head...",
+      "group": "Dark Brotherhood",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "DB01",
+      "name": "Innocence Lost",
+      "group": "Dark Brotherhood",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "5 / obj. 5",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "Geral da quest",
+        "A confirmar"
+      ]
+    },
+    {
+      "id": "DB01Misc",
+      "name": "Delayed Burial",
+      "group": "Dark Brotherhood",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "5, 20, 30 / obj. 5",
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "50 / obj. 50"
+      ]
+    },
+    {
+      "id": "DB02",
+      "name": "With Friends Like These...",
+      "group": "Dark Brotherhood",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "50 / obj. 50",
+        "Obj. 0",
+        "Geral da quest",
+        "A confirmar"
+      ]
+    },
+    {
+      "id": "DB02a",
+      "name": "Sanctuary",
+      "group": "Dark Brotherhood",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "DB03",
+      "name": "Mourning Never Comes",
+      "group": "Dark Brotherhood",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "5 / obj. 5",
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30, 50 / obj. 30",
+        "40 / obj. 40",
+        "50 / obj. 50",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "DB04",
+      "name": "Whispers in the Dark",
+      "group": "Dark Brotherhood",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "50 / obj. 50",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "DB04a",
+      "name": "The Silence Has Been Broken",
+      "group": "Dark Brotherhood",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "5 / obj. 5",
+        "10 / obj. 10",
+        "10, 20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "Obj. 15",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "DB05",
+      "name": "Bound Until Death",
+      "group": "Dark Brotherhood",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "DB06",
+      "name": "Breaching Security",
+      "group": "Dark Brotherhood",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "5 / obj. 5",
+        "10 / obj. 8",
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "Obj. 30",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "DB07",
+      "name": "The Cure for Madness",
+      "group": "Dark Brotherhood",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "15 / obj. 15",
+        "17 / obj. 17",
+        "19 / obj. 19",
+        "20 / obj. 666",
+        "25 / obj. 25",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "50 / obj. 50",
+        "60 / obj. 60",
+        "Obj. 20"
+      ]
+    },
+    {
+      "id": "DB08",
+      "name": "Recipe for Disaster",
+      "group": "Dark Brotherhood",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "2 / obj. 2",
+        "4 / obj. 4",
+        "6 / obj. 6",
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "Obj. 15"
+      ]
+    },
+    {
+      "id": "DB09",
+      "name": "To Kill an Empire",
+      "group": "Dark Brotherhood",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "5 / obj. 5",
+        "10 / obj. 10",
+        "20, 25 / obj. 20",
+        "25 / obj. 25",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "50 / obj. 50",
+        "60 / obj. 60",
+        "70 / obj. 70"
+      ]
+    },
+    {
+      "id": "DB10",
+      "name": "Death Incarnate",
+      "group": "Dark Brotherhood",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "15 / obj. 15",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "35 / obj. 35",
+        "40 / obj. 40",
+        "50 / obj. 50",
+        "60 / obj. 60",
+        "70 / obj. 70",
+        "80 / obj. 80",
+        "Obj. 81"
+      ]
+    },
+    {
+      "id": "DB11",
+      "name": "Hail Sithis!",
+      "group": "Dark Brotherhood",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "5 / obj. 5",
+        "10 / obj. 10",
+        "15 / obj. 15",
+        "20 / obj. 20",
+        "40 / obj. 40",
+        "50 / obj. 50",
+        "60 / obj. 60",
+        "70 / obj. 70",
+        "80 / obj. 80"
+      ]
+    },
+    {
+      "id": "DBDestroy",
+      "name": "Destroy the Dark Brotherhood!",
+      "group": "Dark Brotherhood",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "DBEviction",
+      "name": "Honor Thy Family",
+      "group": "Dark Brotherhood",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "DBrecurring",
+      "name": "The Dark Brotherhood Forever",
+      "group": "Dark Brotherhood",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30"
+      ]
+    },
+    {
+      "id": "DBSideContract01",
+      "name": "Contract: Kill Narfi",
+      "group": "Dark Brotherhood",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "DBSideContract02",
+      "name": "Contract: Kill Ennodius Papius",
+      "group": "Dark Brotherhood",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "DBSideContract03",
+      "name": "Contract: Kill Beitild",
+      "group": "Dark Brotherhood",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "DBSideContract04",
+      "name": "Contract: Kill Hern",
+      "group": "Dark Brotherhood",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "DBSideContract05",
+      "name": "Contract: Kill Lurbuk",
+      "group": "Dark Brotherhood",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "DBSideContract06",
+      "name": "Contract: Kill Deekus",
+      "group": "Dark Brotherhood",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "DBSideContract07",
+      "name": "Contract: Kill Ma'randru-jo",
+      "group": "Dark Brotherhood",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "DBSideContract08",
+      "name": "Contract: Kill Anoriath",
+      "group": "Dark Brotherhood",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "DBSideContract09",
+      "name": "Contract: Kill Agnis",
+      "group": "Dark Brotherhood",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "DBSideContract10",
+      "name": "Contract: Kill Maluril",
+      "group": "Dark Brotherhood",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "DBSideContract11",
+      "name": "Contract: Kill Helvard",
+      "group": "Dark Brotherhood",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "DBSideContract12",
+      "name": "Contract: Kill Safia",
+      "group": "Dark Brotherhood",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "CW01A",
+      "name": "Joining the Legion",
+      "group": "Guerra Civil",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "1 / obj. 1",
+        "100 / obj. 100",
+        "160 / obj. 160",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "CW01B",
+      "name": "Joining the Stormcloaks",
+      "group": "Guerra Civil",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "1 / obj. 1",
+        "100 / obj. 100",
+        "160 / obj. 160",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "CW02A",
+      "name": "The Jagged Crown",
+      "group": "Guerra Civil",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "30 / obj. 20",
+        "50 / obj. 40",
+        "180 / obj. 80",
+        "220 / obj. 90",
+        "Obj. 45",
+        "Obj. 50",
+        "Obj. 55",
+        "Obj. 60",
+        "Obj. 65",
+        "Obj. 70",
+        "Obj. 72",
+        "Obj. 99",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "CW02B",
+      "name": "The Jagged Crown",
+      "group": "Guerra Civil",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "30 / obj. 20",
+        "50 / obj. 40",
+        "180 / obj. 80",
+        "190, 220 / obj. 90",
+        "Obj. 50",
+        "Obj. 99",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "CW03",
+      "name": "Message to Whiterun",
+      "group": "Guerra Civil",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "10 / obj. 11",
+        "16 / obj. 16",
+        "20 / obj. 20",
+        "50 / obj. 50",
+        "100 / obj. 100",
+        "150 / obj. 150",
+        "225 / obj. 225",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "CWCampaignObj",
+      "name": "Campaign for <Alias=CampaignHold>",
+      "group": "Guerra Civil",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "15 / obj. 15",
+        "20 / obj. 20",
+        "30, 60, 61 / obj. 30",
+        "50 / obj. 50"
+      ]
+    },
+    {
+      "id": "CWFortSiegeCapital",
+      "name": "The Battle for <Alias=Fort>",
+      "group": "Guerra Civil",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "10 / obj. 20",
+        "50 / obj. 100",
+        "50 / obj. 200",
+        "920 / obj. 110"
+      ]
+    },
+    {
+      "id": "CWFortSiegeFort",
+      "name": "The Battle for <Alias=Fort>",
+      "group": "Guerra Civil",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "10 / obj. 20",
+        "50 / obj. 100",
+        "50 / obj. 200",
+        "920 / obj. 110"
+      ]
+    },
+    {
+      "id": "CWMission03",
+      "name": "A False Front",
+      "group": "Guerra Civil",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20, 21 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40"
+      ]
+    },
+    {
+      "id": "CWMission04",
+      "name": "Rescue from <Alias=AttackPoint>",
+      "group": "Guerra Civil",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "12 / obj. 12",
+        "15, 30 / obj. 15",
+        "20, 21, 30 / obj. 40",
+        "50 / obj. 50"
+      ]
+    },
+    {
+      "id": "CWMission07",
+      "name": "Compelling Tribute",
+      "group": "Guerra Civil",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "50 / obj. 50",
+        "60, 65 / obj. 60",
+        "90 / obj. 90",
+        "Obj. 100"
+      ]
+    },
+    {
+      "id": "CWObj",
+      "name": "<Alias=QuestNameLocation>",
+      "group": "Guerra Civil",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "Obj. 10",
+        "Obj. 11",
+        "Obj. 101",
+        "Obj. 102",
+        "Obj. 201",
+        "Obj. 202",
+        "Obj. 301",
+        "Obj. 302",
+        "Obj. 401",
+        "Obj. 402",
+        "Obj. 501",
+        "Obj. 502",
+        "Obj. 601",
+        "Obj. 602",
+        "Obj. 701",
+        "Obj. 702",
+        "Obj. 801",
+        "Obj. 802",
+        "Obj. 901",
+        "Obj. 902",
+        "Obj. 1001",
+        "Obj. 1002"
+      ]
+    },
+    {
+      "id": "CWResolution01",
+      "name": "Attack <Alias=Capital>",
+      "group": "Guerra Civil",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40"
+      ]
+    },
+    {
+      "id": "CWResolution02",
+      "name": "Defend <Alias=Capital>",
+      "group": "Guerra Civil",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30"
+      ]
+    },
+    {
+      "id": "CWSiegeAttackObj",
+      "name": "Battle of <Alias=City>",
+      "group": "Guerra Civil",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "Obj. 0",
+        "Obj. 5",
+        "Obj. 10",
+        "Obj. 15",
+        "Obj. 20",
+        "Obj. 25",
+        "Obj. 30",
+        "Obj. 40",
+        "Obj. 50",
+        "Obj. 60",
+        "Obj. 70",
+        "Obj. 80",
+        "Obj. 200",
+        "Obj. 210"
+      ]
+    },
+    {
+      "id": "CWSiegeDefendObj",
+      "name": "Defense of <Alias=City>",
+      "group": "Guerra Civil",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "Obj. 0",
+        "Obj. 10",
+        "Obj. 20",
+        "Obj. 30",
+        "Obj. 40",
+        "Obj. 50",
+        "Obj. 60",
+        "Obj. 999"
+      ]
+    },
+    {
+      "id": "CWSiegeObj",
+      "name": "Battle for <Alias=City>",
+      "group": "Guerra Civil",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "Obj. 0",
+        "Obj. 1000",
+        "Obj. 1005",
+        "Obj. 1015",
+        "Obj. 1020",
+        "Obj. 1030",
+        "Obj. 1050",
+        "Obj. 1060",
+        "Obj. 1070",
+        "Obj. 1080",
+        "Obj. 1200",
+        "Obj. 1210",
+        "Obj. 2000",
+        "Obj. 2030",
+        "Obj. 2040",
+        "Obj. 2060",
+        "Obj. 2065",
+        "Obj. 2070",
+        "Obj. 2080",
+        "Obj. 2999",
+        "Obj. 3010",
+        "Obj. 3020",
+        "Obj. 3030",
+        "Obj. 4001",
+        "Obj. 4002",
+        "Obj. 4101",
+        "Obj. 4102",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "DA01",
+      "name": "The Black Star",
+      "group": "Daédricas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "50 / obj. 40",
+        "50 / obj. 45",
+        "61 / obj. 60",
+        "62 / obj. 62",
+        "65 / obj. 65",
+        "70, 85 / obj. 80",
+        "Geral da quest",
+        "A confirmar"
+      ]
+    },
+    {
+      "id": "DA02",
+      "name": "Boethiah's Calling",
+      "group": "Daédricas",
+      "plugin": "Update.esm",
+      "stages": [
+        "1 / obj. 1",
+        "5 / obj. 5",
+        "10 / obj. 10",
+        "15 / obj. 15",
+        "17 / obj. 101",
+        "20 / obj. 20",
+        "30, 31 / obj. 30",
+        "Obj. 50",
+        "Obj. 100"
+      ]
+    },
+    {
+      "id": "DA03",
+      "name": "A Daedra's Best Friend",
+      "group": "Daédricas",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "20 / obj. 20",
+        "25 / obj. 25",
+        "50 / obj. 50",
+        "70 / obj. 100",
+        "100 / obj. 110",
+        "110 / obj. 150",
+        "155 / obj. 155",
+        "Obj. 75",
+        "Obj. 105",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "DA05",
+      "name": "Ill Met By Moonlight",
+      "group": "Daédricas",
+      "plugin": "Update.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "50 / obj. 50",
+        "55, 60 / obj. 55",
+        "60, 70 / obj. 60",
+        "60, 70 / obj. 70",
+        "61 / obj. 61",
+        "65 / obj. 65",
+        "80 / obj. 80",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "DA06",
+      "name": "The Cursed Tribe",
+      "group": "Daédricas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "50 / obj. 50",
+        "60 / obj. 60",
+        "70 / obj. 70",
+        "80 / obj. 80",
+        "90 / obj. 90",
+        "100 / obj. 100",
+        "110 / obj. 110",
+        "120 / obj. 120"
+      ]
+    },
+    {
+      "id": "DA07",
+      "name": "Pieces of the Past",
+      "group": "Daédricas",
+      "plugin": "Update.esm",
+      "stages": [
+        "10 / obj. 10",
+        "13 / obj. 11",
+        "13 / obj. 12",
+        "13 / obj. 14",
+        "20 / obj. 20",
+        "30 / obj. 22",
+        "40 / obj. 24",
+        "50 / obj. 30",
+        "60 / obj. 40",
+        "70 / obj. 50",
+        "80 / obj. 60",
+        "90 / obj. 70",
+        "95 / obj. 75"
+      ]
+    },
+    {
+      "id": "DA08",
+      "name": "The Whispering Door",
+      "group": "Daédricas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "25 / obj. 25",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "50 / obj. 50"
+      ]
+    },
+    {
+      "id": "DA09",
+      "name": "The Break of Dawn",
+      "group": "Daédricas",
+      "plugin": "Update.esm",
+      "stages": [
+        "50 / obj. 5",
+        "150 / obj. 15",
+        "300 / obj. 20",
+        "350 / obj. 30",
+        "410 / obj. 40",
+        "Obj. 10",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "DA10",
+      "name": "The House of Horrors",
+      "group": "Daédricas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "70 / obj. 20",
+        "80 / obj. 30",
+        "85 / obj. 35",
+        "90 / obj. 40",
+        "100 / obj. 50",
+        "130 / obj. 60",
+        "140 / obj. 70",
+        "Geral da quest",
+        "A confirmar"
+      ]
+    },
+    {
+      "id": "DA11",
+      "name": "The Taste of Death",
+      "group": "Daédricas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "50 / obj. 50",
+        "60 / obj. 60"
+      ]
+    },
+    {
+      "id": "DA13",
+      "name": "The Only Cure",
+      "group": "Daédricas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 11",
+        "10 / obj. 12",
+        "10 / obj. 13",
+        "10 / obj. 14",
+        "21 / obj. 20",
+        "40 / obj. 40",
+        "75 / obj. 75",
+        "Obj. 15"
+      ]
+    },
+    {
+      "id": "DA14",
+      "name": "A Night To Remember",
+      "group": "Daédricas",
+      "plugin": "Update.esm",
+      "stages": [
+        "10 / obj. 10",
+        "10 / obj. 12",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "50, 84 / obj. 50",
+        "75, 84 / obj. 75",
+        "85 / obj. 85",
+        "100, 130 / obj. 100",
+        "115, 130 / obj. 115",
+        "125, 130 / obj. 125",
+        "135 / obj. 135",
+        "150 / obj. 150",
+        "Geral da quest",
+        "A confirmar"
+      ]
+    },
+    {
+      "id": "DA15",
+      "name": "The Mind of Madness",
+      "group": "Daédricas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "45 / obj. 45",
+        "50 / obj. 50",
+        "100 / obj. 100",
+        "Obj. 150",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "DA16",
+      "name": "Waking Nightmare",
+      "group": "Daédricas",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "20 / obj. 20",
+        "25 / obj. 25",
+        "28 / obj. 28",
+        "30 / obj. 30",
+        "50 / obj. 40",
+        "60 / obj. 50",
+        "70 / obj. 55",
+        "80 / obj. 57",
+        "90 / obj. 60",
+        "100 / obj. 65",
+        "110 / obj. 70",
+        "120 / obj. 80",
+        "140 / obj. 100",
+        "150 / obj. 110",
+        "160 / obj. 120",
+        "170 / obj. 130",
+        "180 / obj. 140",
+        "191 / obj. 150",
+        "192 / obj. 160",
+        "195 / obj. 165",
+        "197, 198 / obj. 170",
+        "197, 199 / obj. 180",
+        "198 / obj. 200",
+        "199 / obj. 190",
+        "Geral da quest",
+        "A confirmar"
+      ]
+    },
+    {
+      "id": "BardsCollegePoeticEdda",
+      "name": "Collecting the Edda",
+      "group": "Secundárias",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "Obj. 10"
+      ]
+    },
+    {
+      "id": "dunDarklightQST",
+      "name": "Repentance",
+      "group": "Secundárias",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "25, 35 / obj. 20"
+      ]
+    },
+    {
+      "id": "dunForelhostQST",
+      "name": "Siege on the Dragon Cult",
+      "group": "Secundárias",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "10 / obj. 50",
+        "26 / obj. 30",
+        "60 / obj. 60",
+        "70 / obj. 70",
+        "Obj. 20"
+      ]
+    },
+    {
+      "id": "dunFrostmereCryptQST",
+      "name": "The Pale Lady",
+      "group": "Secundárias",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "1 / obj. 1",
+        "1 / obj. 3",
+        "7 / obj. 2",
+        "9 / obj. 4"
+      ]
+    },
+    {
+      "id": "dunGauldursonQST",
+      "name": "Forbidden Legend",
+      "group": "Secundárias",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "6, 7, 8, 9 / obj. 6",
+        "10 / obj. 10",
+        "10, 20 / obj. 20",
+        "10, 20, 21 / obj. 21",
+        "30 / obj. 31",
+        "30 / obj. 32",
+        "30 / obj. 33",
+        "30, 100 / obj. 100",
+        "150 / obj. 150",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "dunHighGateRuinsQST",
+      "name": "A Scroll For Anska",
+      "group": "Secundárias",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "Obj. 10",
+        "Obj. 20",
+        "Obj. 90"
+      ]
+    },
+    {
+      "id": "dunHillgrundsTombQST",
+      "name": "Ancestral Worship",
+      "group": "Secundárias",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 5",
+        "10 / obj. 10",
+        "90 / obj. 90",
+        "Obj. 35",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "dunHunterQST",
+      "name": "Kyne's Sacred Trials",
+      "group": "Secundárias",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "21 / obj. 30",
+        "21 / obj. 31",
+        "21 / obj. 32",
+        "50 / obj. 50",
+        "51 / obj. 60",
+        "51 / obj. 61",
+        "51 / obj. 62",
+        "70 / obj. 70",
+        "71 / obj. 80",
+        "80 / obj. 100"
+      ]
+    },
+    {
+      "id": "dunNchuandZelQst",
+      "name": "The Lost Expedition",
+      "group": "Secundárias",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "20 / obj. 30",
+        "20 / obj. 40",
+        "50 / obj. 50",
+        "100 / obj. 100"
+      ]
+    },
+    {
+      "id": "dunShipwreck04QST",
+      "name": "Trius' Trinket",
+      "group": "Secundárias",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "Obj. 10",
+        "Obj. 20"
+      ]
+    },
+    {
+      "id": "dunTrevasWatchQST",
+      "name": "Infiltration",
+      "group": "Secundárias",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "Obj. 20",
+        "Obj. 60"
+      ]
+    },
+    {
+      "id": "dunValthumeQST",
+      "name": "Evil in Waiting",
+      "group": "Secundárias",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "3 / obj. 5",
+        "10 / obj. 10",
+        "40 / obj. 15",
+        "Obj. 0"
+      ]
+    },
+    {
+      "id": "dunVolunruudQST",
+      "name": "Silenced Tongues",
+      "group": "Secundárias",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30"
+      ]
+    },
+    {
+      "id": "dunYngolBarrowQST",
+      "name": "Yngol's Barrow",
+      "group": "Secundárias",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "Obj. 0",
+        "Obj. 50"
+      ]
+    },
+    {
+      "id": "MGRitual05",
+      "name": "Alteration Ritual Spell",
+      "group": "Secundárias",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "MS01",
+      "name": "The Forsworn Conspiracy",
+      "group": "Secundárias",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "15 / obj. 10",
+        "20 / obj. 20",
+        "20 / obj. 25",
+        "30 / obj. 30",
+        "35 / obj. 35",
+        "36 / obj. 22",
+        "38 / obj. 50",
+        "40 / obj. 40",
+        "46 / obj. 27",
+        "47 / obj. 28",
+        "48 / obj. 60",
+        "66 / obj. 55",
+        "70, 80 / obj. 70",
+        "76 / obj. 65",
+        "Geral da quest",
+        "A confirmar"
+      ]
+    },
+    {
+      "id": "MS02",
+      "name": "No One Escapes Cidhna Mine",
+      "group": "Secundárias",
+      "plugin": "Update.esm",
+      "stages": [
+        "5 / obj. 10",
+        "10 / obj. 20",
+        "25 / obj. 25",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "50 / obj. 50",
+        "60 / obj. 60",
+        "70 / obj. 70",
+        "200 / obj. 150",
+        "210 / obj. 200",
+        "220 / obj. 210",
+        "230 / obj. 220",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "MS03",
+      "name": "Promises to Keep",
+      "group": "Secundárias",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "5 / obj. 5",
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "25 / obj. 25",
+        "30 / obj. 30",
+        "50 / obj. 50",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "MS04",
+      "name": "Unfathomable Depths",
+      "group": "Secundárias",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "100 / obj. 100",
+        "Obj. 10"
+      ]
+    },
+    {
+      "id": "MS05",
+      "name": "Tending the Flames",
+      "group": "Secundárias",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "75 / obj. 75",
+        "100 / obj. 100",
+        "125 / obj. 125",
+        "135 / obj. 135",
+        "150 / obj. 150",
+        "175 / obj. 175",
+        "200 / obj. 200",
+        "225 / obj. 225",
+        "250 / obj. 250",
+        "253 / obj. 253",
+        "255 / obj. 255",
+        "260 / obj. 260",
+        "Obj. 90",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "MS06",
+      "name": "The Wolf Queen Awakened",
+      "group": "Secundárias",
+      "plugin": "Update.esm",
+      "stages": [
+        "50 / obj. 50",
+        "100 / obj. 100",
+        "125 / obj. 125",
+        "150 / obj. 150",
+        "150 / obj. 155"
+      ]
+    },
+    {
+      "id": "MS06Start",
+      "name": "The Man Who Cried Wolf",
+      "group": "Secundárias",
+      "plugin": "Update.esm",
+      "stages": [
+        "50 / obj. 50",
+        "100 / obj. 100",
+        "Obj. 15"
+      ]
+    },
+    {
+      "id": "MS07",
+      "name": "Lights Out!",
+      "group": "Secundárias",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "50 / obj. 50",
+        "100 / obj. 100",
+        "125 / obj. 125",
+        "150 / obj. 150",
+        "175 / obj. 175",
+        "200 / obj. 200",
+        "225 / obj. 225",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "MS08",
+      "name": "In My Time Of Need",
+      "group": "Secundárias",
+      "plugin": "Update.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20, 175 / obj. 20",
+        "20 / obj. 21",
+        "25, 175 / obj. 25",
+        "25 / obj. 26",
+        "50 / obj. 50",
+        "75 / obj. 75",
+        "100, 101, 130, 150 / obj. 100",
+        "101 / obj. 101",
+        "125 / obj. 125",
+        "160 / obj. 160",
+        "175, 199 / obj. 175",
+        "199 / obj. 199",
+        "Obj. 130",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "MS09",
+      "name": "Missing In Action",
+      "group": "Secundárias",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "50 / obj. 50",
+        "55 / obj. 55",
+        "60 / obj. 60",
+        "100 / obj. 100",
+        "110 / obj. 110",
+        "Obj. 25",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "MS10",
+      "name": "Rise in the East",
+      "group": "Secundárias",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "41 / obj. 41",
+        "42 / obj. 42",
+        "60 / obj. 60",
+        "70 / obj. 70",
+        "75 / obj. 75",
+        "80 / obj. 80"
+      ]
+    },
+    {
+      "id": "MS11",
+      "name": "Blood on the Ice",
+      "group": "Secundárias",
+      "plugin": "Update.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "50 / obj. 50",
+        "60 / obj. 60",
+        "70 / obj. 70",
+        "76 / obj. 76",
+        "80 / obj. 80",
+        "90, 120 / obj. 90",
+        "100, 110 / obj. 1",
+        "Obj. 41",
+        "Obj. 120",
+        "Obj. 130",
+        "Obj. 150",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "MS11b",
+      "name": "Blood on the Ice",
+      "group": "Secundárias",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "Obj. 110",
+        "Obj. 120",
+        "Obj. 130",
+        "Obj. 150"
+      ]
+    },
+    {
+      "id": "MS12",
+      "name": "The White Phial",
+      "group": "Secundárias",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "21 / obj. 21",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "MS12b",
+      "name": "Repairing the Phial",
+      "group": "Secundárias",
+      "plugin": "Update.esm",
+      "stages": [
+        "10 / obj. 10",
+        "30 / obj. 30",
+        "30 / obj. 40",
+        "30 / obj. 50",
+        "60 / obj. 60"
+      ]
+    },
+    {
+      "id": "MS13",
+      "name": "The Golden Claw",
+      "group": "Secundárias",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10, 12, 35 / obj. 10",
+        "15 / obj. 15",
+        "37, 60 / obj. 40",
+        "37, 60 / obj. 45",
+        "40 / obj. 30",
+        "60 / obj. 35",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "MS14",
+      "name": "Laid to Rest",
+      "group": "Secundárias",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "35, 50 / obj. 35",
+        "40 / obj. 40",
+        "50, 60 / obj. 60",
+        "70 / obj. 70",
+        "95 / obj. 95",
+        "100 / obj. 100",
+        "120 / obj. 120",
+        "Obj. 50",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "NN01",
+      "name": "A Return To Your Roots",
+      "group": "Secundárias",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "15 / obj. 5",
+        "20 / obj. 10",
+        "Obj. 20",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "T01",
+      "name": "The Heart of Dibella",
+      "group": "Secundárias",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "60 / obj. 30",
+        "60 / obj. 60",
+        "70 / obj. 70",
+        "80 / obj. 80",
+        "100 / obj. 100",
+        "Obj. 10",
+        "Obj. 20"
+      ]
+    },
+    {
+      "id": "t02",
+      "name": "The Book of Love",
+      "group": "Secundárias",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "25 / obj. 25",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "45 / obj. 45",
+        "50 / obj. 50",
+        "55 / obj. 55",
+        "70 / obj. 70",
+        "80 / obj. 75",
+        "90 / obj. 90",
+        "95 / obj. 95",
+        "100 / obj. 100",
+        "Obj. 80"
+      ]
+    },
+    {
+      "id": "T03",
+      "name": "The Blessings of Nature",
+      "group": "Secundárias",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 20",
+        "30, 50, 70 / obj. 30",
+        "40, 50 / obj. 40",
+        "50 / obj. 50",
+        "55 / obj. 55",
+        "70 / obj. 70",
+        "75 / obj. 75",
+        "Obj. 10",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "VC01",
+      "name": "Rising at Dawn",
+      "group": "Secundárias",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "50 / obj. 50",
+        "100 / obj. 100",
+        "150 / obj. 150",
+        "175 / obj. 175",
+        "185 / obj. 185",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "BardsCollegeDrum",
+      "name": "Rjorn's Drum",
+      "group": "Diversas",
+      "plugin": "Update.esm",
+      "stages": [
+        "20 / obj. 20",
+        "40 / obj. 40"
+      ]
+    },
+    {
+      "id": "BardsCollegeFlute",
+      "name": "Pantea's Flute",
+      "group": "Diversas",
+      "plugin": "Update.esm",
+      "stages": [
+        "20 / obj. 20",
+        "40 / obj. 40"
+      ]
+    },
+    {
+      "id": "BardsCollegeLute",
+      "name": "Finn's Lute",
+      "group": "Diversas",
+      "plugin": "Update.esm",
+      "stages": [
+        "20 / obj. 20",
+        "40 / obj. 40"
+      ]
+    },
+    {
+      "id": "BQ01",
+      "name": "Bounty: Bandit Boss",
+      "group": "Diversas",
+      "plugin": "Update.esm",
+      "stages": [
+        "10 / obj. 10",
+        "100 / obj. 100",
+        "100 / obj. 101",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "BQ02",
+      "name": "Bounty: Forsworn",
+      "group": "Diversas",
+      "plugin": "Update.esm",
+      "stages": [
+        "10 / obj. 10",
+        "100 / obj. 100",
+        "100 / obj. 101"
+      ]
+    },
+    {
+      "id": "BQ03",
+      "name": "Bounty: Giant",
+      "group": "Diversas",
+      "plugin": "Update.esm",
+      "stages": [
+        "10 / obj. 10",
+        "100 / obj. 100",
+        "100 / obj. 101"
+      ]
+    },
+    {
+      "id": "BQ04",
+      "name": "Bounty: Dragon",
+      "group": "Diversas",
+      "plugin": "Update.esm",
+      "stages": [
+        "10 / obj. 10",
+        "100 / obj. 100",
+        "100 / obj. 101"
+      ]
+    },
+    {
+      "id": "CW00A",
+      "name": "Imperial Introductions",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "1, 10 / obj. 1"
+      ]
+    },
+    {
+      "id": "CW00B",
+      "name": "Stormcloak Introductions",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "2, 10 / obj. 2",
+        "A confirmar"
+      ]
+    },
+    {
+      "id": "CW01AOutfitImperial",
+      "name": "Get Outfitted",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "1 / obj. 1"
+      ]
+    },
+    {
+      "id": "DA01Intro",
+      "name": "Visit the Shrine of Azura",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "DA03Start",
+      "name": "Speak to Lod",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "5 / obj. 5",
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "DA07intro",
+      "name": "Visit the museum in Dawnstar",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "5 / obj. 10"
+      ]
+    },
+    {
+      "id": "DA08RumorPointer",
+      "name": "Ask about Balgruuf's strange children",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "DA10MiscObjective",
+      "name": "Speak to the witchhunter about the abandoned house",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "DA11Intro",
+      "name": "Investigate the Hall of the Dead",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "5 / obj. 5",
+        "10 / obj. 10",
+        "15 / obj. 15"
+      ]
+    },
+    {
+      "id": "Da13Intro",
+      "name": "Find Kesh at the Peryite Shrine ",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "1 / obj. 0"
+      ]
+    },
+    {
+      "id": "DA14Start",
+      "name": "Participate in a drinking contest with Sam Guenvere",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "DA15Rumor",
+      "name": "Investigate the man wandering the streets near the Bards College",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "DarkwaterCrossingDerkeethusRescueQuest",
+      "name": "Find Derkeethus.",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "DB01MiscObjective",
+      "name": "Talk to the strange jester",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "DB01Objective",
+      "name": "Talk to Aventus Aretino",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "DBOlavaReadingMiscObjective",
+      "name": "Receive a reading from Olava the Feeble",
+      "group": "Diversas",
+      "plugin": "Update.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "DBOlavaReadingTreasureObjective",
+      "name": "Locate the assassin of old",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "DBRecurringIntroMisc",
+      "name": "Listen to the Night Mother",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "Obj. 10"
+      ]
+    },
+    {
+      "id": "DBTortureTreasureMiscObjective1",
+      "name": "Take the hidden treasure",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "DBTortureTreasureMiscObjective2",
+      "name": "Take the hidden treasure",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "DBTortureTreasureMiscObjective3",
+      "name": "Take the hidden treasure",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "DBTortureTreasureMiscObjective4",
+      "name": "Take the hidden treasure",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "DialogueSolitudeGuardIntro",
+      "name": "Recruitment Drive",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "Obj. 20"
+      ]
+    },
+    {
+      "id": "DLC01SoulCairnHorseQuest2",
+      "name": "Soul Cairn Horse Quest",
+      "group": "Diversas",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "20 / obj. 20",
+        "100 / obj. 100",
+        "150 / obj. 150"
+      ]
+    },
+    {
+      "id": "dunAngarvundeQST",
+      "name": "Destroy the Draugr in Angarvunde (<Global=dunAngarvundeDraugrKilledCount>/3)",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "50 / obj. 50",
+        "61 / obj. 61",
+        "62 / obj. 62",
+        "70 / obj. 70",
+        "100 / obj. 100"
+      ]
+    },
+    {
+      "id": "dunAnsilvundQST",
+      "name": "Kill Lu'ah Al-Skaven in Ansilvund",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "1, 6 / obj. 5"
+      ]
+    },
+    {
+      "id": "dunBlindCliffQST",
+      "name": "The Affairs of Hagravens",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "15, 20 / obj. 15"
+      ]
+    },
+    {
+      "id": "dunFrostflowAbyssQST",
+      "name": "Find the source of the murders in Frostflow Lighthouse",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "5 / obj. 5"
+      ]
+    },
+    {
+      "id": "dunIronbindQST",
+      "name": "Coming of Age",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "dunMidden01QST",
+      "name": "Forgotten Names",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": []
+    },
+    {
+      "id": "dunMistwatchQST",
+      "name": "Search Mistwatch for Fjola",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "11 / obj. 11",
+        "75, 80 / obj. 75",
+        "90 / obj. 85"
+      ]
+    },
+    {
+      "id": "dunMossMotherQST",
+      "name": "Locate Valdr's hunting party.",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "5 / obj. 5",
+        "10 / obj. 10",
+        "30, 40 / obj. 30",
+        "50 / obj. 50",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "dunNilheimQST",
+      "name": "Telrav's Request",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "Obj. 0",
+        "Obj. 10",
+        "Obj. 20",
+        "Obj. 30",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "dunRagnvaldQST",
+      "name": "Unlock the Sarcophagus in Ragnvald",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "dunRebelsCairnQST",
+      "name": "Find Red Eagle's sword",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "22 / obj. 22",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "dunSleepingTreeCampQST",
+      "name": "Speak to Ysolda about Sleeping Tree Sap",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "1 / obj. 0"
+      ]
+    },
+    {
+      "id": "dunSouthfringeQST",
+      "name": "Help Selveni Nethri escape the cave.",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "Obj. 1"
+      ]
+    },
+    {
+      "id": "Favor001",
+      "name": "Delivery",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "Obj. 10"
+      ]
+    },
+    {
+      "id": "Favor013",
+      "name": "A Few Words with You",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "15 / obj. 15",
+        "Obj. 10"
+      ]
+    },
+    {
+      "id": "Favor018",
+      "name": "Some Light Theft",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "15 / obj. 15",
+        "Obj. 10"
+      ]
+    },
+    {
+      "id": "Favor019",
+      "name": "That Was Always There",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "15 / obj. 15",
+        "Obj. 10"
+      ]
+    },
+    {
+      "id": "Favor104",
+      "name": "Kill the Bandit Leader",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "15 / obj. 15",
+        "Obj. 10"
+      ]
+    },
+    {
+      "id": "Favor109",
+      "name": "Kill the Vampire",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "15 / obj. 15",
+        "Obj. 10"
+      ]
+    },
+    {
+      "id": "Favor110",
+      "name": "Rare Gifts",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "Obj. 10"
+      ]
+    },
+    {
+      "id": "Favor151",
+      "name": "Kill the Forsworn Leader (Jarl)",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "15 / obj. 15",
+        "Obj. 10"
+      ]
+    },
+    {
+      "id": "Favor153",
+      "name": "Kill the Giant (Jarl)",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "15 / obj. 15",
+        "Obj. 10"
+      ]
+    },
+    {
+      "id": "Favor154",
+      "name": "Kill the Bandit Leader (Jarl)",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "15 / obj. 15",
+        "Obj. 10",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "Favor157",
+      "name": "Dungeon Delving (Jarl - Hagravens)",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "15 / obj. 15",
+        "Obj. 10"
+      ]
+    },
+    {
+      "id": "Favor158",
+      "name": "Dungeon Delving (Jarl - Caves)",
+      "group": "Diversas",
+      "plugin": "Update.esm",
+      "stages": [
+        "15 / obj. 15",
+        "Obj. 10"
+      ]
+    },
+    {
+      "id": "Favor204",
+      "name": "Dungeon Delving (Bandits)",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "15 / obj. 15",
+        "Obj. 10",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "Favor205",
+      "name": "Dungeon Delving (Caves)",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "15 / obj. 15",
+        "Obj. 10"
+      ]
+    },
+    {
+      "id": "Favor250",
+      "name": "Thane of the Reach",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 15",
+        "Obj. 10"
+      ]
+    },
+    {
+      "id": "Favor252",
+      "name": "Thane of Haafingar",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 15",
+        "Obj. 10"
+      ]
+    },
+    {
+      "id": "Favor253",
+      "name": "Thane of Whiterun",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 15",
+        "Obj. 10"
+      ]
+    },
+    {
+      "id": "Favor254",
+      "name": "Thane of Eastmarch",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 15",
+        "Obj. 10"
+      ]
+    },
+    {
+      "id": "Favor257",
+      "name": "Thane of Winterhold",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 15"
+      ]
+    },
+    {
+      "id": "FavorJarlsMakeFriends",
+      "name": "Making Friends and Influencing People",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "50 / obj. 50",
+        "60 / obj. 60",
+        "70 / obj. 70",
+        "80 / obj. 80",
+        "90 / obj. 90"
+      ]
+    },
+    {
+      "id": "FavorOrcsIntro",
+      "name": "The Forgemaster's Fingers",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "FreeformCaravansA",
+      "name": "Amulet of the Moon",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "15 / obj. 15"
+      ]
+    },
+    {
+      "id": "FreeformCidhnaMineA",
+      "name": "Shiv",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30, 35 / obj. 30"
+      ]
+    },
+    {
+      "id": "FreeformDragonBridge01",
+      "name": "Steal the <Alias=QuestItem> for Olda",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "15 / obj. 20"
+      ]
+    },
+    {
+      "id": "FreeformDushnikhYalA",
+      "name": "Gharol's Message",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "FreeformFalkreathQuest01",
+      "name": "Lod's Lot",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10, 255 / obj. 10",
+        "10, 200 / obj. 20"
+      ]
+    },
+    {
+      "id": "FreeformFalkreathQuest02",
+      "name": "Runil's Dark Past",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": []
+    },
+    {
+      "id": "FreeformFalkreathQuest03",
+      "name": "Dark Ancestor",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "FreeformFalkreathQuest03B",
+      "name": "Dark Ancestor",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "FreeformHeartwoodMill",
+      "name": "Flight or Fight",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "15 / obj. 5",
+        "20 / obj. 10",
+        "30 / obj. 20",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "FreeformHighHrothgarA",
+      "name": "The Words of Power",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "FreeformHighHrothgarB",
+      "name": "Meditations on the Words of Power",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": []
+    },
+    {
+      "id": "FreeformIvarstead01",
+      "name": "Lifting the Shroud",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 10",
+        "30 / obj. 20"
+      ]
+    },
+    {
+      "id": "FreeformIvarstead02",
+      "name": "The Straw that Broke",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 10",
+        "30 / obj. 20",
+        "40 / obj. 30"
+      ]
+    },
+    {
+      "id": "FreeformIvarstead03",
+      "name": "Grin and Bear It",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "Obj. 10",
+        "Obj. 20"
+      ]
+    },
+    {
+      "id": "FreeformIvarstead04",
+      "name": "Climb the Steps",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 10",
+        "Obj. 20",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "FreeformKarthwastenA",
+      "name": "Sanuarach Mine",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20, 30 / obj. 10",
+        "25 / obj. 30",
+        "30 / obj. 20",
+        "35 / obj. 40",
+        "Geral da quest",
+        "A confirmar"
+      ]
+    },
+    {
+      "id": "FreeformKolskeggrA",
+      "name": "Kolskeggr Mine",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "FreeformKynesgroveA",
+      "name": "Dravynea's Frost Salts",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "FreeformMarkarthD",
+      "name": "Delivery to Calcelmo",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "FreeformMarkarthE",
+      "name": "Lisbet's Missing Shipment",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "15 / obj. 15"
+      ]
+    },
+    {
+      "id": "FreeformMarkarthJ",
+      "name": "Bothela's Discreet Delivery",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "FreeformMarkarthL",
+      "name": "Skilled Apprenticeship",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "FreeformMarkarthM",
+      "name": "Search and Seizure",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "15 / obj. 15"
+      ]
+    },
+    {
+      "id": "FreeformMarkarthN",
+      "name": "Coated in Blood",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "FreeformMarkarthO",
+      "name": "Nimhe, the Poisoned One",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "15 / obj. 15"
+      ]
+    },
+    {
+      "id": "FreeformMerryfairFarm",
+      "name": "Bow to the Master",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 10",
+        "30 / obj. 20"
+      ]
+    },
+    {
+      "id": "FreeformMorthalB",
+      "name": "For the Good of Morthal",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "Obj. 10"
+      ]
+    },
+    {
+      "id": "FreeformOldHroldanB",
+      "name": "The Ghost of Old Hroldan",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 10"
+      ]
+    },
+    {
+      "id": "FreeformRiften01",
+      "name": "Supply and Demand",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40"
+      ]
+    },
+    {
+      "id": "FreeformRiften02",
+      "name": "The Lover's Requital",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 10",
+        "30 / obj. 20",
+        "30 / obj. 30",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "FreeformRiften03",
+      "name": "Under the Table",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "FreeformRiften04",
+      "name": "Few and Far Between",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 10",
+        "20 / obj. 20",
+        "20 / obj. 30",
+        "60 / obj. 40",
+        "Obj. 15",
+        "Obj. 25",
+        "Obj. 35"
+      ]
+    },
+    {
+      "id": "FreeformRiften05",
+      "name": "Spread the Love",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 10",
+        "30 / obj. 20"
+      ]
+    },
+    {
+      "id": "FreeformRiften06",
+      "name": "Sealing the Deal",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "Obj. 10",
+        "Obj. 20"
+      ]
+    },
+    {
+      "id": "FreeformRiften07",
+      "name": "Ice Cold",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "Obj. 10",
+        "Obj. 20"
+      ]
+    },
+    {
+      "id": "FreeformRiften08",
+      "name": "Distant Memories",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 10",
+        "30 / obj. 20"
+      ]
+    },
+    {
+      "id": "FreeformRiften09",
+      "name": "Grimsever's Return",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 10",
+        "30 / obj. 20"
+      ]
+    },
+    {
+      "id": "FreeformRiften10",
+      "name": "Stoking the Flames",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "Obj. 10",
+        "Obj. 20"
+      ]
+    },
+    {
+      "id": "FreeformRiften11",
+      "name": "Caught Red Handed",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 10",
+        "20 / obj. 20",
+        "20 / obj. 30",
+        "60 / obj. 40",
+        "70 / obj. 50"
+      ]
+    },
+    {
+      "id": "FreeformRiften12",
+      "name": "Helping Hand",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 10"
+      ]
+    },
+    {
+      "id": "FreeformRiften13",
+      "name": "Pilgrimage",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 10",
+        "30 / obj. 20"
+      ]
+    },
+    {
+      "id": "FreeformRiften14",
+      "name": "Hunt and Gather",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 10",
+        "20 / obj. 20",
+        "20 / obj. 30",
+        "60 / obj. 40"
+      ]
+    },
+    {
+      "id": "FreeformRiften15",
+      "name": "Special Delivery",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 10"
+      ]
+    },
+    {
+      "id": "FreeformRiften16",
+      "name": "Bring It!",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 10",
+        "30 / obj. 20"
+      ]
+    },
+    {
+      "id": "FreeformRiften17",
+      "name": "Truth Ore Consequences",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 10",
+        "30 / obj. 20"
+      ]
+    },
+    {
+      "id": "FreeformRiften18",
+      "name": "Ringmaker",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "60 / obj. 40",
+        "Obj. 10",
+        "Obj. 15",
+        "Obj. 20",
+        "Obj. 25",
+        "Obj. 30",
+        "Obj. 35"
+      ]
+    },
+    {
+      "id": "FreeformRiften19",
+      "name": "Bloody Nose",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 10"
+      ]
+    },
+    {
+      "id": "FreeformRiften20",
+      "name": "The Raid",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "50 / obj. 50",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "FreeformRiften21",
+      "name": "Toying With The Dead",
+      "group": "Diversas",
+      "plugin": "Update.esm",
+      "stages": [
+        "20 / obj. 10",
+        "30 / obj. 20",
+        "40 / obj. 30"
+      ]
+    },
+    {
+      "id": "FreeformRiften22",
+      "name": "Stabilized",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 10",
+        "30 / obj. 20"
+      ]
+    },
+    {
+      "id": "FreeformRiftenThane",
+      "name": "I Done Got Thaned!",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "15 / obj. 30",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "FreeformRiverwood01",
+      "name": "A Lovely Letter",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10, 20, 120 / obj. 10",
+        "10, 210, 220 / obj. 20",
+        "20, 110, 120 / obj. 110",
+        "110, 230, 240 / obj. 120",
+        "210, 240 / obj. 210",
+        "220, 230 / obj. 220",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "FreeformSalviusFarmA",
+      "name": "Rogatus's Letter",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "FreeformSarethiFarm",
+      "name": "Smooth Jazbay",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "30 / obj. 20",
+        "Obj. 10"
+      ]
+    },
+    {
+      "id": "FreeformShipsDawnstar",
+      "name": "Salty Sea-Dogs",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "15 / obj. 15"
+      ]
+    },
+    {
+      "id": "FreeformShipsWindhelm",
+      "name": "Harsh Master",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "15 / obj. 15"
+      ]
+    },
+    {
+      "id": "FreeformShorsStone01",
+      "name": "Mine or Yours",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 10",
+        "30 / obj. 20",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "FreeformShorsStone02",
+      "name": "Special Delivery",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 10",
+        "30 / obj. 20"
+      ]
+    },
+    {
+      "id": "FreeformSkyhavenTempleA",
+      "name": "Rebuilding the Blades",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "FreeformSkyHavenTempleB",
+      "name": "Dragon Hunting",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "FreeformSkyHavenTempleC",
+      "name": "Dragonslayer's Blessing",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": []
+    },
+    {
+      "id": "FreeformSkyHavenTempleD",
+      "name": "Dragon Research",
+      "group": "Diversas",
+      "plugin": "Update.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "FreeformSoljundsSinkholeA",
+      "name": "Soljund's Sinkhole",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "FreeformStonehillsA",
+      "name": "Payment Delivery",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "FreeformValdDebt",
+      "name": "Vald's Debt",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10, 200 / obj. 10",
+        "20, 200 / obj. 20",
+        "30, 200 / obj. 30"
+      ]
+    },
+    {
+      "id": "FreeformWhiterunQuest01",
+      "name": "Convince Braith to stop bullying Lars",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "FreeformWhiterunQuest02",
+      "name": "Steal the Argonian Ale",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "FreeformWhiterunQuest03",
+      "name": "Deliver the sword to Proventus Avenicci",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "FreeformWhiterunQuest04",
+      "name": "Recover Andurs' Amulet of Arkay",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "FreeformWhiterunQuest05",
+      "name": "Give the Frost Salts to Arcadia",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "FreeformWindhelmA",
+      "name": "Delivery",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "FreeformWinterholdA",
+      "name": "A Bad Trade",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "Obj. 20"
+      ]
+    },
+    {
+      "id": "FreeformWinterholdC",
+      "name": "Drowned Sorrows",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": []
+    },
+    {
+      "id": "MG01Pointer",
+      "name": "College Objective Quest",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "MGR02",
+      "name": "Out of Balance",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "MGR10",
+      "name": "Enchanting Pick-Up",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "MGR12",
+      "name": "Filling Soul Gems",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "MGR20",
+      "name": "Fetch me that Book!",
+      "group": "Diversas",
+      "plugin": "Update.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "MGR20B",
+      "name": "Fetch me that Book!",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "MGRAppBrelyna01",
+      "name": "Brelyna's Practice",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 20",
+        "30 / obj. 30"
+      ]
+    },
+    {
+      "id": "MQ201Malborn",
+      "name": "Find the Thalmor assassin",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 10",
+        "100 / obj. 20"
+      ]
+    },
+    {
+      "id": "MQ201RecoverGearMISC",
+      "name": "Recover your equipment",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "MQ306",
+      "name": "Speak to Tsun to return to Skyrim",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "Obj. 10"
+      ]
+    },
+    {
+      "id": "MS01MiscObjectives",
+      "name": "Read Eltrys' Note",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "MS05Rumor",
+      "name": "Speak to Viarmo at the Bards College",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "MS05Start",
+      "name": "Investigate the Bards College",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "MS06Rumor",
+      "name": "Head to the Solitude Court",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "MS07Rumor",
+      "name": "Talk to Jaree-Ra about possible employment",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "MS10MiscObjPointer",
+      "name": "Talk to Orthus Endario at the East Empire Company in Windhelm",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "MS13Intro",
+      "name": "Talk to Lucan about the robbery",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "RelationshipMarriage",
+      "name": "The Bonds of Matrimony",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "20 / obj. 10",
+        "30 / obj. 20"
+      ]
+    },
+    {
+      "id": "RelationshipOrcs",
+      "name": "A Friend to the Orcs",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": []
+    },
+    {
+      "id": "RoriksteadFreeform",
+      "name": "Talk to Mralki about Erik",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "SolitudeFreeform01",
+      "name": "No News is Good News",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "SolitudeFreeform02",
+      "name": "Fit for a Jarl",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "SolitudeFreeform03",
+      "name": "Return to Grace",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30"
+      ]
+    },
+    {
+      "id": "SolitudeFreeform04",
+      "name": "Delivery",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "SolitudeFreeform06",
+      "name": "The Spiced Wine",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "SolitudeFreeform07",
+      "name": "Elisif's Tribute",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "T01DegaineFavor",
+      "name": "Steal the statue in the Temple of Dibella",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "T01Intro",
+      "name": "Speak to Degaine",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "T03Intro",
+      "name": "Talk to Danica about the Gildergreen being destroyed",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "TG02B",
+      "name": "Meet the Family",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "10 / obj. 20",
+        "10 / obj. 30"
+      ]
+    },
+    {
+      "id": "TG04Post",
+      "name": "Scoundrel's Folly Post",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "TGFenceCaravan",
+      "name": "Thieves Guild Caravan Fence Quest",
+      "group": "Diversas",
+      "plugin": "Update.esm",
+      "stages": [
+        "20 / obj. 10",
+        "30 / obj. 20"
+      ]
+    },
+    {
+      "id": "TGLarceny",
+      "name": "The Litany of Larceny",
+      "group": "Diversas",
+      "plugin": "Update.esm",
+      "stages": [
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "50 / obj. 50",
+        "60 / obj. 60",
+        "70 / obj. 70",
+        "80 / obj. 80"
+      ]
+    },
+    {
+      "id": "TutorialAlchemy",
+      "name": "Craft a potion",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10, 100 / obj. 10"
+      ]
+    },
+    {
+      "id": "TutorialBlacksmithing",
+      "name": "Craft an Iron Dagger",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "50 / obj. 50",
+        "60 / obj. 60",
+        "70 / obj. 70",
+        "80 / obj. 80",
+        "90 / obj. 90",
+        "100 / obj. 100"
+      ]
+    },
+    {
+      "id": "TutorialEnchanting",
+      "name": "Use the Arcane Enchanter",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10, 100 / obj. 10"
+      ]
+    },
+    {
+      "id": "WE100ObjA",
+      "name": "Treasure Hunter Objectives",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "1 / obj. 1"
+      ]
+    },
+    {
+      "id": "WE100ObjB",
+      "name": "Treasure Hunter Objectives",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "1 / obj. 1"
+      ]
+    },
+    {
+      "id": "WE100ObjC",
+      "name": "Treasure Hunter Objectives",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "1 / obj. 1"
+      ]
+    },
+    {
+      "id": "WE100ObjD",
+      "name": "Treasure Hunter Objectives",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "1 / obj. 1"
+      ]
+    },
+    {
+      "id": "WE100ObjE",
+      "name": "Treasure Hunter Objectives",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "1 / obj. 1"
+      ]
+    },
+    {
+      "id": "WE100ObjF",
+      "name": "Treasure Hunter Objectives",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "1 / obj. 1"
+      ]
+    },
+    {
+      "id": "WE100ObjG",
+      "name": "Treasure Hunter Objectives",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "1 / obj. 1"
+      ]
+    },
+    {
+      "id": "WE100ObjH",
+      "name": "Treasure Hunter Objectives",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "1 / obj. 1"
+      ]
+    },
+    {
+      "id": "WE100ObjI",
+      "name": "Treasure Hunter Objectives",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "1 / obj. 1"
+      ]
+    },
+    {
+      "id": "WE100ObjJ",
+      "name": "Treasure Hunter Objectives",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "1 / obj. 1"
+      ]
+    },
+    {
+      "id": "WEDA02",
+      "name": "DA02 Hook",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "Obj. 10"
+      ]
+    },
+    {
+      "id": "WIAddItem07",
+      "name": "Buy Dwarven artifact",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "WIAssault02",
+      "name": "Scare my Enemy",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "25 / obj. 25",
+        "30 / obj. 30"
+      ]
+    },
+    {
+      "id": "WICastMagic02",
+      "name": "Dangerous Magic",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "Obj. 10"
+      ]
+    },
+    {
+      "id": "WICastMagic03",
+      "name": "Shout - Guard says stop",
+      "group": "Diversas",
+      "plugin": "Update.esm",
+      "stages": [
+        "Obj. 10"
+      ]
+    },
+    {
+      "id": "WIChangeLocation03",
+      "name": "Wizard Duel",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "100, 101 / obj. 100"
+      ]
+    },
+    {
+      "id": "WIKill04",
+      "name": "An enemy's gratitude",
+      "group": "Diversas",
+      "plugin": "Skyrim.esm",
+      "stages": [
+        "1 / obj. 1",
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "DLC1HunterBaseIntro",
+      "name": "A New Order",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "30 / obj. 40",
+        "45 / obj. 45",
+        "70 / obj. 60",
+        "Obj. 10",
+        "Obj. 47",
+        "Obj. 50"
+      ]
+    },
+    {
+      "id": "DLC1HunterBaseStage2",
+      "name": "Bolstering the Ranks",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "DLC1LD",
+      "name": "Lost to the Ages",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "100 / obj. 100",
+        "110 / obj. 110",
+        "120 / obj. 120",
+        "125 / obj. 125",
+        "130 / obj. 130",
+        "131, 150 / obj. 150",
+        "135 / obj. 135",
+        "160 / obj. 160",
+        "170 / obj. 170",
+        "176 / obj. 175",
+        "181 / obj. 180",
+        "190 / obj. 190",
+        "195 / obj. 195",
+        "200 / obj. 200",
+        "205 / obj. 205",
+        "210 / obj. 210",
+        "220 / obj. 220",
+        "220 / obj. 225"
+      ]
+    },
+    {
+      "id": "DLC1LD_Misc",
+      "name": "Investigate the ruins of Arkngthamz",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "11 / obj. 10",
+        "20, 30, 40, 50 / obj. 20"
+      ]
+    },
+    {
+      "id": "DLC1Radiant",
+      "name": "\"Parent\" quest for Radiant Content",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "Obj. 10",
+        "Obj. 20"
+      ]
+    },
+    {
+      "id": "DLC1RH01",
+      "name": "Hide and Seek",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "10 / obj. 10",
+        "100 / obj. 100"
+      ]
+    },
+    {
+      "id": "DLC1RH02",
+      "name": "Cleansing Light",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "10 / obj. 10",
+        "100 / obj. 100"
+      ]
+    },
+    {
+      "id": "DLC1RH03",
+      "name": "Preemptive Strike",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "10 / obj. 10",
+        "100 / obj. 100"
+      ]
+    },
+    {
+      "id": "DLC1RH04",
+      "name": "Hunting the Monster",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "10 / obj. 10",
+        "50 / obj. 50",
+        "100 / obj. 100"
+      ]
+    },
+    {
+      "id": "DLC1RH05",
+      "name": "Ancient Technology",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "10 / obj. 10",
+        "100 / obj. 100"
+      ]
+    },
+    {
+      "id": "DLC1RH06",
+      "name": "Rescue",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "10, 60 / obj. 10",
+        "10, 50 / obj. 11",
+        "100 / obj. 100"
+      ]
+    },
+    {
+      "id": "DLC1RH07",
+      "name": "A Jarl's Justice",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40, 100 / obj. 40",
+        "100 / obj. 100"
+      ]
+    },
+    {
+      "id": "DLC1RH08",
+      "name": "Lost Relic",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "10 / obj. 10",
+        "100 / obj. 100"
+      ]
+    },
+    {
+      "id": "DLC1RV01",
+      "name": "The Hunt",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "10 / obj. 10",
+        "10 / obj. 11",
+        "100 / obj. 100"
+      ]
+    },
+    {
+      "id": "DLC1RV02",
+      "name": "Culling the Beast",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "10 / obj. 10",
+        "100 / obj. 100"
+      ]
+    },
+    {
+      "id": "DLC1RV03",
+      "name": "Deceiving the Herd",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "10 / obj. 100",
+        "10 / obj. 110",
+        "10 / obj. 111",
+        "200 / obj. 200",
+        "Obj. 220"
+      ]
+    },
+    {
+      "id": "DLC1RV04",
+      "name": "Protecting the Bloodline",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "10 / obj. 10",
+        "100 / obj. 100"
+      ]
+    },
+    {
+      "id": "DLC1RV05",
+      "name": "Ancient Power",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "10 / obj. 10",
+        "100 / obj. 100"
+      ]
+    },
+    {
+      "id": "DLC1RV06",
+      "name": "The Gift",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "10 / obj. 10",
+        "100 / obj. 100"
+      ]
+    },
+    {
+      "id": "DLC1RV07",
+      "name": "New Allegiances",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "10 / obj. 10",
+        "100 / obj. 100"
+      ]
+    },
+    {
+      "id": "DLC1RV08",
+      "name": "Rings of Blood Magic",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "10 / obj. 110",
+        "10 / obj. 120",
+        "200 / obj. 200"
+      ]
+    },
+    {
+      "id": "DLC1RV09",
+      "name": "Amulets of Night Power",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "10 / obj. 110",
+        "10 / obj. 130",
+        "200 / obj. 200",
+        "Obj. 120"
+      ]
+    },
+    {
+      "id": "DLC1RV10",
+      "name": "Destroying the Dawnguard",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "10 / obj. 10",
+        "100 / obj. 100"
+      ]
+    },
+    {
+      "id": "DLC1Surgery",
+      "name": "Locate the face sculptor in Riften",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "DLC1VampireBaseIntro",
+      "name": "The Bloodstone Chalice",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "10 / obj. 10",
+        "15 / obj. 15",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 35",
+        "40 / obj. 40",
+        "50 / obj. 50",
+        "60 / obj. 60",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "DLC1VampireTutorial",
+      "name": "Power of the Blood",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "Obj. 10",
+        "Obj. 20"
+      ]
+    },
+    {
+      "id": "DLC1VQ00",
+      "name": "Find out about the Dawnguard",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "20 / obj. 10"
+      ]
+    },
+    {
+      "id": "DLC1VQ01",
+      "name": "Awakening",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "10 / obj. 30",
+        "20 / obj. 40",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "DLC1VQ01MiscObjective",
+      "name": "Dawnguard",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "DLC1VQ02",
+      "name": "Bloodline",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "5 / obj. 10",
+        "10 / obj. 20",
+        "Obj. 30",
+        "Geral da quest",
+        "A confirmar"
+      ]
+    },
+    {
+      "id": "DLC1VQ03Hunter",
+      "name": "Prophet",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "5 / obj. 5",
+        "7 / obj. 10",
+        "10 / obj. 15",
+        "20 / obj. 20",
+        "20 / obj. 24",
+        "20, 40 / obj. 26",
+        "30 / obj. 25",
+        "45 / obj. 27",
+        "50 / obj. 30",
+        "52 / obj. 32",
+        "55 / obj. 35",
+        "57 / obj. 37",
+        "60 / obj. 40",
+        "66 / obj. 42",
+        "70 / obj. 45",
+        "80 / obj. 50",
+        "100 / obj. 60",
+        "Obj. 41"
+      ]
+    },
+    {
+      "id": "DLC1VQ03Vampire",
+      "name": "Prophet",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "5 / obj. 10",
+        "10 / obj. 20",
+        "20 / obj. 23",
+        "20 / obj. 24",
+        "20, 40 / obj. 26",
+        "30 / obj. 25",
+        "40, 47 / obj. 28",
+        "45 / obj. 27",
+        "50 / obj. 30",
+        "55 / obj. 35",
+        "57 / obj. 37",
+        "60 / obj. 38",
+        "66 / obj. 39",
+        "67 / obj. 40",
+        "70 / obj. 47",
+        "80 / obj. 50",
+        "100 / obj. 60",
+        "120 / obj. 80",
+        "Obj. 41",
+        "Obj. 45",
+        "Obj. 70"
+      ]
+    },
+    {
+      "id": "DLC1VQ04",
+      "name": "Chasing Echoes",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "35 / obj. 40",
+        "50 / obj. 45",
+        "55 / obj. 50",
+        "60 / obj. 52",
+        "60 / obj. 54",
+        "60 / obj. 56",
+        "70 / obj. 60",
+        "75 / obj. 70",
+        "90, 95 / obj. 80",
+        "95 / obj. 90",
+        "100 / obj. 100",
+        "100 / obj. 110",
+        "Obj. 120"
+      ]
+    },
+    {
+      "id": "DLC1VQ05",
+      "name": "Beyond Death",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "10 / obj. 10",
+        "25 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "50 / obj. 50",
+        "70 / obj. 70",
+        "80 / obj. 90",
+        "110 / obj. 95",
+        "120 / obj. 100",
+        "130 / obj. 110",
+        "140 / obj. 120",
+        "Obj. 60"
+      ]
+    },
+    {
+      "id": "DLC1VQ06",
+      "name": "Unseen Visions",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "50 / obj. 40",
+        "70 / obj. 60",
+        "Obj. 50"
+      ]
+    },
+    {
+      "id": "DLC1VQ07",
+      "name": "Touching the Sky",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "10 / obj. 20",
+        "30 / obj. 30",
+        "50 / obj. 50",
+        "55 / obj. 70",
+        "100 / obj. 80",
+        "110 / obj. 90",
+        "120 / obj. 100",
+        "135 / obj. 110",
+        "140 / obj. 120",
+        "150 / obj. 130"
+      ]
+    },
+    {
+      "id": "DLC1VQ08",
+      "name": "Kindred Judgment",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "20, 40 / obj. 30",
+        "60 / obj. 40"
+      ]
+    },
+    {
+      "id": "DLC1VQDragon",
+      "name": "Durnehviir",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "30 / obj. 10",
+        "30 / obj. 20",
+        "40 / obj. 30",
+        "50 / obj. 40"
+      ]
+    },
+    {
+      "id": "DLC1VQElder",
+      "name": "Seeking Disclosure",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "10 / obj. 10",
+        "10 / obj. 20",
+        "40 / obj. 30"
+      ]
+    },
+    {
+      "id": "DLC1VQElderHandler",
+      "name": "Scroll Scouting",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "20 / obj. 10",
+        "30 / obj. 20"
+      ]
+    },
+    {
+      "id": "DLC1VQFVBooks",
+      "name": "Forgotten Vale Books Quest",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "20 / obj. 10"
+      ]
+    },
+    {
+      "id": "DLC1VQSaint",
+      "name": "Impatience of a Saint",
+      "group": "Dawnguard",
+      "plugin": "Dawnguard.esm",
+      "stages": [
+        "20 / obj. 10",
+        "30 / obj. 20"
+      ]
+    },
+    {
+      "id": "BYOHHouseFalkreath",
+      "name": "Speak to the Jarl of Falkreath",
+      "group": "HearthFires",
+      "plugin": "HearthFires.esm",
+      "stages": [
+        "15 / obj. 15",
+        "30 / obj. 30",
+        "100 / obj. 100",
+        "110 / obj. 110",
+        "120 / obj. 120"
+      ]
+    },
+    {
+      "id": "BYOHHouseHjaalmarch",
+      "name": "Speak to the Steward of Morthal about the land for sale",
+      "group": "HearthFires",
+      "plugin": "HearthFires.esm",
+      "stages": [
+        "30 / obj. 30",
+        "100 / obj. 100",
+        "110 / obj. 110",
+        "120 / obj. 120"
+      ]
+    },
+    {
+      "id": "BYOHHousePale",
+      "name": "Speak to the Jarl of Dawnstar about the land for sale",
+      "group": "HearthFires",
+      "plugin": "HearthFires.esm",
+      "stages": [
+        "30 / obj. 30",
+        "100 / obj. 100",
+        "110 / obj. 110",
+        "120 / obj. 120"
+      ]
+    },
+    {
+      "id": "Favor255",
+      "name": "Thane of Hjaalmarch",
+      "group": "HearthFires",
+      "plugin": "HearthFires.esm",
+      "stages": [
+        "20 / obj. 15"
+      ]
+    },
+    {
+      "id": "Favor256",
+      "name": "Thane of the Pale",
+      "group": "HearthFires",
+      "plugin": "HearthFires.esm",
+      "stages": [
+        "20 / obj. 15"
+      ]
+    },
+    {
+      "id": "Favor258",
+      "name": "Thane of Falkreath",
+      "group": "HearthFires",
+      "plugin": "HearthFires.esm",
+      "stages": [
+        "20 / obj. 15"
+      ]
+    },
+    {
+      "id": "HousePurchase",
+      "name": "Visit Breezehome, your new house",
+      "group": "HearthFires",
+      "plugin": "HearthFires.esm",
+      "stages": [
+        "10 / obj. 10",
+        "10 / obj. 20",
+        "10 / obj. 30",
+        "10 / obj. 40",
+        "10 / obj. 50",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "RelationshipMarriageFIN",
+      "name": "Visit your spouse's house",
+      "group": "HearthFires",
+      "plugin": "HearthFires.esm",
+      "stages": [
+        "20 / obj. 10"
+      ]
+    },
+    {
+      "id": "WIGamesHideAndSeek",
+      "name": "Hide and Seek",
+      "group": "HearthFires",
+      "plugin": "HearthFires.esm",
+      "stages": [
+        "Obj. 10",
+        "Obj. 20"
+      ]
+    },
+    {
+      "id": "WIGamesTag",
+      "name": "Tag, you're it!",
+      "group": "HearthFires",
+      "plugin": "HearthFires.esm",
+      "stages": [
+        "Obj. 10",
+        "Obj. 20"
+      ]
+    },
+    {
+      "id": "DA04",
+      "name": "Discerning the Transmundane",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "5 / obj. 5",
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 41",
+        "40 / obj. 42",
+        "40 / obj. 43",
+        "40 / obj. 44",
+        "40 / obj. 45",
+        "50 / obj. 50",
+        "55 / obj. 55",
+        "Obj. 35",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "DLC2BlackBook03Quest",
+      "name": "Black Book: Untold Legends",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "DLC2BlackBook04Quest",
+      "name": "Black Book: The Winds of Change",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "DLC2BlackBook05Quest",
+      "name": "Black Book: The Sallow Regent",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "DLC2BlackBook06Quest",
+      "name": "Black Book: Filament and Filigree",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "DLC2BlackBook07Quest",
+      "name": "Black Book: The Hidden Twilight",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "DLC2dunFrostmoonQSTMisc",
+      "name": "Visit the hunters at Frostmoon Crag",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "10 / obj. 10",
+        "11 / obj. 11"
+      ]
+    },
+    {
+      "id": "DLC2dunHaknirTreasureQST",
+      "name": "Deathbrand",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "29 / obj. 29",
+        "30 / obj. 30",
+        "70 / obj. 70",
+        "90 / obj. 90"
+      ]
+    },
+    {
+      "id": "DLC2dunHaknirTreasureQSTMisc",
+      "name": "Search for the treasure of Haknir Death-Brand",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "DLC2dunHrodulf",
+      "name": "Hrodulf's Madness",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": []
+    },
+    {
+      "id": "DLC2dunKolbjornMiscQST",
+      "name": "Kolbjorn Barrow Misc Objectives",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "DLC2dunKolbjornQST",
+      "name": "Unearthed",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "40 / obj. 40",
+        "75 / obj. 75",
+        "100 / obj. 100",
+        "110 / obj. 130",
+        "110 / obj. 140",
+        "150 / obj. 150",
+        "160 / obj. 160",
+        "175 / obj. 175",
+        "200 / obj. 200",
+        "210 / obj. 230",
+        "210 / obj. 240",
+        "250 / obj. 250",
+        "260 / obj. 260",
+        "275 / obj. 275",
+        "300 / obj. 300",
+        "310 / obj. 330",
+        "350 / obj. 350",
+        "360 / obj. 360",
+        "375 / obj. 375",
+        "400 / obj. 400",
+        "410 / obj. 410",
+        "450 / obj. 450",
+        "475 / obj. 475",
+        "480 / obj. 480"
+      ]
+    },
+    {
+      "id": "DLC2EbonyWarriorQuest",
+      "name": "The Ebony Warrior",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "10 / obj. 10",
+        "100 / obj. 100"
+      ]
+    },
+    {
+      "id": "DLC2KagrumezQST",
+      "name": "The Kagrumez Gauntlet",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "DLC2MH01",
+      "name": "Retaking Thirsk",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "25 / obj. 25",
+        "27 / obj. 27",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "Obj. 21"
+      ]
+    },
+    {
+      "id": "DLC2MH02",
+      "name": "The Chief of Thirsk Hall",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "10 / obj. 10",
+        "15 / obj. 15",
+        "17 / obj. 17",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "35 / obj. 35",
+        "37 / obj. 37",
+        "40 / obj. 40"
+      ]
+    },
+    {
+      "id": "DLC2MHMisc",
+      "name": "Thirsk Rumors",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "0 / obj. 10"
+      ]
+    },
+    {
+      "id": "DLC2MQ01",
+      "name": "Dragonborn",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "5 / obj. 5",
+        "7 / obj. 7",
+        "10 / obj. 10",
+        "15, 20 / obj. 20",
+        "30 / obj. 30",
+        "Obj. 25",
+        "Geral da quest"
+      ]
+    },
+    {
+      "id": "DLC2MQ02",
+      "name": "The Temple of Miraak",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "5 / obj. 5",
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "25 / obj. 25",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "60 / obj. 60",
+        "Obj. 50"
+      ]
+    },
+    {
+      "id": "DLC2MQ03",
+      "name": "The Fate of the Skaal",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "50 / obj. 50",
+        "60 / obj. 60",
+        "70 / obj. 70"
+      ]
+    },
+    {
+      "id": "DLC2MQ03B",
+      "name": "Cleansing the Stones",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "5 / obj. 10",
+        "5 / obj. 20",
+        "5 / obj. 30",
+        "5 / obj. 40"
+      ]
+    },
+    {
+      "id": "DLC2MQ04",
+      "name": "The Path of Knowledge",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "10 / obj. 10",
+        "50 / obj. 20",
+        "230 / obj. 40",
+        "500 / obj. 50"
+      ]
+    },
+    {
+      "id": "DLC2MQ05",
+      "name": "The Gardener of Men",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "10 / obj. 10",
+        "100 / obj. 20",
+        "340 / obj. 30",
+        "500 / obj. 40"
+      ]
+    },
+    {
+      "id": "DLC2MQ06",
+      "name": "At the Summit of Apocrypha",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "10 / obj. 10",
+        "100 / obj. 20",
+        "200 / obj. 25",
+        "250 / obj. 30",
+        "300 / obj. 40"
+      ]
+    },
+    {
+      "id": "DLC2RR01",
+      "name": "March of the Dead",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "30 / obj. 10",
+        "40 / obj. 20",
+        "50 / obj. 30",
+        "60 / obj. 50",
+        "80 / obj. 60",
+        "90 / obj. 70",
+        "100 / obj. 80",
+        "110 / obj. 90",
+        "120 / obj. 100",
+        "130 / obj. 110"
+      ]
+    },
+    {
+      "id": "DLC2RR02",
+      "name": "Served Cold",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "10, 15 / obj. 5",
+        "20 / obj. 10",
+        "30 / obj. 20",
+        "50 / obj. 40",
+        "60 / obj. 50",
+        "70 / obj. 60",
+        "80 / obj. 65",
+        "85 / obj. 70",
+        "90 / obj. 80",
+        "100 / obj. 90",
+        "110 / obj. 100",
+        "Obj. 30"
+      ]
+    },
+    {
+      "id": "DLC2RR03",
+      "name": "The Final Descent",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "15 / obj. 5",
+        "20 / obj. 10",
+        "30, 50 / obj. 20",
+        "30 / obj. 30",
+        "50 / obj. 40"
+      ]
+    },
+    {
+      "id": "DLC2RR03Intro",
+      "name": "An Axe to Find",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "15 / obj. 10",
+        "20 / obj. 20",
+        "25 / obj. 30"
+      ]
+    },
+    {
+      "id": "DLC2RR03Priest",
+      "name": "The Final Descent Priest",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "DLC2RRFavor01",
+      "name": "Recipe for Distraction",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "20 / obj. 10",
+        "30 / obj. 20"
+      ]
+    },
+    {
+      "id": "DLC2RRFavor02",
+      "name": "Fetch the Netch",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "Obj. 10",
+        "Obj. 20"
+      ]
+    },
+    {
+      "id": "DLC2RRFavor03",
+      "name": "Clean Sweep",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "20 / obj. 10",
+        "30 / obj. 20"
+      ]
+    },
+    {
+      "id": "DLC2RRFavor04",
+      "name": "It's All In The Taste",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "20 / obj. 10",
+        "30 / obj. 20"
+      ]
+    },
+    {
+      "id": "DLC2RRFavor05",
+      "name": "Pain in the Necklace",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "20 / obj. 10"
+      ]
+    },
+    {
+      "id": "DLC2RRFavor06",
+      "name": "Feeding the Addiction",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "20 / obj. 10",
+        "30 / obj. 20"
+      ]
+    },
+    {
+      "id": "DLC2RRFavor07",
+      "name": "First Edition",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "20 / obj. 10",
+        "30 / obj. 20"
+      ]
+    },
+    {
+      "id": "DLC2SkaalVillageFreeform2",
+      "name": "Convince Nikulas to stay in Skaal Village",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "20 / obj. 10",
+        "30 / obj. 20"
+      ]
+    },
+    {
+      "id": "DLC2SV01",
+      "name": "Lost Legacy",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20",
+        "30 / obj. 30",
+        "40 / obj. 40",
+        "45 / obj. 45",
+        "50 / obj. 50"
+      ]
+    },
+    {
+      "id": "DLC2SV02",
+      "name": "A New Source of Stalhrim",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 30",
+        "30 / obj. 40",
+        "Obj. 20"
+      ]
+    },
+    {
+      "id": "DLC2SV02Misc",
+      "name": "Ask Deor about Baldor's disappearance",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "DLC2TGQuest",
+      "name": "Paid in Full",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "10 / obj. 10",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "DLC2ThirskFFElmus",
+      "name": "Elmus Favor Quest",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "10, 210 / obj. 10"
+      ]
+    },
+    {
+      "id": "DLC2ThirskFFElmusBack",
+      "name": "Elmus Favor Quest",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "10, 210 / obj. 10"
+      ]
+    },
+    {
+      "id": "DLC2ThirskFFHalbarn",
+      "name": "Halbarn Favor Quest",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "DLC2ThirskFFHilund",
+      "name": "Hilund Favor Quest",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "DLC2TT1",
+      "name": "Reluctant Steward",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "150 / obj. 150",
+        "200, 210 / obj. 200",
+        "300 / obj. 300",
+        "400 / obj. 400"
+      ]
+    },
+    {
+      "id": "DLC2TT1b",
+      "name": "A New Debt",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "100 / obj. 100",
+        "200 / obj. 200",
+        "Obj. 210"
+      ]
+    },
+    {
+      "id": "DLC2TT2",
+      "name": "Old Friends",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "100 / obj. 100",
+        "200 / obj. 200",
+        "300 / obj. 400",
+        "500 / obj. 500"
+      ]
+    },
+    {
+      "id": "DLC2TTF1",
+      "name": "From the Ashes",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "100, 200 / obj. 100",
+        "200 / obj. 200"
+      ]
+    },
+    {
+      "id": "DLC2TTF2",
+      "name": "Healing a House",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "100 / obj. 100",
+        "100 / obj. 110",
+        "200 / obj. 200",
+        "300 / obj. 300",
+        "400 / obj. 400"
+      ]
+    },
+    {
+      "id": "DLC2TTR1",
+      "name": "Lost Knowledge",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "100 / obj. 100",
+        "200 / obj. 200"
+      ]
+    },
+    {
+      "id": "DLC2TTR2",
+      "name": "Heart Stones",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "100 / obj. 100",
+        "200 / obj. 200"
+      ]
+    },
+    {
+      "id": "DLC2TTR3a",
+      "name": "Telvanni Research",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "100 / obj. 100",
+        "200 / obj. 200"
+      ]
+    },
+    {
+      "id": "DLC2TTR3b",
+      "name": "Wind and Sand",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "100 / obj. 100",
+        "200 / obj. 200"
+      ]
+    },
+    {
+      "id": "DLC2TTR4a",
+      "name": "Experimental Subject",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "100 / obj. 100",
+        "200 / obj. 200"
+      ]
+    },
+    {
+      "id": "DLC2TTR4b",
+      "name": "Experimental Subject",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "100 / obj. 150"
+      ]
+    },
+    {
+      "id": "DLC2TTR5",
+      "name": "Briarheart Necropsy",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "100 / obj. 100",
+        "200 / obj. 200"
+      ]
+    },
+    {
+      "id": "DLC2TTR7",
+      "name": "Azra's Staffs",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "100 / obj. 100",
+        "200 / obj. 200"
+      ]
+    },
+    {
+      "id": "DLC2TTR8",
+      "name": "Hunting and Gathering",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "Obj. 101",
+        "Obj. 102",
+        "Obj. 103",
+        "Obj. 104",
+        "Obj. 105",
+        "Obj. 106"
+      ]
+    },
+    {
+      "id": "DLC2WB01",
+      "name": "Filial Bonds",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "10 / obj. 10",
+        "15 / obj. 15",
+        "20 / obj. 20"
+      ]
+    },
+    {
+      "id": "DLC2WE06",
+      "name": "Black Book",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "50 / obj. 1"
+      ]
+    },
+    {
+      "id": "DLC2WE09",
+      "name": "Cultists vs Player",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "Obj. 10"
+      ]
+    },
+    {
+      "id": "WICastMagic04",
+      "name": "Shout - learn about word wall",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "10 / obj. 10"
+      ]
+    },
+    {
+      "id": "WIChangeLocation04",
+      "name": "Magic Student",
+      "group": "Dragonborn",
+      "plugin": "Dragonborn.esm",
+      "stages": [
+        "100 / obj. 100"
+      ]
+    }
+  ]
+}

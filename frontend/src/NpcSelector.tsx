@@ -1,0 +1,6 @@
+import { useState } from 'react';
+export type NpcOption={formId:string;editorId:string;name:string};
+export function NpcSelector({npcs,selected,onChange,loading=false}:{npcs:NpcOption[];selected:string[];onChange:(ids:string[])=>void;loading?:boolean}){
+ const [query,setQuery]=useState('');const missing=selected.filter(id=>!npcs.some(n=>n.formId===id));const visible=npcs.filter(n=>`${n.name} ${n.editorId} ${n.formId}`.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()));
+ return <fieldset className="npc-selector"><legend>NPCs in the plugin ({selected.length} selected)</legend><input aria-label="Search NPCs" placeholder="Search by name, Editor ID or FormID" value={query} onChange={e=>setQuery(e.target.value)}/>{loading?<p>Loading NPCs…</p>:<div className="npc-selector-list">{missing.map(id=><label key={id}><input type="checkbox" checked onChange={()=>onChange(selected.filter(value=>value!==id))}/><span>NPC {id} was not found in the plugin</span></label>)}{visible.map(npc=><label key={npc.formId}><input type="checkbox" checked={selected.includes(npc.formId)} onChange={e=>onChange(e.target.checked?[...selected,npc.formId]:selected.filter(id=>id!==npc.formId))}/><span>{npc.name||npc.editorId||'Unnamed NPC'} · {npc.editorId||'No Editor ID'} · {npc.formId}</span></label>)}{!visible.length&&<p>No NPCs found.</p>}</div>}</fieldset>;
+}
