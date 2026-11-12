@@ -66,7 +66,7 @@ export function createStageDialogue(file, backupDirectory, input, assertEditorCl
  assertEditorClosed();
  const dialogue = typeof input.text === 'string' ? input.text.trim() : '';
  if (!dialogue || dialogue.length > 150 || !/^[\x20-\x7e]+$/.test(dialogue)) fail(400, 'Enter 1–150 ASCII characters for the dialogue.');
- if (!/^[0-9a-f]{8}$/i.test(input.speakerFormId || '') || input.type !== 'IDLE' || !/^[0-9a-f]{8}$/i.test(input.ownerFormId) || !/^[0-9a-f]{8}$/i.test(input.gameFormId) || !Number.isInteger(input.stage) || input.stage < 0 || input.stage > 65535) fail(400, 'Invalid dialogue parameters.');
+ if (!/^[0-9a-f]{8}$/i.test(input.speakerFormId || '') || !['IDLE', 'HELO'].includes(input.type) || !/^[0-9a-f]{8}$/i.test(input.ownerFormId) || !/^[0-9a-f]{8}$/i.test(input.gameFormId) || !Number.isInteger(input.stage) || input.stage < 0 || input.stage > 65535) fail(400, 'Invalid dialogue parameters.');
  const emotionType = input.emotionType ?? 0, emotionValue = input.emotionValue ?? 0;
  if (!Number.isInteger(emotionType) || emotionType < 0 || emotionType > 7 || !Number.isInteger(emotionValue) || emotionValue < 0 || emotionValue > 100) fail(400, 'Invalid emotion type or value.');
  const conditions = input.conditions ?? [];
@@ -85,7 +85,7 @@ export function createStageDialogue(file, backupDirectory, input, assertEditorCl
  const info = all.filter(r => r.type === 'INFO' && r.parent === group && !(r.flags & 0x20));
  const prior = new Set(info.map(r => subrecords(r.data).find(s => s.type === 'PNAM')?.value).filter(b => b?.length === 4).map(b => b.readUInt32LE(0)));
  const last = info.filter(r => !prior.has(r.id));
- if (last.length !== 1) fail(422, 'Unable to determine the existing Idle response order.');
+ if (last.length !== 1) fail(422, `Unable to determine the existing ${input.type === 'IDLE' ? 'Idle' : 'Hello'} response order.`);
  const headFields = subrecords(header.data), masters = headFields.filter(s => s.type === 'MAST').length;
  const hedr = headFields.find(s => s.type === 'HEDR');
  const count = subrecords(topic.data).find(s => s.type === 'TIFC');
