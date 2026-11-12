@@ -1,1 +1,1 @@
-{"files":[],"references":[{"path":"./tsconfig.backend.json"},{"path":"./tsconfig.frontend.json"}]}
+{ "files": [], "references": [{ "path": "./tsconfig.backend.json" }, { "path": "./tsconfig.frontend.json" }] }

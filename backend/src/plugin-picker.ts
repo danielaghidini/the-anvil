@@ -19,8 +19,16 @@ try {
  }
 } finally { $owner.Dispose(); $dialog.Dispose() }
 `;
-export async function selectPluginFile(runner:typeof exec = exec):Promise<string|null> {
- if(process.platform!=='win32') throw Object.assign(new Error('File browsing is currently available on Windows. Enter the full path instead.'),{statusCode:501});
- const {stdout} = await runner('powershell.exe',['-NoProfile','-NonInteractive','-STA','-Command',picker],{encoding:'utf8',windowsHide:true,timeout:600000,maxBuffer:16384});
- return stdout.trim() || null;
+export async function selectPluginFile(runner: typeof exec = exec): Promise<string | null> {
+  if (process.platform !== 'win32')
+    throw Object.assign(
+      new Error('File browsing is currently available on Windows. Enter the full path instead.'),
+      { statusCode: 501 },
+    );
+  const { stdout } = await runner(
+    'powershell.exe',
+    ['-NoProfile', '-NonInteractive', '-STA', '-Command', picker],
+    { encoding: 'utf8', windowsHide: true, timeout: 600000, maxBuffer: 16384 },
+  );
+  return stdout.trim() || null;
 }
