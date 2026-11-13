@@ -157,9 +157,15 @@ test('sync updates affected cached progress without discarding unrelated quests'
       covered: 1,
       stagesWithDialogue: 1,
       stageCount: 2,
+      stages: [10, 30],
+      matched: [30],
     });
     assert.deepEqual(cache.data.skyrim['skyrim.esm|mq103'], dataCache.skyrim['skyrim.esm|mq103']);
-    assert.deepEqual(cache.data.plugin.ModQuest, { covered: 0, stageCount: 2 });
+    assert.deepEqual(
+      { ...cache.data.plugin.ModQuest, stages: undefined },
+      { covered: 0, stageCount: 2, matched: [], stages: undefined },
+    );
+    assert.equal(cache.data.plugin.ModQuest.stages.length, 2);
     const staleVersion = (await api(`/api/projects/${project.id}/progress-version`)).version;
     await writeFile(file, plugin(10));
     const reanalyzedVersion = (await api(`/api/projects/${project.id}/progress-version`)).version;

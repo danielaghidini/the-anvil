@@ -3,6 +3,7 @@ import { DialogueEntry, type VoiceChoice } from './DialogueEntry';
 import { AllQuestsBrowser } from './AllQuestsBrowser';
 import { StageObjectives } from './StageObjectives';
 import { QuestCoverage } from './QuestCoverage';
+import { StageIgnoreToggle, pluginStageKey, useIgnoredStages } from './ignoredStages';
 import { useEffect, useMemo, useState } from 'react';
 import { Search } from 'lucide-react';
 import type { PluginQuest } from '../../shared/types';
@@ -126,6 +127,7 @@ export function ModQuestBrowser({
     () => (chosenQuest ? groupStageDialogues(chosenQuest.stages, chosenQuest.formId, lines) : []),
     [chosenQuest, lines],
   );
+  const ignoredStages = useIgnoredStages(projectId);
   const objectiveStages = new Set(chosenQuest?.objectiveStages ?? []);
   const stageOptions = filterStageDialogues(stages, '', status, '', objectiveStages);
   const visible = filterStageDialogues(stages, stage, status, query, objectiveStages);
@@ -216,7 +218,17 @@ export function ModQuestBrowser({
               />
             </div>
           </div>
-          {!detailLoading && !detailError && <QuestCoverage stages={stages} />}
+          {!detailLoading && !detailError && (
+            <QuestCoverage
+              stages={stages}
+              isIgnored={(s) => ignoredStages.isIgnored(pluginStageKey(chosenQuest.id), s.number)}
+            />
+          )}
+          {ignoredStages.error && (
+            <p className="error" role="alert">
+              {ignoredStages.error}
+            </p>
+          )}
           {detailLoading ? (
             <p className="muted">Loading quest stages…</p>
           ) : detailError ? (
@@ -238,10 +250,19 @@ export function ModQuestBrowser({
               </p>
               <div className="skyrim-stage-list">
                 {visible.map((item) => (
-                  <section className="panel skyrim-stage" key={item.number}>
+                  <section
+                    className={`panel skyrim-stage ${ignoredStages.isIgnored(pluginStageKey(chosenQuest.id), item.number) ? 'is-ignored' : ''}`}
+                    key={item.number}
+                  >
                     <div className="skyrim-stage-heading">
                       <strong>Stage {item.number}</strong>
                       <div className="stage-actions">
+                        <StageIgnoreToggle
+                          ignored={ignoredStages.isIgnored(pluginStageKey(chosenQuest.id), item.number)}
+                          stages={ignoredStages}
+                          questKey={pluginStageKey(chosenQuest.id)}
+                          stage={item.number}
+                        />
                         <span>
                           {item.lines.length
                             ? `${item.lines.length} ${item.lines.length === 1 ? 'dialogue' : 'dialogues'}`

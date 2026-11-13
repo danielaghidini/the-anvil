@@ -4422,3 +4422,9 @@ select:not([multiple]):not([size]) {
 .idle-dialog .idle-dialog-side .idle-conditions-heading {
   grid-column: auto;
 }
+
+.skyrim-stage.is-ignored > :not(.skyrim-stage-heading),
+.skyrim-stage.is-ignored .skyrim-stage-heading > :first-child,
+.skyrim-stage.is-ignored .stage-actions > :not(.progress-ignore) {
+  opacity: 0.55;
+}

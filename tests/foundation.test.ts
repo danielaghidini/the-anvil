@@ -575,6 +575,38 @@ test('ignored Skyrim quests are scoped to each project and removable', async () 
     await rm(dir, { recursive: true, force: true });
   }
 });
+test('ignored quest stages are stored per project and removable', async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), 'follower-ignore-stage-'));
+  let db: ReturnType<typeof createStore> | undefined;
+  try {
+    const file = path.join(dir, 'test.sqlite'),
+      snapshot = { plugin: 'test.esp', masters: [], quests: [], importedAt: '' };
+    db = createStore(file);
+    const a = db.create('A', snapshot),
+      b = db.create('B', snapshot);
+    db.setQuestStageIgnored(a.id, 'game:skyrim.esm|mq101', 10, true);
+    db.setQuestStageIgnored(a.id, 'game:skyrim.esm|mq101', 10, true);
+    db.setQuestStageIgnored(a.id, 'plugin:testquest', 5, true);
+    db.close();
+    db = createStore(file);
+    assert.deepEqual(
+      db.ignoredQuestStages(a.id).map((x) => ({ ...x })),
+      [
+        { questKey: 'game:skyrim.esm|mq101', stage: 10 },
+        { questKey: 'plugin:testquest', stage: 5 },
+      ],
+    );
+    assert.deepEqual(db.ignoredQuestStages(b.id), []);
+    db.setQuestStageIgnored(a.id, 'GAME:Skyrim.esm|MQ101', 10, false);
+    assert.deepEqual(
+      db.ignoredQuestStages(a.id).map((x) => ({ ...x })),
+      [{ questKey: 'plugin:testquest', stage: 5 }],
+    );
+  } finally {
+    db?.close();
+    await rm(dir, { recursive: true, force: true });
+  }
+});
 test('ignored plugin quests are stored per project and category', async () => {
   const dir = await mkdtemp(path.join(tmpdir(), 'follower-ignore-plugin-'));
   let db: ReturnType<typeof createStore> | undefined;

@@ -229,6 +229,42 @@ app.put<{ Params: { id: string }; Body: { questKey: string; ignored: boolean } }
     return { quests: store.ignoredSkyrimQuests(id) };
   },
 );
+app.get<{ Params: { id: string } }>('/api/projects/:id/ignored-stages', async (req, reply) => {
+  const id = Number(req.params.id);
+  if (!projectExists(id)) return reply.code(404).send({ message: 'Project not found.' });
+  return { stages: store.ignoredQuestStages(id) };
+});
+app.put<{ Params: { id: string }; Body: { questKey: string; stage: number; ignored: boolean } }>(
+  '/api/projects/:id/ignored-stages',
+  {
+    schema: {
+      body: {
+        type: 'object',
+        required: ['questKey', 'stage', 'ignored'],
+        additionalProperties: false,
+        properties: {
+          questKey: { type: 'string', minLength: 3, maxLength: 230 },
+          stage: { type: 'integer', minimum: 0, maximum: 65535 },
+          ignored: { type: 'boolean' },
+        },
+      },
+    },
+  },
+  async (req, reply) => {
+    if (!validLocalRequest(req.headers.origin, req.headers.host))
+      return reply.code(403).send({ message: 'Origin not allowed.' });
+    const id = Number(req.params.id);
+    if (!projectExists(id)) return reply.code(404).send({ message: 'Project not found.' });
+    const key = req.body.questKey.toLowerCase();
+    const exists = key.startsWith('game:')
+      ? catalog.quests.some((q) => `game:${q.plugin.toLowerCase()}|${q.id.toLowerCase()}` === key)
+      : key.startsWith('plugin:') &&
+        !!store.snapshot(id)?.quests.some((q) => `plugin:${q.id.toLowerCase()}` === key);
+    if (!exists) return reply.code(404).send({ message: 'Quest not found.' });
+    store.setQuestStageIgnored(id, key, req.body.stage, req.body.ignored);
+    return { stages: store.ignoredQuestStages(id) };
+  },
+);
 app.get<{ Params: { id: string } }>('/api/projects/:id/progress-version', async (req, reply) => {
   const id = Number(req.params.id),
     paths = pathsForProject(id),
@@ -251,8 +287,20 @@ app.put<{
     version: string;
     forms: Record<string, string>;
     data: {
-      skyrim: Record<string, { covered: number; stagesWithDialogue: number; stageCount: number } | null>;
-      plugin: Record<string, { covered: number; stageCount: number } | null>;
+      skyrim: Record<
+        string,
+        {
+          covered: number;
+          stagesWithDialogue: number;
+          stageCount: number;
+          stages?: number[];
+          matched?: number[];
+        } | null
+      >;
+      plugin: Record<
+        string,
+        { covered: number; stageCount: number; stages?: number[]; matched?: number[] } | null
+      >;
     };
   };
 }>(
@@ -285,6 +333,8 @@ app.put<{
                         covered: { type: 'integer', minimum: 0 },
                         stagesWithDialogue: { type: 'integer', minimum: 0 },
                         stageCount: { type: 'integer', minimum: 0 },
+                        stages: { type: 'array', maxItems: 2000, items: { type: 'integer', minimum: 0 } },
+                        matched: { type: 'array', maxItems: 2000, items: { type: 'integer', minimum: 0 } },
                       },
                     },
                   ],
@@ -302,6 +352,8 @@ app.put<{
                       properties: {
                         covered: { type: 'integer', minimum: 0 },
                         stageCount: { type: 'integer', minimum: 0 },
+                        stages: { type: 'array', maxItems: 2000, items: { type: 'integer', minimum: 0 } },
+                        matched: { type: 'array', maxItems: 2000, items: { type: 'integer', minimum: 0 } },
                       },
                     },
                   ],
@@ -563,8 +615,20 @@ app.post<{ Params: { id: string } }>('/api/projects/:id/sync-dialogue', async (r
       return finish({ changed: false, fullAnalysis: false, pluginQuests: 0, skyrimQuests: 0 });
     }
     const data = initial.data as {
-      skyrim: Record<string, { covered: number; stagesWithDialogue: number; stageCount: number } | null>;
-      plugin: Record<string, { covered: number; stageCount: number } | null>;
+      skyrim: Record<
+        string,
+        {
+          covered: number;
+          stagesWithDialogue: number;
+          stageCount: number;
+          stages?: number[];
+          matched?: number[];
+        } | null
+      >;
+      plugin: Record<
+        string,
+        { covered: number; stageCount: number; stages?: number[]; matched?: number[] } | null
+      >;
     };
     if (
       !data?.skyrim ||
@@ -589,6 +653,8 @@ app.post<{ Params: { id: string } }>('/api/projects/:id/sync-dialogue', async (r
       data.plugin[quest.id] = {
         covered: grouped.filter((x) => x.lines.length > 0).length,
         stageCount: grouped.length,
+        stages: grouped.map((x) => x.number),
+        matched: grouped.filter((x) => x.lines.length > 0).map((x) => x.number),
       };
     }
     const impacted = Object.keys(data.skyrim).filter((key) =>
@@ -608,6 +674,8 @@ app.post<{ Params: { id: string } }>('/api/projects/:id/sync-dialogue', async (r
           covered: allLines.filter((l) => l.conditions.some((c) => c.questFormId === detail.formId)).length,
           stagesWithDialogue: grouped.filter((x) => x.lines.length > 0).length,
           stageCount: grouped.length,
+          stages: grouped.map((x) => x.number),
+          matched: grouped.filter((x) => x.lines.length > 0).map((x) => x.number),
         };
         manifest.forms[key] = detail.formId;
       } catch {

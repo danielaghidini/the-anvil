@@ -1,16 +1,25 @@
 type Stage = { number: number; lines: unknown[] };
-export function QuestCoverage({ stages }: { stages: Stage[] }) {
+export function QuestCoverage({
+  stages,
+  isIgnored = () => false,
+}: {
+  stages: Stage[];
+  isIgnored?: (stage: Stage) => boolean;
+}) {
   if (!stages.length) return null;
-  const covered = stages.filter((stage) => stage.lines.length > 0).length,
-    total = stages.length,
-    percent = Math.round((covered / total) * 100);
+  const active = stages.filter((stage) => !isIgnored(stage)),
+    ignored = stages.length - active.length,
+    covered = active.filter((stage) => stage.lines.length > 0).length,
+    total = active.length,
+    percent = total ? Math.round((covered / total) * 100) : 0;
   return (
     <div className="quest-coverage">
       <div className="quest-coverage-label">
         <span>
           Stages with direct dialogue · {covered} of {total}
+          {ignored > 0 && ` · ${ignored} ignored`}
         </span>
-        <strong>{percent}%</strong>
+        <strong>{total ? `${percent}%` : '—'}</strong>
       </div>
       <div
         className="progress-track"

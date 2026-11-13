@@ -4,6 +4,7 @@ import type { CatalogQuest, PluginQuest } from '../../shared/types';
 import type { StageCondition } from '../../shared/stage-match';
 import { groupStageDialogues } from '../../shared/skyrim-dialogue';
 import { label, sortGroups } from './QuestDashboard';
+import { gameStageKey, pluginStageKey, useIgnoredStages } from './ignoredStages';
 
 type Category = 'skyrim' | 'mod' | 'npc';
 type Line = { text: string; conditions: StageCondition[] };
@@ -13,8 +14,24 @@ type Links = {
   groups: { questId: string; gameGroup: string }[];
   games: { questId: string; gameId: string; gamePlugin: string }[];
 };
-type Coverage = { covered: number; stagesWithDialogue: number; stageCount: number };
-type PluginCoverage = { covered: number; stageCount: number };
+type StageLists = { stages?: number[]; matched?: number[] };
+type Coverage = { covered: number; stagesWithDialogue: number; stageCount: number } & StageLists;
+type PluginCoverage = { covered: number; stageCount: number } & StageLists;
+/** Stage totals for one quest with the user's ignored stages left out. */
+function activeStages(
+  result: StageLists & { stageCount: number },
+  matchedCount: number,
+  ignored: Set<number>,
+) {
+  if (!result.stages || !result.matched)
+    return { matched: matchedCount, total: result.stageCount, ignored: 0 };
+  const total = result.stages.filter((n) => !ignored.has(n)).length;
+  return {
+    matched: result.matched.filter((n) => !ignored.has(n)).length,
+    total,
+    ignored: result.stages.length - total,
+  };
+}
 type CacheData = { skyrim: Record<string, Coverage | null>; plugin: Record<string, PluginCoverage | null> };
 const key = (q: CatalogQuest) => `${q.plugin.toLowerCase()}|${q.id.toLowerCase()}`;
 async function get<T>(url: string, signal: AbortSignal): Promise<T> {
@@ -127,6 +144,11 @@ export function ProgressDashboard({
           setCoverage(cache.data.skyrim);
           setPluginCoverage(cache.data.plugin);
           setUpdatedAt(cache.updatedAt);
+          // Older saved analyses lack per-stage lists, so stage ignores could not apply to them.
+          const stale = [...Object.values(cache.data.skyrim), ...Object.values(cache.data.plugin)].some(
+            (x) => x && (!x.stages || !x.matched),
+          );
+          if (stale) setAnalysisRun((n) => n + 1);
         } else setAnalysisRun((n) => n + 1);
         setCacheLoaded(true);
       })
@@ -168,6 +190,8 @@ export function ProgressDashboard({
             plugin[q.id] = {
               covered: stages.filter((stage) => stage.lines.length > 0).length,
               stageCount: stages.length,
+              stages: stages.map((stage) => stage.number),
+              matched: stages.filter((stage) => stage.lines.length > 0).map((stage) => stage.number),
             };
           } catch {
             lines[q.id] = null;
@@ -203,6 +227,8 @@ export function ProgressDashboard({
               covered,
               stagesWithDialogue: stages.filter((stage) => stage.lines.length > 0).length,
               stageCount: stages.length,
+              stages: stages.map((stage) => stage.number),
+              matched: stages.filter((stage) => stage.lines.length > 0).map((stage) => stage.number),
             };
           } catch {
             skyrim[id] = null;
@@ -234,6 +260,21 @@ export function ProgressDashboard({
       });
     return () => abort.abort();
   }, [analysisRun, projectId, ready, cacheLoaded, links, gameQuests, quests, onAnalysisSaved]);
+  const ignoredStages = useIgnoredStages(projectId);
+  const skyrimStages = (q: CatalogQuest) => {
+    const result = coverage[key(q)];
+    return result
+      ? activeStages(
+          result,
+          result.stagesWithDialogue,
+          ignoredStages.ignoredFor(gameStageKey(q.plugin, q.id)),
+        )
+      : null;
+  };
+  const pluginStages = (id: string) => {
+    const result = pluginCoverage[id];
+    return result ? activeStages(result, result.covered, ignoredStages.ignoredFor(pluginStageKey(id))) : null;
+  };
   const [ignorePending, setIgnorePending] = useState<string | null>(null),
     [ignoreError, setIgnoreError] = useState('');
   const [ignoredPlugin, setIgnoredPlugin] = useState<{ category: 'mod' | 'npc'; questId: string }[] | null>(
@@ -333,10 +374,10 @@ export function ProgressDashboard({
     unknown = activeQuests.filter((q) => coverage[key(q)] === null).length;
   const skyrimOverall = activeQuests.reduce(
     (totals, q) => {
-      const result = coverage[key(q)];
+      const result = skyrimStages(q);
       if (result) {
-        totals.covered += result.stagesWithDialogue;
-        totals.total += result.stageCount;
+        totals.covered += result.matched;
+        totals.total += result.total;
       }
       return totals;
     },
@@ -348,10 +389,10 @@ export function ProgressDashboard({
     .filter((q) => !isPluginIgnored(q.id))
     .reduce(
       (totals, q) => {
-        const result = pluginCoverage[q.id];
+        const result = pluginStages(q.id);
         if (result) {
-          totals.covered += result.covered;
-          totals.total += result.stageCount;
+          totals.covered += result.matched;
+          totals.total += result.total;
         }
         return totals;
       },
@@ -448,7 +489,8 @@ export function ProgressDashboard({
                     {group.label} <span>{group.quests.length}</span>
                   </h3>
                   {group.quests.map((q) => {
-                    const result = coverage[key(q)];
+                    const result = coverage[key(q)],
+                      active = skyrimStages(q);
                     return (
                       <div
                         className={`progress-quest-row skyrim-progress-row ${ignoredSkyrim?.includes(key(q)) ? 'is-ignored' : ''}`}
@@ -472,9 +514,10 @@ export function ProgressDashboard({
                                 : result.covered === 0
                                   ? 'No dialogue with a direct quest condition'
                                   : `${result.covered} ${result.covered === 1 ? 'dialogue' : 'dialogues'} with a direct quest condition`}
-                            {result && result.stageCount > 0
-                              ? ` · ${result.stagesWithDialogue} of ${result.stageCount} stages matched`
+                            {active && result && result.stageCount > 0
+                              ? ` · ${active.matched} of ${active.total} stages matched`
                               : ''}
+                            {active && active.ignored > 0 ? ` · ${active.ignored} ignored` : ''}
                           </span>
                         </div>
                         <label className="progress-ignore">
@@ -486,25 +529,21 @@ export function ProgressDashboard({
                           />
                           <span>Ignore</span>
                         </label>
-                        {result && result.stageCount > 0 && (
+                        {active && active.total > 0 && (
                           <div className="progress-quest-meter">
                             <div
                               className="progress-track"
                               role="progressbar"
                               aria-label={`${q.name || q.id}: stages matched by direct GetStage comparisons`}
                               aria-valuemin={0}
-                              aria-valuemax={result.stageCount}
-                              aria-valuenow={result.stagesWithDialogue}
+                              aria-valuemax={active.total}
+                              aria-valuenow={active.matched}
                             >
                               <span
-                                style={{
-                                  width: `${Math.round((result.stagesWithDialogue / result.stageCount) * 100)}%`,
-                                }}
+                                style={{ width: `${Math.round((active.matched / active.total) * 100)}%` }}
                               />
                             </div>
-                            <strong>
-                              {Math.round((result.stagesWithDialogue / result.stageCount) * 100)}%
-                            </strong>
+                            <strong>{Math.round((active.matched / active.total) * 100)}%</strong>
                           </div>
                         )}
                       </div>
@@ -540,8 +579,9 @@ export function ProgressDashboard({
                   </h3>
                   {group.quests.map((q) => {
                     const found = pluginCoverage[q.id],
-                      covered = found?.covered ?? 0,
-                      stageCount = found?.stageCount ?? 0,
+                      active = pluginStages(q.id),
+                      covered = active?.matched ?? 0,
+                      stageCount = active?.total ?? 0,
                       percent = stageCount ? Math.round((covered / stageCount) * 100) : 0;
                     return (
                       <div
@@ -563,9 +603,10 @@ export function ProgressDashboard({
                                 : 'Not analyzed'
                               : found === null
                                 ? 'Could not analyze dialogue'
-                                : !stageCount
+                                : !found.stageCount
                                   ? 'No stages found'
                                   : `${covered} with dialogue · ${stageCount - covered} without direct dialogue`}
+                            {active && active.ignored > 0 ? ` · ${active.ignored} ignored` : ''}
                           </span>
                         </div>
                         <label className="progress-ignore">

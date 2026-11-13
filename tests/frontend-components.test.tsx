@@ -26,6 +26,21 @@ test('QuestCoverage reports covered stages and renders nothing without stages', 
   assert.equal(renderToStaticMarkup(<QuestCoverage stages={[]} />), '');
 });
 
+test('QuestCoverage leaves ignored stages out of the percentage', () => {
+  const html = renderToStaticMarkup(
+    <QuestCoverage
+      stages={[
+        { number: 10, lines: [1] },
+        { number: 20, lines: [] },
+        { number: 30, lines: [1, 2] },
+      ]}
+      isIgnored={(stage) => stage.number === 20}
+    />,
+  );
+  assert.match(html, /Stages with direct dialogue · 2 of 2 · 1 ignored/);
+  assert.match(html, /<strong>100%<\/strong>/);
+});
+
 test('NpcSelector lists NPCs, marks selected ones and flags missing selections', () => {
   const npcs = [
     { formId: '0001A2B3', editorId: 'BjornNPC', name: 'Bjorn' },

@@ -3,6 +3,7 @@ import { DialogueEntry, type VoiceChoice } from './DialogueEntry';
 import { AllQuestsBrowser } from './AllQuestsBrowser';
 import { StageObjectives } from './StageObjectives';
 import { QuestCoverage } from './QuestCoverage';
+import { StageIgnoreToggle, gameStageKey, useIgnoredStages } from './ignoredStages';
 import { useEffect, useMemo, useState } from 'react';
 import { Search } from 'lucide-react';
 import type { CatalogQuest, PluginQuest } from '../../shared/types';
@@ -215,6 +216,7 @@ export function SkyrimQuestBrowser({
       ? groupStageDialogues(resolved.stages, resolved.formId, lines)
       : [...resolved.stages].sort((a, b) => a - b).map((number) => ({ number, lines: [] as Line[] }));
   }, [game, lines]);
+  const ignoredStages = useIgnoredStages(projectId);
   const objectives = useMemo(() => objectiveStageMap(chosenQuest?.stages ?? []), [chosenQuest]);
   const objectiveStages = useMemo(() => new Set(objectives.keys()), [objectives]);
   const stageOptions = filterStageDialogues(stages, '', status, '', objectiveStages);
@@ -314,7 +316,19 @@ export function SkyrimQuestBrowser({
               />
             </div>
           </div>
-          {!detailLoading && !detailError && game?.resolved?.formId && <QuestCoverage stages={stages} />}
+          {!detailLoading && !detailError && game?.resolved?.formId && (
+            <QuestCoverage
+              stages={stages}
+              isIgnored={(s) =>
+                ignoredStages.isIgnored(gameStageKey(chosenQuest.plugin, chosenQuest.id), s.number)
+              }
+            />
+          )}
+          {ignoredStages.error && (
+            <p className="error" role="alert">
+              {ignoredStages.error}
+            </p>
+          )}
           {detailLoading ? (
             <p className="muted">Loading quest stages…</p>
           ) : detailError ? (
@@ -342,12 +356,24 @@ export function SkyrimQuestBrowser({
               )}
               <div className="skyrim-stage-list">
                 {visible.map((item) => (
-                  <section className="panel skyrim-stage" key={item.number}>
+                  <section
+                    className={`panel skyrim-stage ${ignoredStages.isIgnored(gameStageKey(chosenQuest.plugin, chosenQuest.id), item.number) ? 'is-ignored' : ''}`}
+                    key={item.number}
+                  >
                     <div className="skyrim-stage-heading">
                       <div>
                         <strong>Stage {item.number}</strong>
                       </div>
                       <div className="stage-actions">
+                        <StageIgnoreToggle
+                          ignored={ignoredStages.isIgnored(
+                            gameStageKey(chosenQuest.plugin, chosenQuest.id),
+                            item.number,
+                          )}
+                          stages={ignoredStages}
+                          questKey={gameStageKey(chosenQuest.plugin, chosenQuest.id)}
+                          stage={item.number}
+                        />
                         <span>
                           {!game?.resolved?.formId
                             ? 'Not analyzed'

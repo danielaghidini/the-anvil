@@ -17,6 +17,9 @@ export function createStore(file: string) {
     `CREATE TABLE IF NOT EXISTS ignored_skyrim_quests (project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE, quest_key TEXT NOT NULL COLLATE NOCASE, PRIMARY KEY(project_id,quest_key));`,
   );
   db.exec(
+    `CREATE TABLE IF NOT EXISTS ignored_quest_stages (project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE, quest_key TEXT NOT NULL COLLATE NOCASE, stage INTEGER NOT NULL, PRIMARY KEY(project_id,quest_key,stage));`,
+  );
+  db.exec(
     `CREATE TABLE IF NOT EXISTS sync_dialogue_baseline (project_id INTEGER PRIMARY KEY REFERENCES projects(id) ON DELETE CASCADE, data TEXT NOT NULL);`,
   );
   db.exec(
@@ -128,6 +131,25 @@ export function createStore(file: string) {
           key,
         );
       else db.prepare('DELETE FROM ignored_skyrim_quests WHERE project_id=? AND quest_key=?').run(id, key);
+    },
+    ignoredQuestStages(id: number) {
+      return db
+        .prepare(
+          'SELECT quest_key AS questKey,stage FROM ignored_quest_stages WHERE project_id=? ORDER BY quest_key,stage',
+        )
+        .all(id) as { questKey: string; stage: number }[];
+    },
+    setQuestStageIgnored(id: number, key: string, stage: number, ignored: boolean) {
+      if (ignored)
+        db.prepare(
+          'INSERT OR IGNORE INTO ignored_quest_stages(project_id,quest_key,stage) VALUES(?,?,?)',
+        ).run(id, key, stage);
+      else
+        db.prepare('DELETE FROM ignored_quest_stages WHERE project_id=? AND quest_key=? AND stage=?').run(
+          id,
+          key,
+          stage,
+        );
     },
     progressCache(id: number) {
       const row = db

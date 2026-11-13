@@ -8,6 +8,7 @@ import { filterStageDialogues, groupStageDialogues, objectiveStageMap } from '..
 import { AssignmentSelect, label } from './QuestDashboard';
 import { QuestCoverage } from './QuestCoverage';
 import { StageObjectives } from './StageObjectives';
+import { StageIgnoreToggle, gameStageKey, pluginStageKey, useIgnoredStages } from './ignoredStages';
 
 type Line = {
   info: string;
@@ -164,6 +165,7 @@ export function AllQuestsBrowser(props: Props) {
               : [];
           return {
             id: gameKey(game),
+            stageKey: gameStageKey(game.plugin, game.id),
             title: game.name || game.id,
             group: label(game.group),
             stages,
@@ -188,6 +190,7 @@ export function AllQuestsBrowser(props: Props) {
           );
         return {
           id: mod.id,
+          stageKey: pluginStageKey(mod.id),
           title: mod.name || mod.id,
           group: '',
           stages: result && !result.error ? groupStageDialogues(mod.stages, mod.formId, result.lines) : [],
@@ -214,7 +217,10 @@ export function AllQuestsBrowser(props: Props) {
       ].sort((a, b) => a - b),
     [entries, status],
   );
-  const allStages = entries.filter((e) => e.canMatch).flatMap((e) => e.stages);
+  const ignoredStages = useIgnoredStages(props.projectId);
+  const allStages = entries
+    .filter((e) => e.canMatch)
+    .flatMap((e) => e.stages.map((s) => ({ ...s, ignored: ignoredStages.isIgnored(e.stageKey, s.number) })));
   return (
     <>
       <div className="skyrim-toolbar">
@@ -256,7 +262,12 @@ export function AllQuestsBrowser(props: Props) {
           />
         </div>
       </div>
-      <QuestCoverage stages={allStages} />
+      <QuestCoverage stages={allStages} isIgnored={(s) => (s as { ignored?: boolean }).ignored === true} />
+      {ignoredStages.error && (
+        <p className="error" role="alert">
+          {ignoredStages.error}
+        </p>
+      )}
       <p className="skyrim-results-caption">
         {props.quests.length} quests ·{' '}
         {loaded < props.quests.length ? `Loading ${loaded} of ${props.quests.length}…` : 'All quests loaded'}
@@ -292,10 +303,21 @@ export function AllQuestsBrowser(props: Props) {
               ) : (
                 <div className="skyrim-stage-list">
                   {visible.map((item) => (
-                    <section className="panel skyrim-stage" key={item.number}>
+                    <section
+                      className={`panel skyrim-stage ${ignoredStages.isIgnored(entry.stageKey, item.number) ? 'is-ignored' : ''}`}
+                      key={item.number}
+                    >
                       <div className="skyrim-stage-heading">
                         <strong>Stage {item.number}</strong>
                         <div className="stage-actions">
+                          {entry.canMatch && (
+                            <StageIgnoreToggle
+                              ignored={ignoredStages.isIgnored(entry.stageKey, item.number)}
+                              stages={ignoredStages}
+                              questKey={entry.stageKey}
+                              stage={item.number}
+                            />
+                          )}
                           <span>
                             {item.lines.length
                               ? `${item.lines.length} ${item.lines.length === 1 ? 'dialogue' : 'dialogues'}`
