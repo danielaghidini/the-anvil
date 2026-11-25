@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { createStageDialogue } from '../backend/src/stage-dialogue.mjs';
+import { buildStageDialogue, createStageDialogue, scan, subrecords } from '../backend/src/stage-dialogue.mjs';
+import { editDialogue } from '../backend/src/dialogue-edit.mjs';
 import { parseDialogue } from '../backend/src/quest-dialogue.js';
 const sub = (name: string, data: Buffer) => {
   const h = Buffer.alloc(6);
@@ -77,10 +78,95 @@ test('adds a stage-gated idle and preserves the original backup', () => {
     const lines = parseDialogue(readFileSync(file), '01000800');
     const added = lines.find((x) => x.text === 'A new line.');
     assert.equal(added?.info, '01000900');
+    assert.equal(added?.sayOnce, true);
+    assert.equal(added?.resetHours, 0);
     assert.deepEqual(added?.conditions, [
       { function: 'GetStage', questFormId: '00012345', operator: '=', value: 10, or: false },
     ]);
     assert.equal(lines.length, 2);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+test('new dialogue stores selected timing without changing the Random flag or stage condition', () => {
+  const { modified, info } = buildStageDialogue(fixture(), {
+    text: 'A repeatable line.',
+    type: 'IDLE',
+    ownerFormId: '01000800',
+    speakerFormId: '01000810',
+    gameFormId: '00012345',
+    stage: 10,
+    resetHours: 6,
+    sayOnce: false,
+  });
+  const line = parseDialogue(modified, '01000800').find((line) => line.info === info.toUpperCase())!;
+  assert.equal(line.sayOnce, false);
+  assert.ok(Math.abs(line.resetHours! - 6) < 0.0002);
+  assert.equal(line.conditions[0].value, 10);
+  const data = scan(modified).find((record) => record.type === 'INFO' && record.id === parseInt(info, 16))!;
+  assert.ok('data' in data);
+  const flags = subrecords(data.data).find((part) => part.type === 'ENAM')!.value;
+  assert.equal(flags.readUInt16LE(0), 2);
+});
+
+test('keeps a scripted line pending through text edits and removes only its review condition on approval', () => {
+  const dir = mkdtempSync(path.join(tmpdir(), 'stage-review-'));
+  try {
+    const file = path.join(dir, 'test.esp');
+    const backup = path.join(dir, 'backup');
+    const staged = buildStageDialogue(fixture(), {
+      text: 'A draft.',
+      type: 'IDLE',
+      ownerFormId: '01000800',
+      speakerFormId: '01000810',
+      gameFormId: '00012345',
+      stage: 10,
+      pendingVoice: true,
+      locations: ['000ABC01', '000ABC02'],
+      outdoors: true,
+    });
+    writeFileSync(file, staged.modified);
+    const read = () => parseDialogue(readFileSync(file), '01000800')[1]!;
+    const responseFields = () => {
+      const record = scan(readFileSync(file)).find(
+        (entry) => entry.type === 'INFO' && 'id' in entry && entry.id === Number.parseInt(staged.info, 16),
+      );
+      assert.ok(record && 'data' in record);
+      return subrecords(record.data);
+    };
+    const locations = () =>
+      responseFields()
+        .filter((item) => item.type === 'CTDA' && [300, 359].includes(item.value.readUInt16LE(8)))
+        .map(({ value }) => [value.readUInt16LE(8), value[0], value.readFloatLE(4), value.readUInt32LE(12)]);
+    const expectedLocations = [
+      [359, 1, 1, 0x000abc01],
+      [359, 0, 1, 0x000abc02],
+      [300, 0, 0, 0],
+    ];
+    assert.deepEqual(locations(), expectedLocations);
+    assert.equal(
+      responseFields()
+        .find((item) => item.type === 'ENAM')
+        ?.value.readUInt32LE(),
+      0x06,
+    );
+    assert.equal(read().pendingVoice, true);
+    const response = { questFormId: '01000800', info: staged.info, response: 1 };
+    editDialogue(file, backup, { ...response, text: 'A revision.', expectedText: 'A draft.' }, () => {});
+    const pending = read();
+    assert.equal(pending.text, 'A revision.');
+    assert.equal(pending.pendingVoice, true);
+    const approval = { ...response, text: pending.text, expectedText: pending.text };
+    const result = editDialogue(file, backup, approval, () => {}, true);
+    const approved = read();
+    assert.equal(approved.pendingVoice, undefined);
+    assert.deepEqual(approved.conditions, pending.conditions);
+    assert.equal(approved.text, pending.text);
+    assert.equal(approved.speaker, pending.speaker);
+    assert.equal(approved.topicType, pending.topicType);
+    assert.deepEqual(locations(), expectedLocations);
+    assert.equal(parseDialogue(readFileSync(result.backup!), '01000800')[1]?.pendingVoice, true);
+    assert.throws(() => editDialogue(file, backup, approval, () => {}, true), /no longer pending/);
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }

@@ -4,6 +4,8 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { AddIdleDialog } from '../frontend/src/AddIdleDialog';
 import { NpcSelector } from '../frontend/src/NpcSelector';
 import { QuestCoverage } from '../frontend/src/QuestCoverage';
+import { moveQuest, sortQuests } from '../frontend/src/questOrder';
+import { stageRanges } from '../frontend/src/stageRanges';
 
 const noop = () => {};
 const count = (html: string, pattern: RegExp) => html.match(new RegExp(pattern, 'g'))?.length ?? 0;
@@ -112,4 +114,42 @@ test('AddIdleDialog shows a fixed destination for one quest and a picker for sev
   assert.doesNotMatch(many, /idle-destination/);
   assert.match(many, /aria-label="Destination quest"/);
   assert.match(many, />QuestB</);
+});
+
+test('sortQuests prefers the manual order, then the detected order', () => {
+  const quests = ['A', 'B', 'C', 'D'].map((id) => ({ id, formId: id, stages: [] }));
+  assert.deepEqual(
+    sortQuests(quests, ['C', 'A', 'B']).map((q) => q.id),
+    ['C', 'A', 'B', 'D'],
+  );
+  assert.deepEqual(
+    sortQuests(quests, ['C', 'A', 'B'], ['b', 'd']).map((q) => q.id),
+    ['B', 'D', 'C', 'A'],
+  );
+});
+
+test('moveQuest moves a quest past its visible neighbor', () => {
+  const order = ['A', 'X', 'B', 'C'];
+  assert.deepEqual(moveQuest(order, ['A', 'B', 'C'], 'B', -1), ['B', 'A', 'X', 'C']);
+  assert.deepEqual(moveQuest(order, ['A', 'B', 'C'], 'A', 1), ['X', 'B', 'A', 'C']);
+  assert.equal(moveQuest(order, ['A', 'B', 'C'], 'A', -1), null);
+});
+
+test('stageRanges shows a multi-stage line in full only in the first visible stage', () => {
+  const shared = { text: 'To think...' },
+    single = { text: 'Only here' };
+  const all = [
+    { number: 0, lines: [shared] },
+    { number: 5, lines: [shared, single] },
+    { number: 30, lines: [shared] },
+  ];
+  const ranges = stageRanges(all, all);
+  assert.equal(ranges.label(shared), '3 stages: 0–30');
+  assert.equal(ranges.label(single), undefined);
+  assert.equal(ranges.shownIn(shared, 0), undefined);
+  assert.equal(ranges.shownIn(shared, 30), 0);
+  // With stage 0 filtered out, the next visible stage shows the line in full.
+  const filtered = stageRanges(all, all.slice(1));
+  assert.equal(filtered.shownIn(shared, 5), undefined);
+  assert.equal(filtered.shownIn(shared, 30), 5);
 });

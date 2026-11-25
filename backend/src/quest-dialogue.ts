@@ -4,9 +4,13 @@ import { readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { inflateSync } from 'node:zlib';
 import type { PluginSnapshot } from '../../shared/types.js';
+import { isDraftGate } from './stage-dialogue.mjs';
+import { isCombatDialogue } from '../../shared/combat-dialogue.js';
+import { readDialogueTiming } from './dialogue-timing.mjs';
+import type { DialogueTimingFields } from '../../shared/dialogue-timing.js';
 type RecordEntry = { type: string; id: number; topic?: number; data: Buffer };
 type Field = [string, Buffer];
-function* fields(data: Buffer): Generator<Field> {
+export function* fields(data: Buffer): Generator<Field> {
   let p = 0,
     large: number | undefined;
   while (p < data.length) {
@@ -27,7 +31,7 @@ function* fields(data: Buffer): Generator<Field> {
     p = end;
   }
 }
-function* records(
+export function* records(
   b: Buffer,
   start = 0,
   end = b.length,
@@ -65,12 +69,15 @@ function string(b: Buffer) {
 function first(f: Field[], name: string) {
   return f.find(([type]) => type === name)?.[1];
 }
-export interface DialogueLine {
+export interface DialogueLine extends DialogueTimingFields {
   info: string;
   response: number;
   text: string;
   topicType: string;
+  topicCategory?: number;
+  topicEditorId?: string;
   speaker?: string;
+  pendingVoice?: boolean;
   emotionType?: number;
   emotionValue?: number;
   conditionSignature?: string;
@@ -85,7 +92,7 @@ export interface DialogueLine {
 }
 export function parseAllDialogue(buffer: Buffer): Map<string, DialogueLine[]> {
   const entries = [...records(buffer)],
-    topics = new Map<number, { owner: string; type: string }>();
+    topics = new Map<number, { owner: string; type: string; editorId: string; category?: number }>();
   for (const rec of entries) {
     if (rec.type !== 'DIAL') continue;
     const f = [...fields(rec.data)],
@@ -94,6 +101,8 @@ export function parseAllDialogue(buffer: Buffer): Map<string, DialogueLine[]> {
       topics.set(rec.id, {
         owner: owner.readUInt32LE().toString(16).padStart(8, '0').toUpperCase(),
         type: string(first(f, 'SNAM') ?? Buffer.alloc(0)) || 'Dialogue',
+        category: first(f, 'DATA')?.[1],
+        editorId: string(first(f, 'EDID') ?? Buffer.alloc(0)),
       });
   }
   const ops = ['=', '≠', '>', '≥', '<', '≤'],
@@ -104,6 +113,9 @@ export function parseAllDialogue(buffer: Buffer): Map<string, DialogueLine[]> {
     if (!topic) continue;
     const f = [...fields(rec.data)],
       conditions: DialogueLine['conditions'] = [];
+    const pendingVoice = f.some(([type, value]) => type === 'CTDA' && isDraftGate(value));
+    const timing = readDialogueTiming(first(f, 'ENAM'), first(f, 'DATA'));
+    const responseCount = f.filter(([type]) => type === 'TRDT').length;
     for (const [type, value] of f) {
       if (type !== 'CTDA' || value.length < 32) continue;
       const fn = value.readUInt16LE(8);
@@ -119,7 +131,18 @@ export function parseAllDialogue(buffer: Buffer): Map<string, DialogueLine[]> {
         or: Boolean(value[0] & 1),
       });
     }
-    const conditionFields = f.filter(([kind]) => kind === 'CTDA').map(([, value]) => value);
+    const conditionFields: Buffer[] = [];
+    for (const [kind, value] of f) {
+      if (kind === 'CTDA') conditionFields.push(Buffer.from(value));
+      else if ((kind === 'CIS1' || kind === 'CIS2') && conditionFields.length) {
+        // A string parameter lives in CIS1/CIS2. The Creation Kit fills the matching CTDA parameter
+        // slot with a memory address that changes on every save, so hash the string instead.
+        const last = conditionFields[conditionFields.length - 1],
+          slot = kind === 'CIS1' ? 12 : 16;
+        if (last.length >= slot + 4) last.fill(0, slot, slot + 4);
+        conditionFields.push(Buffer.from(kind), value);
+      }
+    }
     const conditionSignature = conditionFields.length
       ? createHash('sha256').update(Buffer.concat(conditionFields)).digest('hex')
       : undefined;
@@ -136,14 +159,20 @@ export function parseAllDialogue(buffer: Buffer): Map<string, DialogueLine[]> {
         emotionValue = value.length >= 8 ? value.readUInt32LE(4) : undefined;
       } else if (type === 'NAM1' && number !== undefined) {
         const text = string(value).trim();
-        if (text) {
+        if (text || isCombatDialogue({ topicType: topic.type, topicCategory: topic.category })) {
           const lines = result.get(topic.owner) ?? [];
           lines.push({
             info: rec.id.toString(16).padStart(8, '0').toUpperCase(),
             response: number,
             text,
             topicType: topic.type,
+            ...(timing ?? {}),
+            timingEditable: !!timing && !(first(f, 'ENAM') && first(f, 'DATA')),
+            responseCount,
+            ...(topic.category !== undefined ? { topicCategory: topic.category } : {}),
+            topicEditorId: topic.editorId,
             ...(speaker ? { speaker } : {}),
+            ...(pendingVoice ? { pendingVoice } : {}),
             ...(emotionType ? { emotionType } : {}),
             ...(emotionValue ? { emotionValue } : {}),
             ...(conditionSignature ? { conditionSignature } : {}),
@@ -161,7 +190,7 @@ export function parseDialogue(buffer: Buffer, questFormId: string): DialogueLine
   return parseAllDialogue(buffer).get(questFormId.toUpperCase()) ?? [];
 }
 const dialogueCache = new Map<string, { stamp: string; value: Promise<Map<string, DialogueLine[]>> }>();
-export async function readDialogue(file: string, questFormId: string) {
+export async function readAllDialogue(file: string) {
   const info = await stat(file),
     stamp = `${info.size}:${info.mtimeMs}`,
     cached = dialogueCache.get(file);
@@ -173,7 +202,10 @@ export async function readDialogue(file: string, questFormId: string) {
       if (dialogueCache.get(file)?.value === value) dialogueCache.delete(file);
     });
   }
-  return (await value).get(questFormId.toUpperCase()) ?? [];
+  return value;
+}
+export async function readDialogue(file: string, questFormId: string) {
+  return (await readAllDialogue(file)).get(questFormId.toUpperCase()) ?? [];
 }
 type QuestIndex = { masters: string[]; localized: boolean; quests: Map<string, RecordEntry> };
 const questIndexCache = new Map<string, { stamp: string; index: Promise<QuestIndex> }>();

@@ -1,6 +1,6 @@
 import { stageMatchesDirectConditions } from '../../shared/stage-match';
 import { useEffect, useRef, useState } from 'react';
-import { ChevronDown, ChevronRight, Link2, Search, X } from 'lucide-react';
+import { ArrowDown, ArrowUp, Check, ChevronDown, ChevronRight, Link2, Pencil, Search, X } from 'lucide-react';
 import type { CatalogQuest, PluginQuest } from '../../shared/types';
 type Character = { id: number; name: string };
 type Links = {
@@ -73,6 +73,7 @@ export function AssignmentSelect({
   onAddCharacter,
   onRemoveCharacter,
   placeholderLast = false,
+  hidePlaceholder = false,
 }: {
   value: string;
   placeholder: string;
@@ -82,6 +83,7 @@ export function AssignmentSelect({
   onAddCharacter?: () => void;
   onRemoveCharacter?: () => void;
   placeholderLast?: boolean;
+  hidePlaceholder?: boolean;
 }) {
   const ref = useRef<HTMLDetailsElement>(null);
   const chosen = options.find((option) => option.value === value);
@@ -110,7 +112,7 @@ export function AssignmentSelect({
         <ChevronDown size={17} aria-hidden="true" />
       </summary>
       <div className="assignment-options">
-        {!placeholderLast && (
+        {!placeholderLast && !hidePlaceholder && (
           <button
             type="button"
             disabled={disabled}
@@ -139,7 +141,7 @@ export function AssignmentSelect({
             {option.label}
           </button>
         ))}
-        {placeholderLast && (
+        {placeholderLast && !hidePlaceholder && (
           <button
             type="button"
             disabled={disabled}
@@ -196,6 +198,8 @@ export function QuestDashboard({
   onCountsChange,
   onAddFollower,
   onOpenSetup,
+  order,
+  onRename,
 }: {
   projectId: number;
   quests: PluginQuest[];
@@ -214,6 +218,14 @@ export function QuestDashboard({
   }) => void;
   onAddFollower: () => void;
   onOpenSetup: () => void;
+  /** Lets the user arrange quests; omitted where order does not apply. */
+  order?: {
+    custom: boolean;
+    error: string;
+    onMove: (questId: string, direction: -1 | 1, visible: string[]) => void;
+    onReset: () => void;
+  };
+  onRename?: (questId: string, name: string) => Promise<void>;
 }) {
   const [modFilter, setModFilter] = useState<'all' | 'main' | 'side' | 'misc' | 'unassigned'>('all');
   const [loaded, setLoaded] = useState(false);
@@ -386,36 +398,90 @@ export function QuestDashboard({
       <div className="dashboard-caption">
         {filtered.length} {filtered.length === 1 ? 'quest' : 'quests'}
         {setup ? ' to organize' : ''}
+        {order && (
+          <span className="quest-order-status">
+            {order.custom ? 'Custom order' : 'Order detected from plugin scripts'}
+            {order.custom && (
+              <button type="button" className="link-button" onClick={order.onReset}>
+                Reset to detected order
+              </button>
+            )}
+          </span>
+        )}
       </div>
+      {order?.error && (
+        <p className="error" role="alert">
+          {order.error}
+        </p>
+      )}
       <div className="dashboard-list">
-        {filtered.map((q) => (
-          <QuestCard
+        {filtered.map((q, index) => (
+          <div
+            className={order && !filter ? 'quest-order-row' : 'quest-order-row is-plain'}
             key={`${projectId}:${q.formId}`}
-            projectId={projectId}
-            quest={q}
-            characters={characters}
-            catalog={catalog}
-            linkedMod={links.mods.some((x) => x.questId === q.id)}
-            linkedModGroup={links.mods.find((x) => x.questId === q.id)?.modGroup ?? ''}
-            linkedCharacters={links.characters.filter((x) => x.questId === q.id).map((x) => x.characterId)}
-            linkedGroups={links.groups.filter((x) => x.questId === q.id)}
-            linkedGames={links.games.filter((x) => x.questId === q.id)}
-            open={setup || expanded === q.id}
-            setup={setup}
-            pending={pending}
-            onToggle={() => {
-              setExpanded(expanded === q.id ? null : q.id);
-              onQuestContext(null);
-            }}
-            onPicker={() => {
-              setSearch('');
-              setPicker(q.id);
-            }}
-            onLink={link}
-            onAssign={assign}
-            onAddFollower={onAddFollower}
-            onQuestContext={onQuestContext}
-          />
+          >
+            {order && !filter && (
+              <div className="quest-order-buttons">
+                <button
+                  type="button"
+                  className="icon-button"
+                  aria-label={`Move ${q.name || q.id} up`}
+                  disabled={index === 0}
+                  onClick={() =>
+                    order.onMove(
+                      q.id,
+                      -1,
+                      filtered.map((x) => x.id),
+                    )
+                  }
+                >
+                  <ArrowUp size={16} aria-hidden="true" />
+                </button>
+                <button
+                  type="button"
+                  className="icon-button"
+                  aria-label={`Move ${q.name || q.id} down`}
+                  disabled={index === filtered.length - 1}
+                  onClick={() =>
+                    order.onMove(
+                      q.id,
+                      1,
+                      filtered.map((x) => x.id),
+                    )
+                  }
+                >
+                  <ArrowDown size={16} aria-hidden="true" />
+                </button>
+              </div>
+            )}
+            <QuestCard
+              projectId={projectId}
+              quest={q}
+              characters={characters}
+              catalog={catalog}
+              linkedMod={links.mods.some((x) => x.questId === q.id)}
+              linkedModGroup={links.mods.find((x) => x.questId === q.id)?.modGroup ?? ''}
+              linkedCharacters={links.characters.filter((x) => x.questId === q.id).map((x) => x.characterId)}
+              linkedGroups={links.groups.filter((x) => x.questId === q.id)}
+              linkedGames={links.games.filter((x) => x.questId === q.id)}
+              open={setup || expanded === q.id}
+              setup={setup}
+              pending={pending}
+              onToggle={() => {
+                setExpanded(expanded === q.id ? null : q.id);
+                onQuestContext(null);
+              }}
+              onPicker={() => {
+                setSearch('');
+                setPicker(q.id);
+              }}
+              onLink={link}
+              onAssign={assign}
+              onAddFollower={onAddFollower}
+              onQuestContext={onQuestContext}
+              onRename={onRename}
+            />
+          </div>
         ))}
         {loaded && !filtered.length && (
           <div className="empty quest-list-empty">
@@ -523,6 +589,7 @@ function QuestCard({
   onAssign,
   onAddFollower,
   onQuestContext,
+  onRename,
 }: {
   projectId: number;
   quest: PluginQuest;
@@ -542,6 +609,7 @@ function QuestCard({
   onAssign: (body: object) => Promise<boolean>;
   onAddFollower: () => void;
   onQuestContext: (q: CatalogQuest | null) => void;
+  onRename?: (questId: string, name: string) => Promise<void>;
 }) {
   const [draftCharacter, setDraftCharacter] = useState(''),
     [draftGroup, setDraftGroup] = useState(''),
@@ -629,29 +697,113 @@ function QuestCard({
   const groupQuests = (catalog?.quests ?? []).filter(
     (q) => q.group === selectedGroup && `${q.id} ${q.name}`.toLowerCase().includes(groupSearch.toLowerCase()),
   );
+  const [renaming, setRenaming] = useState(false),
+    [nameDraft, setNameDraft] = useState(''),
+    [nameSaving, setNameSaving] = useState(false),
+    [nameError, setNameError] = useState('');
+  async function saveName() {
+    if (!onRename) return;
+    const name = nameDraft.trim().replace(/\s+/g, ' '),
+      renamed = quest.pluginName !== undefined,
+      pluginName = renamed ? quest.pluginName : (quest.name ?? '');
+    // Typing the plugin's own name back, or leaving it empty, restores it.
+    const value = name === pluginName ? '' : name;
+    if ((renamed ? quest.name : '') === value) {
+      setRenaming(false);
+      return;
+    }
+    setNameSaving(true);
+    setNameError('');
+    try {
+      await onRename(quest.id, value);
+      setRenaming(false);
+    } catch {
+      setNameError('Could not save the name. Try again.');
+    } finally {
+      setNameSaving(false);
+    }
+  }
+  const heading = (
+    <span>
+      <strong>{quest.name || quest.id}</strong>
+      <small>
+        {quest.name ? `${quest.id} · ` : ''}
+        {quest.formId} · {quest.stages.length} stages
+        {quest.pluginName !== undefined ? ' · renamed' : ''}
+      </small>
+    </span>
+  );
   return (
     <section className={`panel dashboard-card ${open ? 'is-open' : ''}`}>
-      {setup ? (
-        <div className="dashboard-card-heading">
+      {renaming ? (
+        <form
+          className="dashboard-card-heading quest-rename"
+          onSubmit={(e) => {
+            e.preventDefault();
+            void saveName();
+          }}
+        >
           <span>
-            <strong>{quest.name || quest.id}</strong>
-            <small>
-              {quest.name ? `${quest.id} � ` : ''}
-              {quest.formId} · {quest.stages.length} stages
+            <input
+              autoFocus
+              aria-label={`New name for ${quest.id}`}
+              value={nameDraft}
+              maxLength={120}
+              placeholder={quest.pluginName || quest.id}
+              disabled={nameSaving}
+              onChange={(e) => setNameDraft(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') setRenaming(false);
+              }}
+            />
+            <small className={nameError ? 'quest-rename-error' : undefined}>
+              {nameError ||
+                (quest.pluginName !== undefined
+                  ? `Plugin name: ${quest.pluginName || quest.id} · leave empty to restore it`
+                  : 'Only changes the name in this app, not in the plugin.')}
             </small>
           </span>
-        </div>
+          <span className="quest-rename-actions">
+            <button type="submit" className="icon-button" aria-label="Save name" disabled={nameSaving}>
+              <Check size={17} aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              className="icon-button"
+              aria-label="Cancel renaming"
+              disabled={nameSaving}
+              onClick={() => setRenaming(false)}
+            >
+              <X size={17} aria-hidden="true" />
+            </button>
+          </span>
+        </form>
       ) : (
-        <button className="dashboard-card-heading" type="button" onClick={onToggle} aria-expanded={open}>
-          <span>
-            <strong>{quest.name || quest.id}</strong>
-            <small>
-              {quest.name ? `${quest.id} � ` : ''}
-              {quest.formId} · {quest.stages.length} stages
-            </small>
-          </span>
-          {open ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
-        </button>
+        <div className="quest-card-title-row">
+          {setup ? (
+            <div className="dashboard-card-heading">{heading}</div>
+          ) : (
+            <button className="dashboard-card-heading" type="button" onClick={onToggle} aria-expanded={open}>
+              {heading}
+              {open ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
+            </button>
+          )}
+          {onRename && (
+            <button
+              type="button"
+              className="icon-button quest-rename-button"
+              aria-label={`Rename ${quest.name || quest.id}`}
+              title="Rename quest"
+              onClick={() => {
+                setNameDraft(quest.name ?? '');
+                setNameError('');
+                setRenaming(true);
+              }}
+            >
+              <Pencil size={15} aria-hidden="true" />
+            </button>
+          )}
+        </div>
       )}
       {open && (
         <div className="dashboard-card-body">

@@ -75,7 +75,7 @@ export function ModNpcs({
   return (
     <div className="mod-npcs">
       <div className="mod-npcs-intro">
-        <p>Manage your characters and link each one to an NPC in the project plugin.</p>
+        <p>Manage your characters and optionally link them to NPCs in the project plugin.</p>
         <button type="button" className="secondary" onClick={onAdd}>
           <Plus size={17} aria-hidden="true" /> Add character
         </button>
@@ -108,13 +108,12 @@ export function ModNpcs({
                       );
                     })
                   ) : (
-                    <p>No NPC linked yet.</p>
+                    <p>No plugin NPC linked.</p>
                   )}
                 </div>
                 <div className="mod-npc-actions">
                   <button className="secondary" type="button" onClick={() => edit(character)}>
-                    <Pencil size={16} aria-hidden="true" />{' '}
-                    {character.npcFormIds.length ? 'Edit' : 'Link NPC'}
+                    <Pencil size={16} aria-hidden="true" /> Edit
                   </button>
                   <button className="secondary" type="button" onClick={() => onRemove(character.id)}>
                     <Trash2 size={16} aria-hidden="true" /> Remove
@@ -159,6 +158,9 @@ export function ModNpcs({
                 />
               </label>
               <NpcSelector npcs={npcs} selected={npcFormIds} onChange={setNpcFormIds} />
+              <p className="hint">
+                NPC selection is optional for characters from the base game or other plugins.
+              </p>
               {!npcs.length && <p>No NPCs were found in this plugin.</p>}
               {editError && (
                 <p className="error" role="alert">
@@ -170,7 +172,7 @@ export function ModNpcs({
               <button type="button" className="secondary" disabled={busy} onClick={() => setEditing(null)}>
                 Cancel
               </button>
-              <button className="primary" disabled={busy || !npcFormIds.length}>
+              <button className="primary" disabled={busy || !name.trim()}>
                 {busy ? 'Saving…' : 'Save'}
               </button>
             </footer>

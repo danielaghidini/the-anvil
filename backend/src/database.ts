@@ -10,6 +10,11 @@ export function createStore(file: string) {
   db.exec(
     `CREATE TABLE IF NOT EXISTS character_synthetic_voice (character_id INTEGER PRIMARY KEY REFERENCES characters(id) ON DELETE CASCADE, voice_id TEXT NOT NULL);`,
   );
+  const voiceColumns = db.prepare('PRAGMA table_info(character_synthetic_voice)').all() as { name: string }[];
+  if (!voiceColumns.some((column) => column.name === 'model_id'))
+    db.exec(
+      "ALTER TABLE character_synthetic_voice ADD COLUMN model_id TEXT NOT NULL DEFAULT 'eleven_multilingual_v2'",
+    );
   db.exec(
     `CREATE TABLE IF NOT EXISTS ignored_plugin_quests (project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE, category TEXT NOT NULL, quest_id TEXT NOT NULL COLLATE NOCASE, PRIMARY KEY(project_id,category,quest_id));`,
   );
@@ -18,6 +23,12 @@ export function createStore(file: string) {
   );
   db.exec(
     `CREATE TABLE IF NOT EXISTS ignored_quest_stages (project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE, quest_key TEXT NOT NULL COLLATE NOCASE, stage INTEGER NOT NULL, PRIMARY KEY(project_id,quest_key,stage));`,
+  );
+  db.exec(
+    `CREATE TABLE IF NOT EXISTS quest_manual_order (project_id INTEGER PRIMARY KEY REFERENCES projects(id) ON DELETE CASCADE, data TEXT NOT NULL);`,
+  );
+  db.exec(
+    `CREATE TABLE IF NOT EXISTS quest_display_names (project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE, quest_id TEXT NOT NULL COLLATE NOCASE, name TEXT NOT NULL, PRIMARY KEY(project_id,quest_id));`,
   );
   db.exec(
     `CREATE TABLE IF NOT EXISTS sync_dialogue_baseline (project_id INTEGER PRIMARY KEY REFERENCES projects(id) ON DELETE CASCADE, data TEXT NOT NULL);`,
@@ -36,6 +47,8 @@ export function createStore(file: string) {
     db.exec("ALTER TABLE quest_mod_quests ADD COLUMN mod_group TEXT NOT NULL DEFAULT ''");
   const projectColumns = db.prepare('PRAGMA table_info(projects)').all() as { name: string }[];
   const characterColumns = db.prepare('PRAGMA table_info(characters)').all() as { name: string }[];
+  if (!characterColumns.some((column) => column.name === 'voice_folder'))
+    db.exec("ALTER TABLE characters ADD COLUMN voice_folder TEXT NOT NULL DEFAULT ''");
   if (!characterColumns.some((column) => column.name === 'npc_form_id'))
     db.exec('ALTER TABLE characters ADD COLUMN npc_form_id TEXT');
   if (!characterColumns.some((column) => column.name === 'npc_form_ids')) {
@@ -132,12 +145,50 @@ export function createStore(file: string) {
         );
       else db.prepare('DELETE FROM ignored_skyrim_quests WHERE project_id=? AND quest_key=?').run(id, key);
     },
+    /** Names the user gave quests in the app; the plugin itself is not changed. */
+    questDisplayNames(id: number) {
+      return db
+        .prepare(
+          'SELECT quest_id AS questId,name FROM quest_display_names WHERE project_id=? ORDER BY quest_id',
+        )
+        .all(id) as { questId: string; name: string }[];
+    },
+    setQuestDisplayName(id: number, questId: string, name: string) {
+      if (name)
+        db.prepare(
+          'INSERT INTO quest_display_names(project_id,quest_id,name) VALUES(?,?,?) ON CONFLICT(project_id,quest_id) DO UPDATE SET name=excluded.name',
+        ).run(id, questId, name);
+      else db.prepare('DELETE FROM quest_display_names WHERE project_id=? AND quest_id=?').run(id, questId);
+    },
+    /** Quest IDs in the order the user arranged them, or null when they use the detected order. */
+    questManualOrder(id: number): string[] | null {
+      const row = db.prepare('SELECT data FROM quest_manual_order WHERE project_id=?').get(id) as
+        { data: string } | undefined;
+      return row ? (JSON.parse(row.data) as string[]) : null;
+    },
+    saveQuestManualOrder(id: number, order: string[] | null) {
+      if (!order) db.prepare('DELETE FROM quest_manual_order WHERE project_id=?').run(id);
+      else
+        db.prepare(
+          'INSERT INTO quest_manual_order(project_id,data) VALUES(?,?) ON CONFLICT(project_id) DO UPDATE SET data=excluded.data',
+        ).run(id, JSON.stringify(order));
+    },
     ignoredQuestStages(id: number) {
       return db
         .prepare(
           'SELECT quest_key AS questKey,stage FROM ignored_quest_stages WHERE project_id=? ORDER BY quest_key,stage',
         )
         .all(id) as { questKey: string; stage: number }[];
+    },
+    setQuestStagesIgnored(id: number, key: string, stages: number[], ignored: boolean) {
+      db.exec('BEGIN');
+      try {
+        for (const stage of stages) this.setQuestStageIgnored(id, key, stage, ignored);
+        db.exec('COMMIT');
+      } catch (error) {
+        db.exec('ROLLBACK');
+        throw error;
+      }
     },
     setQuestStageIgnored(id: number, key: string, stage: number, ignored: boolean) {
       if (ignored)
@@ -181,6 +232,62 @@ export function createStore(file: string) {
       const row = db.prepare('SELECT snapshot FROM projects WHERE id=?').get(id) as
         { snapshot: string } | undefined;
       return row ? (JSON.parse(row.snapshot) as PluginSnapshot) : null;
+    },
+    /**
+     * Makes the project quest list follow the plugin: appends quests that are new in the plugin and drops
+     * quests that no longer exist there, along with their assignments. Never touches the plugin itself.
+     */
+    syncSnapshotQuests(id: number, live: PluginSnapshot['quests']) {
+      const current = this.snapshot(id);
+      if (!current) return { added: [], removed: [] };
+      const liveIds = new Set(live.map((q) => q.formId.toUpperCase())),
+        known = new Set(current.quests.map((q) => q.formId.toUpperCase()));
+      const removed = current.quests.filter((q) => !liveIds.has(q.formId.toUpperCase())),
+        added = live.filter((q) => !known.has(q.formId.toUpperCase()));
+      if (!removed.length && !added.length) return { added, removed };
+      const quests = [...current.quests.filter((q) => liveIds.has(q.formId.toUpperCase())), ...added];
+      const remaining = new Set(quests.map((q) => q.id.toLowerCase()));
+      const orphaned = [...new Set(removed.map((q) => q.id.toLowerCase()))].filter((q) => !remaining.has(q));
+      db.exec('BEGIN');
+      try {
+        db.prepare('UPDATE projects SET snapshot=? WHERE id=?').run(
+          JSON.stringify({ ...current, quests }),
+          id,
+        );
+        for (const quest of orphaned) {
+          for (const table of [
+            'quest_characters',
+            'quest_game_links',
+            'quest_mod_quests',
+            'quest_game_groups',
+            'ignored_plugin_quests',
+            'quest_display_names',
+          ])
+            db.prepare(`DELETE FROM ${table} WHERE project_id=? AND quest_id=?`).run(id, quest);
+          db.prepare('DELETE FROM ignored_quest_stages WHERE project_id=? AND quest_key=?').run(
+            id,
+            `plugin:${quest}`,
+          );
+        }
+        db.exec('COMMIT');
+      } catch (error) {
+        db.exec('ROLLBACK');
+        throw error;
+      }
+      return { added, removed };
+    },
+    /** Appends quests that are not in the project yet. Never removes or replaces existing ones. */
+    addSnapshotQuests(id: number, quests: PluginSnapshot['quests']) {
+      const current = this.snapshot(id);
+      if (!current) return [];
+      const known = new Set(current.quests.map((q) => q.formId.toUpperCase()));
+      const added = quests.filter((q) => !known.has(q.formId.toUpperCase()));
+      if (added.length)
+        db.prepare('UPDATE projects SET snapshot=? WHERE id=?').run(
+          JSON.stringify({ ...current, quests: [...current.quests, ...added] }),
+          id,
+        );
+      return added;
     },
     pluginPath(id: number) {
       return (
@@ -362,17 +469,29 @@ export function createStore(file: string) {
     syntheticVoices(projectId: number) {
       return db
         .prepare(
-          'SELECT c.id AS characterId, v.voice_id AS voiceId FROM character_synthetic_voice v JOIN characters c ON c.id=v.character_id WHERE c.project_id=?',
+          'SELECT c.id AS characterId, v.voice_id AS voiceId, v.model_id AS modelId FROM character_synthetic_voice v JOIN characters c ON c.id=v.character_id WHERE c.project_id=?',
         )
-        .all(projectId) as unknown as { characterId: number; voiceId: string }[];
+        .all(projectId) as unknown as { characterId: number; voiceId: string; modelId: string }[];
     },
-    setSyntheticVoice(projectId: number, characterId: number, voiceId: string) {
+    characterVoiceFolders(projectId: number) {
+      return db
+        .prepare('SELECT id AS characterId, voice_folder AS voiceFolder FROM characters WHERE project_id=?')
+        .all(projectId) as unknown as { characterId: number; voiceFolder: string }[];
+    },
+    setCharacterVoiceFolder(projectId: number, characterId: number, folder: string) {
+      return (
+        db
+          .prepare('UPDATE characters SET voice_folder=? WHERE id=? AND project_id=?')
+          .run(folder, characterId, projectId).changes > 0
+      );
+    },
+    setSyntheticVoice(projectId: number, characterId: number, voiceId: string, modelId?: string) {
       if (!db.prepare('SELECT id FROM characters WHERE id=? AND project_id=?').get(characterId, projectId))
         return false;
       if (voiceId)
         db.prepare(
-          'INSERT INTO character_synthetic_voice(character_id,voice_id) VALUES(?,?) ON CONFLICT(character_id) DO UPDATE SET voice_id=excluded.voice_id',
-        ).run(characterId, voiceId);
+          "INSERT INTO character_synthetic_voice(character_id,voice_id,model_id) VALUES(?,?,COALESCE(?, 'eleven_multilingual_v2')) ON CONFLICT(character_id) DO UPDATE SET voice_id=excluded.voice_id, model_id=COALESCE(?, character_synthetic_voice.model_id)",
+        ).run(characterId, voiceId, modelId ?? null, modelId ?? null);
       else db.prepare('DELETE FROM character_synthetic_voice WHERE character_id=?').run(characterId);
       return true;
     },

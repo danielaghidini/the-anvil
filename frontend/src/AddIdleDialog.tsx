@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { ChevronDown, Pause, Play, Volume2 } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
+import { AudioPreview } from './AudioPreview';
+import { DialogueTimingInputs } from './DialogueTimingEditor';
 type IdleCondition = {
   id: string;
   function: string;
@@ -91,99 +93,6 @@ function IdleSelect({
   );
 }
 
-function AudioPreview({ src }: { src: string }) {
-  const audio = useRef<HTMLAudioElement>(null),
-    [playing, setPlaying] = useState(false),
-    [time, setTime] = useState(0),
-    [duration, setDuration] = useState(0),
-    [volume, setVolume] = useState(1),
-    [error, setError] = useState('');
-  const format = (seconds: number) => {
-    const value = Math.floor(Number.isFinite(seconds) ? seconds : 0);
-    return `${Math.floor(value / 60)}:${String(value % 60).padStart(2, '0')}`;
-  };
-  async function toggle() {
-    const player = audio.current;
-    if (!player) return;
-    if (!player.paused) {
-      player.pause();
-      return;
-    }
-    try {
-      setError('');
-      await player.play();
-    } catch {
-      setError('Could not play audio.');
-    }
-  }
-  return (
-    <div className="idle-audio-preview">
-      <audio
-        ref={audio}
-        src={src}
-        preload="metadata"
-        onLoadedMetadata={(e) =>
-          setDuration(Number.isFinite(e.currentTarget.duration) ? e.currentTarget.duration : 0)
-        }
-        onDurationChange={(e) =>
-          setDuration(Number.isFinite(e.currentTarget.duration) ? e.currentTarget.duration : 0)
-        }
-        onTimeUpdate={(e) => setTime(e.currentTarget.currentTime)}
-        onPlay={() => setPlaying(true)}
-        onPause={() => setPlaying(false)}
-        onEnded={() => setPlaying(false)}
-        onError={() => setError('Could not load audio.')}
-      />
-      <button
-        type="button"
-        className="idle-audio-play"
-        aria-label={playing ? 'Pause audio' : 'Play audio'}
-        onClick={() => void toggle()}
-      >
-        {playing ? <Pause size={16} fill="currentColor" /> : <Play size={16} fill="currentColor" />}
-      </button>
-      <span className="idle-audio-time">
-        {format(time)} / {format(duration)}
-      </span>
-      <input
-        className="idle-audio-seek"
-        type="range"
-        min="0"
-        max={duration || 0}
-        step="0.01"
-        value={Math.min(time, duration)}
-        aria-label="Audio progress"
-        disabled={!duration}
-        onChange={(e) => {
-          const value = Number(e.target.value);
-          if (audio.current) audio.current.currentTime = value;
-          setTime(value);
-        }}
-      />
-      <Volume2 size={17} className="idle-audio-volume-icon" aria-hidden="true" />
-      <input
-        className="idle-audio-volume"
-        type="range"
-        min="0"
-        max="1"
-        step="0.01"
-        value={volume}
-        aria-label="Audio volume"
-        onChange={(e) => {
-          const value = Number(e.target.value);
-          if (audio.current) audio.current.volume = value;
-          setVolume(value);
-        }}
-      />
-      {error && (
-        <span className="idle-audio-preview-error" role="alert">
-          {error}
-        </span>
-      )}
-    </div>
-  );
-}
-
 export function AddIdleDialog({
   projectId,
   stage: addingStage,
@@ -204,6 +113,9 @@ export function AddIdleDialog({
   onSaved: (destination: string) => void;
 }) {
   const [dialogueType, setDialogueType] = useState('IDLE');
+  const [resetHours, setResetHours] = useState('0'),
+    [sayOnce, setSayOnce] = useState(true);
+  const [draftSlot] = useState(() => `new:${crypto.randomUUID()}`);
   const [emotionType, setEmotionType] = useState('0'),
     [emotionValue, setEmotionValue] = useState('0');
   const [destination, setDestination] = useState(destinations[0]?.id ?? ''),
@@ -212,7 +124,13 @@ export function AddIdleDialog({
     [saving, setSaving] = useState(false),
     [saveError, setSaveError] = useState('');
   const [audioOptions, setAudioOptions] = useState<{
-      characters: { id: number; name: string; npcFormIds: string[] }[];
+      characters: {
+        id: number;
+        name: string;
+        npcFormIds: string[];
+        modelId: string;
+        defaultFolder: string;
+      }[];
       speakers: { formId: string; editorId: string; name: string; voiceType: string }[];
       registeredNpcIds: string[];
       folders: string[];
@@ -257,8 +175,6 @@ export function AddIdleDialog({
     if (audioBusy || !newText.trim()) return;
     setAudioBusy(file ? 'Loading…' : 'Generating audio…');
     setAudioError('');
-    setDraft('');
-    setLipReady(false);
     try {
       let wav: string | undefined;
       if (file) {
@@ -273,11 +189,16 @@ export function AddIdleDialog({
       const response = await fetch(`/api/projects/${projectId}/voice-drafts`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: newText, ...(wav ? { wav } : { characterId: Number(characterId) }) }),
+        body: JSON.stringify({
+          text: newText,
+          slot: draftSlot,
+          ...(wav ? { wav } : { characterId: Number(characterId) }),
+        }),
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || 'Could not prepare audio.');
       setDraft(data.draft);
+      setLipReady(false);
     } catch (e) {
       setAudioError(e instanceof Error ? e.message : 'Could not prepare audio.');
     } finally {
@@ -325,6 +246,8 @@ export function AddIdleDialog({
           speakerFormId,
           emotionType: Number(emotionType),
           emotionValue: Number(emotionValue),
+          resetHours: resetHours.trim() ? Number(resetHours) : null,
+          sayOnce,
           conditions: conditions.map((c) => ({
             function: c.function,
             runOn: c.runOn,
@@ -399,15 +322,18 @@ export function AddIdleDialog({
                         .sort((a, b) => Number(b.registered) - Number(a.registered))}
                       onChange={(value) => {
                         setSpeakerFormId(value);
-                        setDraft('');
-                        setLipReady(false);
                         const npc = audioOptions.speakers.find((n) => n.formId === value),
                           folder = audioOptions.folders.find(
                             (f) => f.toLowerCase() === npc?.voiceType.toLowerCase(),
                           );
                         setVoiceFolder(folder ?? '');
                         const chars = audioOptions.characters.filter((c) => c.npcFormIds.includes(value));
-                        setCharacterId(chars.length === 1 ? String(chars[0].id) : '');
+                        const nextCharacter = chars.length === 1 ? String(chars[0].id) : '';
+                        if (nextCharacter && nextCharacter !== characterId) {
+                          setDraft('');
+                          setLipReady(false);
+                        }
+                        setCharacterId(nextCharacter || characterId);
                       }}
                     />
                   )}
@@ -429,6 +355,13 @@ export function AddIdleDialog({
                     placeholder="English dialogue (ASCII characters)"
                   />
                 </label>
+                <DialogueTimingInputs
+                  hours={resetHours}
+                  sayOnce={sayOnce}
+                  onHours={setResetHours}
+                  onSayOnce={setSayOnce}
+                  disabled={saving || !!audioBusy}
+                />
                 <div className="idle-emotion">
                   <IdleSelect
                     label="Emotion Type"
@@ -491,10 +424,31 @@ export function AddIdleDialog({
                           disabled={saving || !!audioBusy}
                           options={audioOptions.characters.map((c) => ({
                             value: String(c.id),
-                            label: c.name,
+                            label: `${c.name} · ${c.modelId === 'eleven_v4' ? 'Eleven v4' : c.modelId === 'eleven_v3' ? 'Eleven v3' : 'Multilingual v2'}`,
                           }))}
                           onChange={(value) => {
                             setCharacterId(value);
+                            const selected = audioOptions.characters.find(
+                              (item) => String(item.id) === value,
+                            );
+                            if (
+                              !speakerFormId &&
+                              selected?.npcFormIds.length === 1 &&
+                              audioOptions.speakers.some((item) => item.formId === selected.npcFormIds[0])
+                            )
+                              setSpeakerFormId(selected.npcFormIds[0]);
+                            const speaker = audioOptions.speakers.find(
+                              (item) => item.formId === speakerFormId,
+                            );
+                            const folder = audioOptions.folders.find(
+                              (item) => item.toLowerCase() === selected?.defaultFolder.toLowerCase(),
+                            );
+                            if (
+                              folder &&
+                              (!speaker?.voiceType ||
+                                speaker.voiceType.toLowerCase() === folder.toLowerCase())
+                            )
+                              setVoiceFolder(folder);
                             setDraft('');
                             setLipReady(false);
                           }}
@@ -671,6 +625,11 @@ export function AddIdleDialog({
                 })}
               </section>
               <p className="idle-backup-note">A backup is created before saving.</p>
+              {!speakerFormId && (
+                <p className="idle-save-hint" role="status">
+                  Choose a Speaker above to enable saving.
+                </p>
+              )}
               {saveError && (
                 <p className="error idle-layout-error" role="alert">
                   {saveError}

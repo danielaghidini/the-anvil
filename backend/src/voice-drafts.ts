@@ -2,14 +2,22 @@ import { randomUUID } from 'node:crypto';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
 const exec = promisify(execFile);
 const fail = (status: number, message: string): never => {
   throw Object.assign(new Error(message), { status });
 };
-type Draft = { project: number; text: string; wav: Buffer; lip?: Buffer; expires: number; busy?: boolean };
+type Draft = {
+  project: number;
+  slot?: string;
+  text: string;
+  wav: Buffer;
+  lip?: Buffer;
+  expires: number;
+  busy?: boolean;
+};
 const drafts = new Map<string, Draft>();
 const maxAudio = 12_000_000;
 let faceFxBusy = false;
@@ -44,12 +52,19 @@ function clean() {
   const now = Date.now();
   for (const [id, item] of drafts) if (!item.busy && item.expires < now) drafts.delete(id);
 }
-export function createDraft(project: number, text: string, wav: Buffer) {
+export function createDraft(project: number, text: string, wav: Buffer, slot?: string) {
   checkWav(wav);
   clean();
-  if (drafts.size >= 100) fail(503, 'Too many temporary audio drafts. Try again later.');
   const id = randomUUID();
-  drafts.set(id, { project, text: text.trim(), wav, expires: Date.now() + 3600000 });
+  if (slot !== undefined) {
+    for (const [previousId, draft] of drafts) {
+      if (draft.project === project && draft.slot === slot) {
+        drafts.delete(previousId);
+        break;
+      }
+    }
+  }
+  drafts.set(id, { project, slot, text: text.trim(), wav, expires: Date.now() + 3600000 });
   return id;
 }
 export function draftFor(project: number, id: string, text?: string) {
@@ -93,8 +108,14 @@ export async function generateLip(project: number, id: string, text: string, eng
     faceFxBusy = false;
     if (dir) await rm(dir, { recursive: true, force: true });
   }
+  draftFor(project, id);
 }
-export async function generateSpeech(text: string, key: string, voiceId: string) {
+export async function generateSpeech(
+  text: string,
+  key: string,
+  voiceId: string,
+  modelId = 'eleven_multilingual_v2',
+) {
   let response: Response;
   try {
     response = await fetch(
@@ -104,13 +125,11 @@ export async function generateSpeech(text: string, key: string, voiceId: string)
         headers: { 'xi-api-key': key, 'Content-Type': 'application/json', Accept: 'audio/pcm' },
         body: JSON.stringify({
           text: text.trim(),
-          model_id: 'eleven_multilingual_v2',
+          model_id: modelId,
           voice_settings: {
             stability: 0.6,
             similarity_boost: 0.8,
-            style: 0.9,
-            speed: 0.94,
-            use_speaker_boost: true,
+            ...(modelId === 'eleven_v4' ? {} : { style: 0.9, speed: 0.94, use_speaker_boost: true }),
           },
         }),
         signal: AbortSignal.timeout(120000),
@@ -148,6 +167,7 @@ export function installDraft(
   topic: string,
   info: string,
   d: Draft,
+  response = 1,
 ) {
   if (!d.lip || d.busy) fail(409, 'Generate the lipsync before saving.');
   if (!/^[a-z0-9_]+$/i.test(folder) || !/^[a-z0-9_]+$/i.test(quest) || !/^[a-z0-9_]*$/i.test(topic))
@@ -158,7 +178,7 @@ export function installDraft(
     if (q.length > 10) q = q.slice(0, 10);
     t = t.slice(0, 25 - q.length);
   }
-  const base = `${q}_${t}_00${info.slice(-6)}_1`.toLowerCase(),
+  const base = `${q}_${t}_00${info.slice(-6)}_${response}`.toLowerCase(),
     dir = path.join(dataDir, 'Sound', 'Voice', plugin, folder);
   mkdirSync(dir, { recursive: true });
   const created: string[] = [];
@@ -185,4 +205,37 @@ export function installDraft(
 }
 export function consumeDraft(id: string) {
   drafts.delete(id);
+}
+export function replaceDraft(wavPath: string, d: Draft) {
+  if (!d.lip || d.busy) fail(409, 'Generate the lipsync before saving.');
+  const lipPath = wavPath.replace(/\.wav$/i, '.lip');
+  if (lipPath === wavPath || !existsSync(wavPath))
+    fail(409, 'The voice file no longer exists. Refresh the list.');
+  const token = randomUUID(),
+    paths = [wavPath, lipPath],
+    contents = [d.wav, d.lip],
+    temps = paths.map((p) => `${p}.${token}.tmp`),
+    backups = paths.map((p) => `${p}.${token}.bak`),
+    backedUp: boolean[] = [false, false],
+    installed: boolean[] = [false, false];
+  try {
+    for (let i = 0; i < 2; i++) writeFileSync(temps[i], contents[i]!, { flag: 'wx' });
+    for (let i = 0; i < 2; i++) {
+      if (existsSync(paths[i])) {
+        renameSync(paths[i], backups[i]);
+        backedUp[i] = true;
+      }
+      renameSync(temps[i], paths[i]);
+      installed[i] = true;
+    }
+  } catch (error) {
+    for (let i = 1; i >= 0; i--) {
+      if (installed[i]) rmSync(paths[i], { force: true });
+      if (backedUp[i]) renameSync(backups[i], paths[i]);
+    }
+    throw error;
+  } finally {
+    for (const temp of temps) rmSync(temp, { force: true });
+  }
+  for (const backup of backups) rmSync(backup, { force: true });
 }

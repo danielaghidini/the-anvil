@@ -47,3 +47,45 @@ test('custom endpoints cannot send credentials to a local address', async () => 
   await assert.rejects(customRequest('http://127.0.0.1:4318/x', {}, '{}'), /public HTTPS/);
   await assert.rejects(customRequest('https://127.0.0.1/x', {}, '{}'), /public address/);
 });
+test('the open page and quest are sent as the current view', async () => {
+  let payload: any;
+  const mock: typeof fetch = async (_input, init) => {
+    payload = JSON.parse(String(init?.body));
+    return new Response(JSON.stringify({ choices: [{ message: { content: 'Reply' } }] }), { status: 200 });
+  };
+  await askAssistant(
+    {
+      ...base,
+      provider: 'openai',
+      view: {
+        page: 'Skyrim Quests',
+        quest: {
+          source: 'skyrim',
+          id: 'MQ301',
+          name: 'The Fallen',
+          group: 'Principal',
+          plugin: 'Update.esm',
+          stages: ['10 / obj. 10'],
+          linkedProjectQuests: [{ id: 'AQuest', stages: [10] }],
+        },
+      },
+    },
+    mock,
+  );
+  const system = payload.messages[0].content as string;
+  const reference = JSON.parse(system.slice(system.indexOf('{')));
+  assert.equal(reference.currentView.page, 'Skyrim Quests');
+  assert.equal(reference.currentView.quest.id, 'MQ301');
+  assert.equal(reference.currentView.quest.linkedProjectQuests[0].id, 'AQuest');
+  assert.match(system, /currentView/);
+});
+test('without a selection the current view is empty', async () => {
+  let payload: any;
+  const mock: typeof fetch = async (_input, init) => {
+    payload = JSON.parse(String(init?.body));
+    return new Response(JSON.stringify({ content: [{ type: 'text', text: 'Reply' }] }), { status: 200 });
+  };
+  await askAssistant({ ...base, provider: 'anthropic' }, mock);
+  const reference = JSON.parse(payload.system.slice(payload.system.indexOf('{')));
+  assert.deepEqual(reference.currentView, { page: null, quest: null });
+});

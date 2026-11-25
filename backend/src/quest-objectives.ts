@@ -71,7 +71,7 @@ export function objectiveLinksFromSource(
     if (!match) continue;
     const code = match[1].replace(/;\/[\s\S]*?\/;/g, '').replace(/;[^\r\n]*/g, '');
     for (const call of code.matchAll(
-      /(?:\bSelf\s*\.\s*|(?<![\w.]))SetObjective(?:Displayed|Completed|Failed)\s*\(\s*(\d+)\b/gi,
+      /(?:\bSelf\s*\.\s*|(?<![\w.]))SetObjectiveDisplayed\s*\(\s*(\d+)\b/gi,
     )) {
       const values = (result[f.stage] ??= []);
       const objective = Number(call[1]);

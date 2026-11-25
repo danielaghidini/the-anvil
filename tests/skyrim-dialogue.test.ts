@@ -1,6 +1,30 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { groupStageDialogues, filterStageDialogues, objectiveStageMap } from '../shared/skyrim-dialogue.js';
+import {
+  groupStageDialogues,
+  filterStageDialogues,
+  filterStagesByVoice,
+  objectiveStageMap,
+} from '../shared/skyrim-dialogue.js';
+
+test('voice filter keeps matching dialogue within stages and preserves empty stages when off', () => {
+  const voiced = { text: 'Voiced', conditions: [], voices: [{ file: 'one.wav' }] };
+  const silent = { text: 'Silent', conditions: [], voices: [] };
+  const groups = [
+    { number: 10, lines: [voiced, silent] },
+    { number: 20, lines: [voiced] },
+    { number: 30, lines: [] },
+  ];
+  assert.deepEqual(
+    filterStagesByVoice(groups, '').map((g) => g.number),
+    [10, 20, 30],
+  );
+  assert.deepEqual(filterStagesByVoice(groups, 'no-voice'), [{ number: 10, lines: [silent] }]);
+  assert.deepEqual(filterStagesByVoice(groups, 'with-voice'), [
+    { number: 10, lines: [voiced] },
+    { number: 20, lines: [voiced] },
+  ]);
+});
 import type { StageCondition } from '../shared/stage-match.js';
 test('Skyrim stage filters stay within selected stages and search dialogue text', () => {
   const condition = (questFormId: string, operator: string, value: number): StageCondition => ({

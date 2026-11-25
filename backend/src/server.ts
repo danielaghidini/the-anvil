@@ -13,23 +13,28 @@ import {
   generateLip,
   generateSpeech,
   installDraft,
+  replaceDraft,
   consumeDraft,
 } from './voice-drafts.js';
-import { createStageDialogue, type IdleCondition } from './stage-dialogue.mjs';
-import { createReadStream } from 'node:fs';
+import { createStageDialogue, ensureEditorClosed, type IdleCondition } from './stage-dialogue.mjs';
+import { deleteDialogue, editDialogue, editDialogueTiming } from './dialogue-edit.mjs';
+import { createQuest, type NewQuestInput } from './quest-create.mjs';
+import { createNpc, type NewNpcInput } from './npc-create.mjs';
+import { createReadStream, rmSync } from 'node:fs';
 import { voiceIndex, voicesFor, clearVoiceIndex } from './voice-files.js';
 import { readDialogue, resolveGameQuest, parseDialogue, parseAllDialogue } from './quest-dialogue.js';
 import { listPluginScripts } from './plugin-scripts.js';
 import { createScriptWorkspace } from './script-workspace.js';
 import { protectKey, unprotectKey } from './key-vault.js';
 import { selectPluginFile } from './plugin-picker.js';
-import { askAssistant, type Message, type Provider } from './assistant.js';
+import { askAssistant, type AssistantView, type Message, type Provider } from './assistant.js';
 import Fastify from 'fastify';
-import { readFile, realpath, readdir } from 'node:fs/promises';
+import { readFile, realpath, readdir, rm } from 'node:fs/promises';
+import { createEmptyPlugin, masterAvailability } from './plugin-new.js';
 import path from 'node:path';
 import { createStore } from './database.js';
 import { readPlugin, readPluginNpcs, readVoiceSpeakers, readSpeakerOptions } from './plugin.js';
-import type { CatalogQuest } from '../../shared/types.js';
+import type { CatalogQuest, PluginSnapshot } from '../../shared/types.js';
 const app = Fastify({ logger: true, bodyLimit: 100000 });
 const store = createStore(process.env.FOLLOWER_DB || path.resolve('data/follower-builder.sqlite'));
 const catalog = JSON.parse(await readFile(path.resolve('data/skyrim-catalog.json'), 'utf8')) as {
@@ -53,6 +58,7 @@ app.get<{ Params: { id: string } }>('/api/projects/:id', async (req, reply) => {
       project,
       snapshot: {
         ...snapshot,
+        ...(live.questOrder ? { questOrder: live.questOrder } : {}),
         quests: snapshot.quests.map((q) => {
           const match = names.get(q.formId);
           return match?.id === q.id
@@ -229,22 +235,98 @@ app.put<{ Params: { id: string }; Body: { questKey: string; ignored: boolean } }
     return { quests: store.ignoredSkyrimQuests(id) };
   },
 );
+app.get<{ Params: { id: string } }>('/api/projects/:id/quest-names', async (req, reply) => {
+  const id = Number(req.params.id);
+  if (!projectExists(id)) return reply.code(404).send({ message: 'Project not found.' });
+  return { names: store.questDisplayNames(id) };
+});
+app.put<{ Params: { id: string }; Body: { questId: string; name: string } }>(
+  '/api/projects/:id/quest-names',
+  {
+    schema: {
+      body: {
+        type: 'object',
+        required: ['questId', 'name'],
+        additionalProperties: false,
+        properties: {
+          questId: { type: 'string', minLength: 1, maxLength: 100 },
+          name: { type: 'string', maxLength: 120 },
+        },
+      },
+    },
+  },
+  async (req, reply) => {
+    if (!validLocalRequest(req.headers.origin, req.headers.host))
+      return reply.code(403).send({ message: 'Origin not allowed.' });
+    const id = Number(req.params.id);
+    if (!projectExists(id)) return reply.code(404).send({ message: 'Project not found.' });
+    const q = store.snapshot(id)?.quests.find((x) => x.id.toLowerCase() === req.body.questId.toLowerCase());
+    if (!q) return reply.code(404).send({ message: 'Project quest not found.' });
+    store.setQuestDisplayName(id, q.id, req.body.name.trim().replace(/\s+/g, ' '));
+    return { names: store.questDisplayNames(id) };
+  },
+);
+app.get<{ Params: { id: string } }>('/api/projects/:id/quest-order', async (req, reply) => {
+  const id = Number(req.params.id);
+  if (!projectExists(id)) return reply.code(404).send({ message: 'Project not found.' });
+  return { order: store.questManualOrder(id) };
+});
+app.put<{ Params: { id: string }; Body: { order: string[] | null } }>(
+  '/api/projects/:id/quest-order',
+  {
+    schema: {
+      body: {
+        type: 'object',
+        required: ['order'],
+        additionalProperties: false,
+        properties: {
+          order: {
+            anyOf: [
+              { type: 'null' },
+              { type: 'array', maxItems: 10000, items: { type: 'string', minLength: 1, maxLength: 100 } },
+            ],
+          },
+        },
+      },
+    },
+  },
+  async (req, reply) => {
+    if (!validLocalRequest(req.headers.origin, req.headers.host))
+      return reply.code(403).send({ message: 'Origin not allowed.' });
+    const id = Number(req.params.id);
+    if (!projectExists(id)) return reply.code(404).send({ message: 'Project not found.' });
+    const known = new Map((store.snapshot(id)?.quests ?? []).map((q) => [q.id.toLowerCase(), q.id])),
+      order = req.body.order
+        ? [...new Set(req.body.order.map((x) => known.get(x.toLowerCase())).filter((x) => x !== undefined))]
+        : null;
+    store.saveQuestManualOrder(id, order);
+    return { order: store.questManualOrder(id) };
+  },
+);
 app.get<{ Params: { id: string } }>('/api/projects/:id/ignored-stages', async (req, reply) => {
   const id = Number(req.params.id);
   if (!projectExists(id)) return reply.code(404).send({ message: 'Project not found.' });
   return { stages: store.ignoredQuestStages(id) };
 });
-app.put<{ Params: { id: string }; Body: { questKey: string; stage: number; ignored: boolean } }>(
+app.put<{
+  Params: { id: string };
+  Body: { questKey: string; stage?: number; stages?: number[]; ignored: boolean };
+}>(
   '/api/projects/:id/ignored-stages',
   {
     schema: {
       body: {
         type: 'object',
-        required: ['questKey', 'stage', 'ignored'],
+        required: ['questKey', 'ignored'],
         additionalProperties: false,
         properties: {
           questKey: { type: 'string', minLength: 3, maxLength: 230 },
           stage: { type: 'integer', minimum: 0, maximum: 65535 },
+          stages: {
+            type: 'array',
+            maxItems: 1000,
+            items: { type: 'integer', minimum: 0, maximum: 65535 },
+          },
           ignored: { type: 'boolean' },
         },
       },
@@ -261,7 +343,9 @@ app.put<{ Params: { id: string }; Body: { questKey: string; stage: number; ignor
       : key.startsWith('plugin:') &&
         !!store.snapshot(id)?.quests.some((q) => `plugin:${q.id.toLowerCase()}` === key);
     if (!exists) return reply.code(404).send({ message: 'Quest not found.' });
-    store.setQuestStageIgnored(id, key, req.body.stage, req.body.ignored);
+    const stages = req.body.stages ?? (req.body.stage === undefined ? [] : [req.body.stage]);
+    if (!stages.length) return reply.code(400).send({ message: 'Choose at least one stage.' });
+    store.setQuestStagesIgnored(id, key, stages, req.body.ignored);
     return { stages: store.ignoredQuestStages(id) };
   },
 );
@@ -415,7 +499,7 @@ const characterBodySchema = {
     name: { type: 'string', minLength: 1, maxLength: 100 },
     npcFormIds: {
       type: 'array',
-      minItems: 1,
+      minItems: 0,
       maxItems: 100,
       uniqueItems: true,
       items: { type: 'string', pattern: '^[0-9a-fA-F]{8}$' },
@@ -549,6 +633,55 @@ app.put<{ Params: { id: string }; Body: { chapters: { title: string; content: st
 const defaultDataDirectory =
   process.env.FOLLOWER_SKYRIM_DATA ||
   String.raw`C:\Program Files (x86)\Steam\steamapps\common\Skyrim Special Edition\Data`;
+app.get('/api/new-plugin/options', async () => ({
+  dataDirectory: defaultDataDirectory,
+  masters: masterAvailability(defaultDataDirectory),
+}));
+app.post<{
+  Body: { name: string; fileName: string; author?: string; description?: string; masters?: string[] };
+}>(
+  '/api/projects/new-plugin',
+  {
+    schema: {
+      body: {
+        type: 'object',
+        required: ['name', 'fileName'],
+        additionalProperties: false,
+        properties: {
+          name: { type: 'string', minLength: 1, maxLength: 100 },
+          fileName: { type: 'string', minLength: 1, maxLength: 64 },
+          author: { type: 'string', maxLength: 100 },
+          description: { type: 'string', maxLength: 500 },
+          masters: { type: 'array', maxItems: 5, items: { type: 'string', maxLength: 32 } },
+        },
+      },
+    },
+  },
+  async (req, reply) => {
+    if (!validLocalRequest(req.headers.origin, req.headers.host))
+      return reply.code(403).send({ message: 'Origin not allowed.' });
+    const name = req.body.name.trim();
+    if (!name) return reply.code(400).send({ message: 'Enter a project name.' });
+    let created: ReturnType<typeof createEmptyPlugin>;
+    try {
+      created = createEmptyPlugin(defaultDataDirectory, req.body);
+    } catch (e) {
+      const status = (e as { statusCode?: number }).statusCode;
+      if (!status) req.log.error({ err: e }, 'Plugin creation failed');
+      return reply
+        .code(status ?? 500)
+        .send({ message: status && e instanceof Error ? e.message : 'Could not create the plugin.' });
+    }
+    try {
+      const snapshot = await readPlugin(created.file, defaultDataDirectory);
+      return reply.code(201).send(store.create(name, snapshot, await realpath(created.file)));
+    } catch (e) {
+      await rm(created.file, { force: true });
+      req.log.error({ err: e }, 'Project creation for new plugin failed');
+      return reply.code(500).send({ message: 'The plugin was created but the project could not be saved.' });
+    }
+  },
+);
 const scriptWorkspace = createScriptWorkspace({
   dataDirectory: defaultDataDirectory,
   backupDirectory: path.join(
@@ -567,8 +700,8 @@ app.post<{ Params: { id: string } }>('/api/projects/:id/sync-dialogue', async (r
   if (!validLocalRequest(req.headers.origin, req.headers.host))
     return reply.code(403).send({ message: 'Origin not allowed.' });
   const id = Number(req.params.id),
-    paths = pathsForProject(id),
-    snapshot = store.snapshot(id);
+    paths = pathsForProject(id);
+  let snapshot = store.snapshot(id);
   if (!paths || !snapshot) return reply.code(404).send({ message: 'Project not found.' });
   if (syncingProjects.has(id))
     return reply.code(409).send({ message: 'Synchronization is already running for this project.' });
@@ -583,6 +716,15 @@ app.post<{ Params: { id: string } }>('/api/projects/:id/sync-dialogue', async (r
       return reply
         .code(409)
         .send({ message: 'The plugin or its masters changed. Check the project before synchronizing.' });
+    const summary = (q: { id: string; name?: string; formId: string }) => ({
+      id: q.id,
+      ...(q.name ? { name: q.name } : {}),
+      formId: q.formId,
+    });
+    const questSync = store.syncSnapshotQuests(id, current.quests),
+      addedQuests = questSync.added.map(summary),
+      removedQuests = questSync.removed.map(summary);
+    if (addedQuests.length || removedQuests.length) snapshot = store.snapshot(id)!;
     clearVoiceIndex(paths.dataDirectory, snapshot.plugin);
     const initial = store.progressCache(id),
       previous = store.progressManifest(id) as ProgressManifest | null,
@@ -592,9 +734,22 @@ app.post<{ Params: { id: string } }>('/api/projects/:id/sync-dialogue', async (r
       comparison = compareDialogueBaseline(store.syncDialogueBaseline(id), baseline);
     const finish = (result: Record<string, unknown>) => {
       store.saveSyncDialogueBaseline(id, baseline);
-      return { ...result, comparisonAvailable: comparison !== null, dialogues: comparison };
+      return {
+        ...result,
+        addedQuests,
+        removedQuests,
+        comparisonAvailable: comparison !== null,
+        dialogues: comparison,
+      };
     };
-    if (!initial || !previous || !previous.quests || !previous.forms) {
+    if (
+      addedQuests.length ||
+      removedQuests.length ||
+      !initial ||
+      !previous ||
+      !previous.quests ||
+      !previous.forms
+    ) {
       store.clearProgressCache(id);
       return finish({ changed: true, fullAnalysis: true });
     }
@@ -770,6 +925,39 @@ app.post<{ Params: { id: string; action: string }; Body: { name: string; version
     }
   },
 );
+/** Describes the quest the user has open for the assistant: a project quest, or a Skyrim quest with the project quests linked to it. */
+function assistantQuest(
+  projectId: number,
+  snapshot: PluginSnapshot,
+  questId: string,
+  questPlugin: string,
+): AssistantView['quest'] {
+  const same = (a: string, b: string) => a.toLowerCase() === b.toLowerCase();
+  const summary = (q: PluginSnapshot['quests'][number]) => ({
+    id: q.id,
+    name: q.name,
+    stages: q.stages,
+    ...(q.objectiveTexts && Object.keys(q.objectiveTexts).length ? { objectives: q.objectiveTexts } : {}),
+  });
+  if (same(questPlugin, snapshot.plugin)) {
+    const own = snapshot.quests.find((q) => same(q.id, questId));
+    return own ? { source: 'plugin', plugin: snapshot.plugin, ...summary(own) } : undefined;
+  }
+  const game = catalog.quests.find((q) => same(q.id, questId) && same(q.plugin, questPlugin));
+  if (!game) return undefined;
+  const links = store.questLinks(projectId),
+    linked = new Set([
+      ...links.groups.filter((g) => g.gameGroup === game.group).map((g) => g.questId),
+      ...links.games
+        .filter((g) => same(g.gameId, game.id) && same(g.gamePlugin, game.plugin))
+        .map((g) => g.questId),
+    ]);
+  return {
+    source: 'skyrim',
+    ...game,
+    linkedProjectQuests: snapshot.quests.filter((q) => linked.has(q.id)).map(summary),
+  };
+}
 function questForProject(projectId: number, questId: string) {
   return store.snapshot(projectId)?.quests.find((q) => q.id.toLowerCase() === questId.toLowerCase());
 }
@@ -955,18 +1143,35 @@ app.get<{ Params: { id: string } }>('/api/projects/:id/voice-drafts/options', as
     snapshot = store.snapshot(id);
   if (!paths || !snapshot) return reply.code(404).send({ message: 'Project not found.' });
   const bindings = store.syntheticVoices(id);
+  const configuredFolders = store.characterVoiceFolders(id);
   return {
+    folderCharacters: store.characters(id).map((c) => ({
+      ...c,
+      defaultFolder: configuredFolders.find((f) => f.characterId === c.id)?.voiceFolder ?? '',
+      hasVoice: bindings.some((b) => b.characterId === c.id),
+      modelId: bindings.find((b) => b.characterId === c.id)?.modelId ?? '',
+    })),
     characters: store
       .characters(id)
       .filter((c) => bindings.some((b) => b.characterId === c.id))
-      .map((c) => ({ id: c.id, name: c.name, npcFormIds: c.npcFormIds })),
+      .map((c) => ({
+        id: c.id,
+        name: c.name,
+        npcFormIds: c.npcFormIds,
+        modelId: bindings.find((b) => b.characterId === c.id)?.modelId,
+        defaultFolder: configuredFolders.find((f) => f.characterId === c.id)?.voiceFolder ?? '',
+      })),
     registeredNpcIds: store.characters(id).flatMap((c) => c.npcFormIds),
     speakers: await readSpeakerOptions(paths.pluginFile),
     folders: await voiceFolders(paths.dataDirectory, snapshot.plugin),
+    voiceDirectory: path.join(paths.dataDirectory, 'Sound', 'Voice', snapshot.plugin),
     hasKey: !!store.aiCredential('__elevenlabs'),
   };
 });
-app.post<{ Params: { id: string }; Body: { text: string; wav?: string; characterId?: number } }>(
+app.post<{
+  Params: { id: string };
+  Body: { text: string; wav?: string; characterId?: number; slot?: string };
+}>(
   '/api/projects/:id/voice-drafts',
   {
     bodyLimit: 17000000,
@@ -979,6 +1184,7 @@ app.post<{ Params: { id: string }; Body: { text: string; wav?: string; character
           text: { type: 'string', minLength: 1, maxLength: 150 },
           wav: { type: 'string', minLength: 1, maxLength: 16000000 },
           characterId: { type: 'integer', minimum: 1 },
+          slot: { type: 'string', minLength: 1, maxLength: 64 },
         },
       },
     },
@@ -987,7 +1193,7 @@ app.post<{ Params: { id: string }; Body: { text: string; wav?: string; character
     if (!validLocalRequest(req.headers.origin, req.headers.host))
       return reply.code(403).send({ message: 'Origin not allowed.' });
     const id = Number(req.params.id),
-      { text, wav, characterId } = req.body;
+      { text, wav, characterId, slot } = req.body;
     if (!projectExists(id)) return reply.code(404).send({ message: 'Project not found.' });
     if (!text.trim() || !/^[\x20-\x7e]+$/.test(text.trim()) || Boolean(wav) === Boolean(characterId))
       return reply.code(400).send({ message: 'Enter dialogue and choose an audio source.' });
@@ -1002,9 +1208,14 @@ app.post<{ Params: { id: string }; Body: { text: string; wav?: string; character
           binding = store.syntheticVoices(id).find((x) => x.characterId === characterId);
         if (!credential || !binding)
           return reply.code(400).send({ message: 'Set an ElevenLabs key and character voice in Settings.' });
-        audio = await generateSpeech(text, await unprotectKey(credential.protectedKey), binding.voiceId);
+        audio = await generateSpeech(
+          text,
+          await unprotectKey(credential.protectedKey),
+          binding.voiceId,
+          binding.modelId,
+        );
       }
-      const draft = createDraft(id, text, audio);
+      const draft = createDraft(id, text, audio, slot);
       return reply.code(201).send({ draft });
     } catch (error) {
       const e = error as { status?: number; message?: string };
@@ -1066,6 +1277,8 @@ app.post<{
     speakerFormId: string;
     emotionType: number;
     emotionValue: number;
+    resetHours?: number;
+    sayOnce?: boolean;
     type: 'IDLE' | 'HELO';
   };
 }>(
@@ -1090,6 +1303,8 @@ app.post<{
           type: { type: 'string', enum: ['IDLE', 'HELO'] },
           emotionType: { type: 'integer', minimum: 0, maximum: 7 },
           emotionValue: { type: 'integer', minimum: 0, maximum: 100 },
+          resetHours: { type: 'number', minimum: 0, maximum: 24 },
+          sayOnce: { type: 'boolean' },
           speakerFormId: { type: 'string', pattern: '^[a-fA-F0-9]{8}$' },
           draft: { type: 'string', minLength: 36, maxLength: 36 },
           voiceFolder: { type: 'string', minLength: 1, maxLength: 120, pattern: '^[a-zA-Z0-9_]+$' },
@@ -1202,13 +1417,13 @@ app.post<{
         return reply
           .code(400)
           .send({ message: `The selected NPC uses ${speaker.voiceType}. Choose that voice folder.` });
-      const draft = draftFor(id, req.body.draft, req.body.text);
-      if (!draft.lip || draft.busy)
-        return reply.code(409).send({ message: 'Generate lipsync before saving.' });
       const folder = (await voiceFolders(paths.dataDirectory, live.plugin)).find(
         (f) => f.toLowerCase() === req.body.voiceFolder.toLowerCase(),
       );
       if (!folder) return reply.code(400).send({ message: 'Choose an existing voice folder.' });
+      const draft = draftFor(id, req.body.draft, req.body.text);
+      if (!draft.lip || draft.busy)
+        return reply.code(409).send({ message: 'Generate lipsync before saving.' });
       const result = createStageDialogue(
         paths.pluginFile,
         path.join(
@@ -1224,6 +1439,8 @@ app.post<{
           stage: req.body.stage,
           emotionType: req.body.emotionType,
           emotionValue: req.body.emotionValue,
+          resetHours: req.body.resetHours,
+          sayOnce: req.body.sayOnce,
           conditions: req.body.conditions,
         },
         undefined,
@@ -1239,6 +1456,92 @@ app.post<{
       return reply
         .code(e.status || 500)
         .send({ message: e.status ? e.message : 'Could not write the dialogue.' });
+    }
+  },
+);
+app.post<{ Params: { id: string }; Body: NewQuestInput }>(
+  '/api/projects/:id/quests',
+  {
+    schema: {
+      body: {
+        type: 'object',
+        required: ['editorId'],
+        additionalProperties: false,
+        properties: {
+          editorId: { type: 'string', maxLength: 99 },
+          name: { type: 'string', maxLength: 100 },
+          type: { type: 'integer', minimum: 0, maximum: 11 },
+          priority: { type: 'integer', minimum: 0, maximum: 100 },
+          startGameEnabled: { type: 'boolean' },
+          runOnce: { type: 'boolean' },
+        },
+      },
+    },
+  },
+  async (req, reply) => {
+    if (!validLocalRequest(req.headers.origin, req.headers.host))
+      return reply.code(403).send({ message: 'Origin not allowed.' });
+    const id = Number(req.params.id),
+      paths = pathsForProject(id);
+    if (!paths) return reply.code(404).send({ message: 'Project not found.' });
+    try {
+      const result = createQuest(
+        paths.pluginFile,
+        path.join(
+          path.dirname(process.env.FOLLOWER_DB || path.resolve('data/follower-builder.sqlite')),
+          'plugin-backups',
+        ),
+        req.body,
+      );
+      const live = await readPlugin(paths.pluginFile, paths.dataDirectory);
+      const quest = live.quests.find((q) => q.formId === result.formId);
+      if (quest) store.addSnapshotQuests(id, [quest]);
+      return reply.code(201).send(result);
+    } catch (error) {
+      const e = error as { status?: number; message?: string };
+      if (!e.status) req.log.error({ err: error }, 'Quest creation failed');
+      return reply
+        .code(e.status || 500)
+        .send({ message: e.status ? e.message : 'Could not create the quest.' });
+    }
+  },
+);
+app.post<{ Params: { id: string }; Body: NewNpcInput }>(
+  '/api/projects/:id/npcs',
+  {
+    schema: {
+      body: {
+        type: 'object',
+        required: ['editorId'],
+        additionalProperties: false,
+        properties: {
+          editorId: { type: 'string', maxLength: 99 },
+          name: { type: 'string', maxLength: 100 },
+        },
+      },
+    },
+  },
+  async (req, reply) => {
+    if (!validLocalRequest(req.headers.origin, req.headers.host))
+      return reply.code(403).send({ message: 'Origin not allowed.' });
+    const paths = pathsForProject(Number(req.params.id));
+    if (!paths) return reply.code(404).send({ message: 'Project not found.' });
+    try {
+      const result = createNpc(
+        paths.pluginFile,
+        path.join(
+          path.dirname(process.env.FOLLOWER_DB || path.resolve('data/follower-builder.sqlite')),
+          'plugin-backups',
+        ),
+        req.body,
+      );
+      return reply.code(201).send(result);
+    } catch (error) {
+      const e = error as { status?: number; message?: string };
+      if (!e.status) req.log.error({ err: error }, 'NPC creation failed');
+      return reply
+        .code(e.status || 500)
+        .send({ message: e.status ? e.message : 'Could not create the NPC.' });
     }
   },
 );
@@ -1260,6 +1563,7 @@ app.get<{ Params: { id: string; questId: string } }>(
       return {
         lines: lines.map((line) => ({
           ...line,
+          canDelete: parseInt(line.info.slice(0, 2), 16) === snapshot.masters.length,
           voices: voicesFor(index, line.info, line.response, snapshot.masters.length).map(
             ({ voice, file }) => ({ voice, file, speakers: speakers.get(voice.toLowerCase()) ?? [] }),
           ),
@@ -1267,6 +1571,154 @@ app.get<{ Params: { id: string; questId: string } }>(
       };
     } catch {
       return reply.code(500).send({ message: 'Could not read dialogue or voice files from the project.' });
+    }
+  },
+);
+app.patch<{
+  Params: { id: string; questId: string; info: string; response: string };
+  Body: { text: string; expectedText: string };
+}>(
+  '/api/projects/:id/quests/:questId/dialogue/:info/:response',
+  {
+    schema: {
+      body: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['text', 'expectedText'],
+        properties: {
+          text: { type: 'string', minLength: 1, maxLength: 150 },
+          expectedText: { type: 'string', maxLength: 1000 },
+        },
+      },
+    },
+  },
+  async (req, reply) => {
+    if (!validLocalRequest(req.headers.origin, req.headers.host))
+      return reply.code(403).send({ message: 'Origin not allowed.' });
+    const id = Number(req.params.id),
+      quest = questForProject(id, req.params.questId),
+      paths = pathsForProject(id);
+    if (!quest || !paths) return reply.code(404).send({ message: 'Project quest not found.' });
+    try {
+      return editDialogue(
+        paths.pluginFile,
+        path.join(
+          path.dirname(process.env.FOLLOWER_DB || path.resolve('data/follower-builder.sqlite')),
+          'plugin-backups',
+        ),
+        {
+          questFormId: quest.formId,
+          info: req.params.info,
+          response: Number(req.params.response),
+          ...req.body,
+        },
+      );
+    } catch (error) {
+      const e = error as { status?: number; message?: string };
+      if (!e.status) req.log.error({ err: error }, 'Dialogue edit failed');
+      return reply.code(e.status || 500).send({ message: e.status ? e.message : 'Could not save dialogue.' });
+    }
+  },
+);
+app.patch<{
+  Params: { id: string; questId: string; info: string; response: string };
+  Body: {
+    resetHours: number;
+    sayOnce: boolean;
+    expectedResetHours: number;
+    expectedSayOnce: boolean;
+    expectedText: string;
+  };
+}>(
+  '/api/projects/:id/quests/:questId/dialogue/:info/:response/timing',
+  {
+    schema: {
+      body: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['resetHours', 'sayOnce', 'expectedResetHours', 'expectedSayOnce', 'expectedText'],
+        properties: {
+          resetHours: { type: 'number', minimum: 0 },
+          sayOnce: { type: 'boolean' },
+          expectedResetHours: { type: 'number', minimum: 0 },
+          expectedSayOnce: { type: 'boolean' },
+          expectedText: { type: 'string', maxLength: 1000 },
+        },
+      },
+    },
+  },
+  async (req, reply) => {
+    if (!validLocalRequest(req.headers.origin, req.headers.host))
+      return reply.code(403).send({ message: 'Origin not allowed.' });
+    const id = Number(req.params.id),
+      quest = questForProject(id, req.params.questId),
+      paths = pathsForProject(id);
+    if (!quest || !paths) return reply.code(404).send({ message: 'Project quest not found.' });
+    try {
+      return editDialogueTiming(
+        paths.pluginFile,
+        path.join(
+          path.dirname(process.env.FOLLOWER_DB || path.resolve('data/follower-builder.sqlite')),
+          'plugin-backups',
+        ),
+        {
+          questFormId: quest.formId,
+          info: req.params.info,
+          response: Number(req.params.response),
+          ...req.body,
+        },
+      );
+    } catch (error) {
+      const e = error as { status?: number; message?: string };
+      if (!e.status) req.log.error({ err: error }, 'Dialogue timing edit failed');
+      return reply
+        .code(e.status || 500)
+        .send({ message: e.status ? e.message : 'Could not save dialogue timing.' });
+    }
+  },
+);
+app.delete<{
+  Params: { id: string; questId: string; info: string; response: string };
+  Body: { expectedText: string };
+}>(
+  '/api/projects/:id/quests/:questId/dialogue/:info/:response',
+  {
+    schema: {
+      body: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['expectedText'],
+        properties: { expectedText: { type: 'string', maxLength: 1000 } },
+      },
+    },
+  },
+  async (req, reply) => {
+    if (!validLocalRequest(req.headers.origin, req.headers.host))
+      return reply.code(403).send({ message: 'Origin not allowed.' });
+    const id = Number(req.params.id),
+      quest = questForProject(id, req.params.questId),
+      paths = pathsForProject(id);
+    if (!quest || !paths) return reply.code(404).send({ message: 'Project quest not found.' });
+    try {
+      return deleteDialogue(
+        paths.pluginFile,
+        path.join(
+          path.dirname(process.env.FOLLOWER_DB || path.resolve('data/follower-builder.sqlite')),
+          'plugin-backups',
+        ),
+        {
+          questFormId: quest.formId,
+          info: req.params.info,
+          response: Number(req.params.response),
+          expectedText: req.body.expectedText,
+        },
+      );
+    } catch (error) {
+      const e = error as { status?: number; message?: string };
+      if (!e.status) req.log.error({ err: error }, 'Dialogue deletion failed');
+      return reply
+        .code(e.status || 500)
+        .send({ message: e.status ? e.message : 'Could not delete dialogue.' });
     }
   },
 );
@@ -1306,6 +1758,124 @@ app.get<{
     return reply.code(500).send({ message: 'Could not read the voice file.' });
   }
 });
+app.post<{
+  Params: { id: string; questId: string; info: string; response: string };
+  Body: { draft: string; voiceFolder: string; existingFile?: string };
+}>(
+  '/api/projects/:id/quests/:questId/dialogue/:info/:response/voice',
+  {
+    schema: {
+      body: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['draft', 'voiceFolder'],
+        properties: {
+          draft: { type: 'string', minLength: 36, maxLength: 36 },
+          voiceFolder: { type: 'string', pattern: '^[a-zA-Z0-9_]+$' },
+          existingFile: { type: 'string', minLength: 1, maxLength: 255 },
+        },
+      },
+    },
+  },
+  async (req, reply) => {
+    if (!validLocalRequest(req.headers.origin, req.headers.host))
+      return reply.code(403).send({ message: 'Origin not allowed.' });
+    const id = Number(req.params.id),
+      q = questForProject(id, req.params.questId),
+      paths = pathsForProject(id),
+      snapshot = store.snapshot(id),
+      response = Number(req.params.response);
+    if (!q || !paths || !snapshot) return reply.code(404).send({ message: 'Project quest not found.' });
+    if (
+      !/^[0-9a-f]{8}$/i.test(req.params.info) ||
+      !Number.isInteger(response) ||
+      response < 0 ||
+      response > 255
+    )
+      return reply.code(400).send({ message: 'Invalid response.' });
+    try {
+      const line = (await readDialogue(paths.pluginFile, q.formId)).find(
+        (item) => item.info.toLowerCase() === req.params.info.toLowerCase() && item.response === response,
+      );
+      if (!line) return reply.code(404).send({ message: 'Dialogue not found.' });
+      if (parseInt(line.info.slice(0, 2), 16) !== snapshot.masters.length)
+        return reply
+          .code(400)
+          .send({ message: 'This dialogue belongs to a master plugin and cannot be saved here.' });
+      const folder = (await voiceFolders(paths.dataDirectory, snapshot.plugin)).find(
+        (item) => item.toLowerCase() === req.body.voiceFolder.toLowerCase(),
+      );
+      if (!folder) return reply.code(400).send({ message: 'Choose an existing voice folder.' });
+      if (line.pendingVoice) {
+        const speaker = (await readSpeakerOptions(paths.pluginFile)).find(
+          (npc) => npc.formId === line.speaker,
+        );
+        if (!speaker?.voiceType || speaker.voiceType.toLowerCase() !== folder.toLowerCase())
+          return reply.code(400).send({ message: 'Choose the voice folder for the speaker on this draft.' });
+        ensureEditorClosed();
+      }
+      const existing = voicesFor(
+        await voiceIndex(paths.dataDirectory, snapshot.plugin),
+        line.info,
+        response,
+        snapshot.masters.length,
+      ).filter((file) => file.voice.toLowerCase() === folder.toLowerCase());
+      const draft = draftFor(id, req.body.draft, line.text);
+      let installed: ReturnType<typeof installDraft> | undefined;
+      if (req.body.existingFile) {
+        const file = existing.find((item) => item.file === req.body.existingFile);
+        if (!file)
+          return reply
+            .code(409)
+            .send({ message: 'The selected voice file no longer exists. Refresh the list.' });
+        replaceDraft(file.path, draft);
+      } else {
+        if (existing.length)
+          return reply
+            .code(409)
+            .send({ message: 'A voice already exists in this folder. Refresh the list to replace it.' });
+        installed = installDraft(
+          paths.dataDirectory,
+          snapshot.plugin,
+          folder,
+          q.id,
+          line.topicEditorId ?? '',
+          line.info,
+          draft,
+          response,
+        );
+      }
+      if (line.pendingVoice) {
+        try {
+          editDialogue(
+            paths.pluginFile,
+            path.join(
+              path.dirname(process.env.FOLLOWER_DB || path.resolve('data/follower-builder.sqlite')),
+              'plugin-backups',
+            ),
+            { questFormId: q.formId, info: line.info, response, text: line.text, expectedText: line.text },
+            undefined,
+            true,
+          );
+        } catch (error) {
+          if (installed) {
+            rmSync(installed.wav, { force: true });
+            rmSync(installed.lip, { force: true });
+          }
+          throw error;
+        }
+      }
+      consumeDraft(req.body.draft);
+      clearVoiceIndex(paths.dataDirectory, snapshot.plugin);
+      return reply.code(201).send({ saved: true });
+    } catch (error) {
+      const e = error as { status?: number; message?: string };
+      return reply
+        .code(e.status || 500)
+        .send({ message: e.status ? e.message : 'Could not save the voice files.' });
+    }
+  },
+);
 app.get<{ Params: { id: string }; Querystring: { gameId: string; gamePlugin: string } }>(
   '/api/projects/:id/game-quest',
   async (req, reply) => {
@@ -1531,9 +2101,12 @@ app.get<{ Params: { id: string } }>('/api/projects/:id/synthetic-voices', async 
   if (!validLocalRequest(req.headers.origin, req.headers.host))
     return reply.code(403).send({ message: 'Origin not allowed.' });
   if (!projectExists(id)) return reply.code(404).send({ message: 'Project not found.' });
-  return { voices: store.syntheticVoices(id) };
+  return { voices: store.syntheticVoices(id), folders: store.characterVoiceFolders(id) };
 });
-app.put<{ Params: { id: string; characterId: string }; Body: { voiceId: string } }>(
+app.put<{
+  Params: { id: string; characterId: string };
+  Body: { voiceId: string; modelId?: string; voiceFolder?: string };
+}>(
   '/api/projects/:id/characters/:characterId/synthetic-voice',
   {
     schema: {
@@ -1541,7 +2114,11 @@ app.put<{ Params: { id: string; characterId: string }; Body: { voiceId: string }
         type: 'object',
         required: ['voiceId'],
         additionalProperties: false,
-        properties: { voiceId: { type: 'string', maxLength: 100, pattern: '^[a-zA-Z0-9_-]*$' } },
+        properties: {
+          voiceId: { type: 'string', maxLength: 100, pattern: '^[a-zA-Z0-9_-]*$' },
+          modelId: { type: 'string', enum: ['eleven_multilingual_v2', 'eleven_v3', 'eleven_v4'] },
+          voiceFolder: { type: 'string', maxLength: 100, pattern: '^[a-zA-Z0-9_]*$' },
+        },
       },
     },
   },
@@ -1550,14 +2127,28 @@ app.put<{ Params: { id: string; characterId: string }; Body: { voiceId: string }
       return reply.code(403).send({ message: 'Origin not allowed.' });
     const id = Number(req.params.id),
       characterId = Number(req.params.characterId);
-    if (!store.setSyntheticVoice(id, characterId, req.body.voiceId))
+    if (req.body.voiceFolder) {
+      const paths = pathsForProject(id),
+        snapshot = store.snapshot(id);
+      if (
+        !paths ||
+        !snapshot ||
+        !(await voiceFolders(paths.dataDirectory, snapshot.plugin)).some(
+          (folder) => folder === req.body.voiceFolder,
+        )
+      )
+        return reply.code(400).send({ message: 'Choose an existing voice folder in this project.' });
+    }
+    if (!store.setSyntheticVoice(id, characterId, req.body.voiceId, req.body.modelId))
       return reply.code(404).send({ message: 'Character not found in this project.' });
+    if (req.body.voiceFolder !== undefined)
+      store.setCharacterVoiceFolder(id, characterId, req.body.voiceFolder);
     return { voiceId: req.body.voiceId };
   },
 );
 app.post<{
   Params: { id: string };
-  Body: { provider: Provider; messages: Message[]; questId?: string; questPlugin?: string };
+  Body: { provider: Provider; messages: Message[]; questId?: string; questPlugin?: string; page?: string };
 }>(
   '/api/projects/:id/assistant',
   {
@@ -1570,6 +2161,7 @@ app.post<{
           provider: { type: 'string', enum: ['openai', 'openrouter', 'anthropic', 'gemini', 'custom'] },
           questId: { type: 'string', maxLength: 100 },
           questPlugin: { type: 'string', maxLength: 100 },
+          page: { type: 'string', maxLength: 100 },
           messages: {
             type: 'array',
             minItems: 1,
@@ -1595,7 +2187,7 @@ app.post<{
       project = store.list().find((p) => p.id === id),
       snapshot = store.snapshot(id);
     if (!project || !snapshot) return reply.code(404).send({ message: 'Project not found.' });
-    const { provider, messages, questId, questPlugin } = req.body,
+    const { provider, messages, questId, questPlugin, page } = req.body,
       credential = store.aiCredential(provider);
     if (!credential) return reply.code(400).send({ message: 'Save an API key and model in AI settings.' });
     if (messages.at(-1)?.role !== 'user') return reply.code(400).send({ message: 'Enter a message.' });
@@ -1605,9 +2197,10 @@ app.post<{
     } catch {
       return reply.code(500).send({ message: 'Could not unlock the saved key for this Windows account.' });
     }
-    const quest = questId
-      ? catalog.quests.find((q) => q.id === questId && q.plugin === questPlugin)
-      : undefined;
+    const view: AssistantView = {
+      page,
+      quest: questId ? assistantQuest(id, snapshot, questId, questPlugin ?? '') : undefined,
+    };
     const answer = await askAssistant({
       provider,
       key,
@@ -1621,7 +2214,7 @@ app.post<{
         .map((c) => `${c.title}\n${c.content}`)
         .join('\n\n'),
       characters: store.characters(id),
-      quest,
+      view,
     });
     return { reply: answer };
   },

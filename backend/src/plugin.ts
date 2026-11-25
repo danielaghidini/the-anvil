@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { findObjectiveLinks, questFragments } from './quest-objectives.js';
+import { detectQuestOrder } from './quest-order.js';
 import { inflateSync } from 'node:zlib';
 import type { PluginQuest, PluginSnapshot } from '../../shared/types.js';
 type RecordEntry = { type: string; id: number; flags: number; data: Buffer };
@@ -101,7 +102,17 @@ export async function readPlugin(file: string, dataDirectory = path.dirname(file
       }),
   );
   const namedQuests = quests.filter((q) => q.id);
-  return { plugin: path.basename(file), masters, quests: namedQuests, importedAt: new Date().toISOString() };
+  let questOrder: string[] | undefined;
+  try {
+    questOrder = await detectQuestOrder(b, dataDirectory, namedQuests);
+  } catch {}
+  return {
+    plugin: path.basename(file),
+    masters,
+    quests: namedQuests,
+    ...(questOrder ? { questOrder } : {}),
+    importedAt: new Date().toISOString(),
+  };
 }
 
 export function parsePluginNpcs(b: Buffer) {

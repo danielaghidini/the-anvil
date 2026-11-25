@@ -1,6 +1,19 @@
 import { stageMatchesDirectConditions, type StageCondition } from './stage-match.js';
-export type StageDialogue = { text: string; conditions: StageCondition[] };
+export type StageDialogue = { text: string; conditions: StageCondition[]; pendingVoice?: boolean };
 export type StageGroup<T extends StageDialogue> = { number: number; lines: T[] };
+export type VoiceFilter = '' | 'no-voice' | 'with-voice';
+export function matchesVoiceFilter(line: { voices?: readonly unknown[] }, filter: VoiceFilter) {
+  return !filter || (filter === 'with-voice' ? !!line.voices?.length : !line.voices?.length);
+}
+export function filterStagesByVoice<T extends StageDialogue & { voices?: readonly unknown[] }>(
+  groups: StageGroup<T>[],
+  filter: VoiceFilter,
+): StageGroup<T>[] {
+  if (!filter) return groups;
+  return groups
+    .map((group) => ({ ...group, lines: group.lines.filter((line) => matchesVoiceFilter(line, filter)) }))
+    .filter((group) => group.lines.length > 0);
+}
 export function groupStageDialogues<T extends StageDialogue>(
   stages: number[],
   questFormId: string,
@@ -28,14 +41,20 @@ export function filterStageDialogues<T extends StageDialogue>(
         (!status ||
           status === 'most' ||
           status === 'fewest' ||
+          status === 'review' ||
           (status === 'objectives'
             ? objectiveStages.has(item.number)
             : status === 'missing'
               ? item.lines.length === 0
               : item.lines.length > 0)),
     )
-    .map((item) => ({ ...item, lines: item.lines.filter((line) => line.text.toLowerCase().includes(term)) }))
-    .filter((item) => !term || item.lines.length > 0);
+    .map((item) => ({
+      ...item,
+      lines: item.lines.filter(
+        (line) => (status !== 'review' || line.pendingVoice) && line.text.toLowerCase().includes(term),
+      ),
+    }))
+    .filter((item) => (!term && status !== 'review') || item.lines.length > 0);
   if (status === 'most' || status === 'fewest')
     result.sort(
       (a, b) =>

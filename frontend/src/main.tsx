@@ -13,8 +13,10 @@ import {
   Settings,
   Plus,
   RefreshCw,
+  FilePlus2,
+  UserRoundPlus,
 } from 'lucide-react';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import type { Project, CatalogQuest, PluginSnapshot } from '../../shared/types';
 import './style.css';
@@ -28,10 +30,13 @@ import { SkyrimQuestBrowser } from './SkyrimQuestBrowser';
 import { ModQuestBrowser } from './ModQuestBrowser';
 import { NpcQuestBrowser } from './NpcQuestBrowser';
 import { NpcSelector } from './NpcSelector';
+import { CreateQuestDialog } from './CreateQuestDialog';
+import { CreateNpcDialog } from './CreateNpcDialog';
 import { ModNpcs } from './ModNpcs';
 import { StoryEditor } from './StoryEditor';
 import { ProgressDashboard } from './ProgressDashboard';
 import { ScriptPicker } from './ScriptPicker';
+import { moveQuest, sortQuests } from './questOrder';
 const EMPTY_QUESTS: PluginSnapshot['quests'] = [];
 const isFragment = (name: string) => /^(?:[a-z0-9]+_)?(?:tif|qf|sf|pf|prkf|term)_/i.test(name);
 async function request<T>(url: string, options?: RequestInit): Promise<T> {
@@ -54,6 +59,8 @@ type SyncResult = {
   dialogues?: { added: SyncChange[]; updated: SyncChange[]; removed: SyncChange[] } | null;
   pluginQuests?: number;
   skyrimQuests?: number;
+  addedQuests?: { id: string; name?: string; formId: string }[];
+  removedQuests?: { id: string; name?: string; formId: string }[];
   error?: string;
 };
 function SyncSummary({ result, onClose }: { result: SyncResult; onClose: () => void }) {
@@ -87,6 +94,30 @@ function SyncSummary({ result, onClose }: { result: SyncResult; onClose: () => v
           </button>
         </div>
         <div className="dialog-body">
+          {!result.error && !!result.addedQuests?.length && (
+            <section className="sync-change-group sync-new-quests">
+              <h3>New quests · {result.addedQuests.length}</h3>
+              <p>Added to the project. Assign them in Quests Setup.</p>
+              {result.addedQuests.map((q) => (
+                <article key={q.formId}>
+                  <small>{q.formId}</small>
+                  <p>{q.name ? `${q.name} (${q.id})` : q.id}</p>
+                </article>
+              ))}
+            </section>
+          )}
+          {!result.error && !!result.removedQuests?.length && (
+            <section className="sync-change-group sync-new-quests">
+              <h3>Removed quests · {result.removedQuests.length}</h3>
+              <p>No longer in the plugin, so they were removed from the project with their assignments.</p>
+              {result.removedQuests.map((q) => (
+                <article key={q.formId}>
+                  <small>{q.formId}</small>
+                  <p>{q.name ? `${q.name} (${q.id})` : q.id}</p>
+                </article>
+              ))}
+            </section>
+          )}
           {result.error ? (
             <p className="error" role="alert">
               {result.error}
@@ -148,8 +179,8 @@ function SyncSummary({ result, onClose }: { result: SyncResult; onClose: () => v
             )}
           {!result.error && (
             <p className="sync-note">
-              The comparison covers dialogue text, type, conditions, speaker and emotion; audio files and
-              other plugin records are not included.
+              The comparison covers dialogue text, type, conditions, speaker, emotion and timing; audio files
+              and other plugin records are not included.
             </p>
           )}
         </div>
@@ -206,6 +237,94 @@ function App() {
     [detail, setDetail] = useState<{ project: Project; snapshot: PluginSnapshot } | null>(null);
   const selectedRef = useRef(selected);
   selectedRef.current = selected;
+  const [manualOrder, setManualOrder] = useState<{ projectId: number; order: string[] | null } | null>(null),
+    [orderError, setOrderError] = useState('');
+  const [questNames, setQuestNames] = useState<{ projectId: number; names: Map<string, string> } | null>(
+    null,
+  );
+  const toNameMap = (names: { questId: string; name: string }[]) =>
+    new Map(names.map((x) => [x.questId.toLowerCase(), x.name]));
+  useEffect(() => {
+    setManualOrder(null);
+    setQuestNames(null);
+    setOrderError('');
+    if (selected === null) return;
+    let active = true;
+    request<{ order: string[] | null }>(`/api/projects/${selected}/quest-order`)
+      .then(({ order }) => {
+        if (active) setManualOrder({ projectId: selected, order });
+      })
+      .catch(() => {
+        if (active) setManualOrder({ projectId: selected, order: null });
+      });
+    request<{ names: { questId: string; name: string }[] }>(`/api/projects/${selected}/quest-names`)
+      .then(({ names }) => {
+        if (active) setQuestNames({ projectId: selected, names: toNameMap(names) });
+      })
+      .catch(() => {
+        if (active) setQuestNames({ projectId: selected, names: new Map() });
+      });
+    return () => {
+      active = false;
+    };
+  }, [selected]);
+  const orderedQuests = useMemo(() => {
+    if (
+      !detail ||
+      manualOrder?.projectId !== detail.project.id ||
+      questNames?.projectId !== detail.project.id
+    )
+      return null;
+    const renamed = detail.snapshot.quests.map((q) => {
+      const custom = questNames.names.get(q.id.toLowerCase());
+      return custom ? { ...q, name: custom, pluginName: q.name ?? '' } : q;
+    });
+    return sortQuests(renamed, detail.snapshot.questOrder, manualOrder.order);
+  }, [detail, manualOrder, questNames]);
+  /** Saves a custom quest name for this app; an empty name restores the plugin's name. */
+  async function renameQuest(questId: string, name: string) {
+    if (!detail) return;
+    const id = detail.project.id;
+    const saved = await request<{ names: { questId: string; name: string }[] }>(
+      `/api/projects/${id}/quest-names`,
+      {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ questId, name }),
+      },
+    );
+    if (selectedRef.current === id) setQuestNames({ projectId: id, names: toNameMap(saved.names) });
+  }
+  async function saveQuestOrder(order: string[] | null) {
+    if (!detail || !manualOrder) return;
+    const id = detail.project.id,
+      previous = manualOrder;
+    setOrderError('');
+    setManualOrder({ projectId: id, order });
+    try {
+      const saved = await request<{ order: string[] | null }>(`/api/projects/${id}/quest-order`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order }),
+      });
+      if (selectedRef.current === id) setManualOrder({ projectId: id, order: saved.order });
+    } catch {
+      if (selectedRef.current === id) {
+        setManualOrder(previous);
+        setOrderError('Could not save the quest order. Try again.');
+      }
+    }
+  }
+  const handleMoveQuest = (questId: string, direction: -1 | 1, visible: string[]) => {
+    if (!orderedQuests) return;
+    const next = moveQuest(
+      orderedQuests.map((q) => q.id),
+      visible,
+      questId,
+      direction,
+    );
+    if (next) void saveQuestOrder(next);
+  };
   useEffect(() => setSyncResult(null), [selected]);
   const [progressQuest, setProgressQuest] = useState<{
     category: 'skyrim' | 'mod' | 'npc';
@@ -234,12 +353,23 @@ function App() {
   const [creating, setCreating] = useState(false),
     [name, setName] = useState(''),
     [pluginPath, setPluginPath] = useState(''),
+    [pluginMode, setPluginMode] = useState<'import' | 'new'>('import'),
+    [newFileName, setNewFileName] = useState(''),
+    [newAuthor, setNewAuthor] = useState(''),
+    [newMasters, setNewMasters] = useState<string[]>(['Skyrim.esm', 'Update.esm']),
+    [pluginOptions, setPluginOptions] = useState<{
+      dataDirectory: string;
+      masters: { name: string; available: boolean }[];
+    } | null>(null),
     [error, setError] = useState(''),
     [busy, setBusy] = useState(false);
   const [characters, setCharacters] = useState<{ id: number; name: string; npcFormIds: string[] }[]>([]),
     [characterId, setCharacterId] = useState<number | null>(null),
     [characterName, setCharacterName] = useState(''),
-    [addingCharacter, setAddingCharacter] = useState(false);
+    [addingCharacter, setAddingCharacter] = useState(false),
+    [characterSource, setCharacterSource] = useState<'plugin' | 'external'>('plugin'),
+    [creatingQuest, setCreatingQuest] = useState(false),
+    [creatingNpc, setCreatingNpc] = useState(false);
   const [npcs, setNpcs] = useState<{ formId: string; editorId: string; name: string }[]>([]),
     [npcFormIds, setNpcFormIds] = useState<string[]>([]),
     [npcsLoading, setNpcsLoading] = useState(false);
@@ -248,6 +378,7 @@ function App() {
     let active = true;
     setNpcs([]);
     setNpcFormIds([]);
+    setCharacterSource('plugin');
     setNpcsLoading(true);
     request<{ npcs: { formId: string; editorId: string; name: string }[] }>(`/api/projects/${selected}/npcs`)
       .then((data) => {
@@ -516,24 +647,53 @@ function App() {
       setBusy(false);
     }
   }
+  function choosePluginMode(mode: 'import' | 'new') {
+    setPluginMode(mode);
+    setError('');
+    if (mode === 'new' && !pluginOptions)
+      request<{ dataDirectory: string; masters: { name: string; available: boolean }[] }>(
+        '/api/new-plugin/options',
+      )
+        .then((options) => {
+          setPluginOptions(options);
+          setNewMasters((current) =>
+            current.filter((m) => options.masters.some((o) => o.name === m && o.available)),
+          );
+        })
+        .catch((e) => setError(e instanceof Error ? e.message : 'Could not read the Data folder.'));
+  }
   async function create(e: React.FormEvent) {
     e.preventDefault();
     setBusy(true);
     setError('');
     try {
-      const project = await request<Project>('/api/projects', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, pluginPath }),
-      });
+      const project =
+        pluginMode === 'new'
+          ? await request<Project>('/api/projects/new-plugin', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ name, fileName: newFileName, author: newAuthor, masters: newMasters }),
+            })
+          : await request<Project>('/api/projects', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ name, pluginPath }),
+            });
       setProjects((x) => [project, ...x]);
       setSelected(project.id);
       setPage('organize');
       setCreating(false);
       setName('');
       setPluginPath('');
+      setNewFileName('');
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Import failed.');
+      setError(
+        e instanceof Error
+          ? e.message
+          : pluginMode === 'new'
+            ? 'Could not create the plugin.'
+            : 'Import failed.',
+      );
     } finally {
       setBusy(false);
     }
@@ -545,14 +705,18 @@ function App() {
     setSyncResult(null);
     try {
       const result = await request<SyncResult>(`/api/projects/${id}/sync-dialogue`, { method: 'POST' });
-      setDetail((current) =>
-        current?.project.id === id
-          ? {
-              ...current,
-              snapshot: { ...current.snapshot, quests: current.snapshot.quests.map((q) => ({ ...q })) },
-            }
-          : current,
-      );
+      if (result.addedQuests?.length || result.removedQuests?.length) {
+        const fresh = await request<{ project: Project; snapshot: PluginSnapshot }>(`/api/projects/${id}`);
+        if (selectedRef.current === id) setDetail(fresh);
+      } else
+        setDetail((current) =>
+          current?.project.id === id
+            ? {
+                ...current,
+                snapshot: { ...current.snapshot, quests: current.snapshot.quests.map((q) => ({ ...q })) },
+              }
+            : current,
+        );
       if (selectedRef.current === id) {
         setSkyrimCoverage(null);
         setSyncRevision((n) => n + 1);
@@ -573,6 +737,37 @@ function App() {
     }
   }
   const project = projects.find((p) => p.id === selected);
+  const projectPlugin = project?.plugin;
+  // Mod and NPC quest pages report one of the project's own quests.
+  const setPluginQuestContext = useCallback(
+    (questId: string | null) => {
+      const quest = questId ? orderedQuests?.find((q) => q.id === questId) : undefined;
+      setContextQuest(
+        quest && projectPlugin
+          ? {
+              id: quest.id,
+              name: quest.name || quest.id,
+              group: '',
+              plugin: projectPlugin,
+              stages: quest.stages.map(String),
+            }
+          : null,
+      );
+    },
+    [orderedQuests, projectPlugin],
+  );
+  const pageLabels: Record<typeof page, string> = {
+    progress: 'Progress',
+    organize: 'Quests Setup',
+    projects: manageSkyrimLinks ? 'Skyrim Quests (managing assignments)' : 'Skyrim Quests',
+    modquests: manageModLinks ? 'Mod Quests (managing assignments)' : 'Mod Quests',
+    npcquests: manageNpcLinks ? 'NPCs Quests (managing assignments)' : 'NPCs Quests',
+    lore: 'Mod Lore',
+    modnpcs: 'Mod NPCs',
+    scripts: 'Scripts',
+    settings: 'Settings',
+    character: 'Character',
+  };
   return (
     <div className="app">
       <button
@@ -788,7 +983,7 @@ function App() {
                   + Create project
                 </button>
               </section>
-            ) : detail?.project.id === project.id ? (
+            ) : detail?.project.id === project.id && orderedQuests ? (
               <>
                 <div className={page === 'organize' ? 'quest-setup' : undefined}>
                   {page === 'organize' && (
@@ -797,21 +992,53 @@ function App() {
                         <div>
                           <p className="quest-setup-description">Choose where each imported quest belongs.</p>
                         </div>
-                        <button
-                          type="button"
-                          className="secondary quest-setup-add-character"
-                          onClick={() => {
-                            setError('');
-                            setAddingCharacter(true);
-                          }}
-                        >
-                          <UserPlus size={17} aria-hidden="true" /> Add character
-                        </button>
+                        <div className="quest-setup-actions">
+                          <button
+                            type="button"
+                            className="secondary quest-setup-add-character"
+                            onClick={() => {
+                              setError('');
+                              setCreatingQuest(true);
+                            }}
+                          >
+                            <FilePlus2 size={17} aria-hidden="true" /> Create New Quest
+                          </button>
+                          <button
+                            type="button"
+                            className="secondary quest-setup-add-character"
+                            onClick={() => {
+                              setError('');
+                              setCreatingNpc(true);
+                            }}
+                          >
+                            <UserRoundPlus size={17} aria-hidden="true" /> Create New NPC
+                          </button>
+                          <button
+                            type="button"
+                            className="secondary quest-setup-add-character"
+                            onClick={() => {
+                              setError('');
+                              setAddingCharacter(true);
+                            }}
+                          >
+                            <UserPlus size={17} aria-hidden="true" /> Add character
+                          </button>
+                        </div>
                       </div>
                     </>
                   )}
                   {page === 'npcquests' && (
                     <div className="skyrim-manage npc-page-actions">
+                      <button
+                        type="button"
+                        className="secondary"
+                        onClick={() => {
+                          setError('');
+                          setCreatingNpc(true);
+                        }}
+                      >
+                        <UserRoundPlus size={17} aria-hidden="true" /> Create New NPC
+                      </button>
                       <button
                         type="button"
                         className="secondary"
@@ -861,7 +1088,7 @@ function App() {
                       key={project.id}
                       initialQuest={progressQuest?.category === 'skyrim' ? progressQuest : undefined}
                       projectId={project.id}
-                      quests={detail.snapshot.quests}
+                      quests={orderedQuests}
                       onQuestContext={setContextQuest}
                       onOpenSetup={() => setPage('organize')}
                     />
@@ -870,7 +1097,8 @@ function App() {
                       key={project.id}
                       initialQuest={progressQuest?.category === 'mod' ? progressQuest : undefined}
                       projectId={project.id}
-                      quests={detail.snapshot.quests}
+                      quests={orderedQuests}
+                      onQuestContext={setPluginQuestContext}
                       onOpenSetup={() => setPage('organize')}
                     />
                   ) : page === 'npcquests' && !manageNpcLinks ? (
@@ -878,7 +1106,8 @@ function App() {
                       key={project.id}
                       initialQuest={progressQuest?.category === 'npc' ? progressQuest : undefined}
                       projectId={project.id}
-                      quests={detail.snapshot.quests}
+                      quests={orderedQuests}
+                      onQuestContext={setPluginQuestContext}
                       characters={characters}
                       onRemoveCharacter={(id) => {
                         setCharacterId(id);
@@ -891,7 +1120,7 @@ function App() {
                     <QuestDashboard
                       key={`${project.id}:${page}`}
                       projectId={project.id}
-                      quests={detail.snapshot.quests}
+                      quests={orderedQuests}
                       characters={characters}
                       setup={page === 'organize'}
                       organizedOnly={page === 'projects' || page === 'modquests' || page === 'npcquests'}
@@ -912,6 +1141,17 @@ function App() {
                       }}
                       onOpenSetup={() => setPage('organize')}
                       onQuestContext={setContextQuest}
+                      onRename={renameQuest}
+                      {...(page === 'modquests' || page === 'npcquests'
+                        ? {
+                            order: {
+                              custom: !!manualOrder?.order,
+                              error: orderError,
+                              onMove: handleMoveQuest,
+                              onReset: () => void saveQuestOrder(null),
+                            },
+                          }
+                        : {})}
                     />
                   )}
                 </div>
@@ -943,9 +1183,9 @@ function App() {
                 ignoredSkyrim={ignoredSkyrim}
                 onIgnoredChange={setIgnoredSkyrim}
                 onAnalysisSaved={updateSkyrimDialogueCount}
-                ready={detail?.project.id === project.id}
+                ready={detail?.project.id === project.id && !!orderedQuests}
                 projectId={project.id}
-                quests={detail?.project.id === project.id ? detail.snapshot.quests : EMPTY_QUESTS}
+                quests={detail?.project.id === project.id && orderedQuests ? orderedQuests : EMPTY_QUESTS}
                 onOpenQuest={(category, questId, group, plugin) => {
                   setProgressQuest({ category, questId, group, plugin });
                   setManageSkyrimLinks(false);
@@ -1039,10 +1279,10 @@ function App() {
                   Remove character
                 </button>
               </div>
-              {project && detail?.project.id === project.id && (
+              {project && detail?.project.id === project.id && orderedQuests && (
                 <QuestDashboard
                   projectId={project.id}
-                  quests={detail.snapshot.quests}
+                  quests={orderedQuests}
                   characters={characters}
                   characterId={characterId}
                   onCountChange={setOrganizedCount}
@@ -1053,6 +1293,7 @@ function App() {
                   }}
                   onOpenSetup={() => setPage('organize')}
                   onQuestContext={setContextQuest}
+                  onRename={renameQuest}
                 />
               )}
             </section>
@@ -1064,6 +1305,7 @@ function App() {
         projectId={selected}
         projectName={project?.name}
         quest={contextQuest}
+        page={project ? pageLabels[page] : undefined}
         settingsRevision={settingsRevision}
         onOpenSettings={() => {
           setError('');
@@ -1114,6 +1356,28 @@ function App() {
           </div>
         </div>
       )}
+      {creatingNpc && selected !== null && (
+        <CreateNpcDialog
+          projectId={selected}
+          onClose={() => setCreatingNpc(false)}
+          onCreated={() => setCreatingNpc(false)}
+        />
+      )}
+      {creatingQuest && selected !== null && (
+        <CreateQuestDialog
+          projectId={selected}
+          onClose={() => setCreatingQuest(false)}
+          onCreated={() => {
+            const projectId = selected;
+            setCreatingQuest(false);
+            request<{ project: Project; snapshot: PluginSnapshot }>(`/api/projects/${projectId}`)
+              .then((x) => {
+                if (projectId === selected) setDetail(x);
+              })
+              .catch((e) => setError(e.message));
+          }}
+        />
+      )}
       {addingCharacter && (
         <div className="overlay" onClick={() => !busy && setAddingCharacter(false)}>
           <form className="dialog" onSubmit={addCharacter} onClick={(e) => e.stopPropagation()}>
@@ -1129,19 +1393,49 @@ function App() {
               </button>
             </div>
             <div className="dialog-body">
-              <NpcSelector
-                npcs={npcs}
-                selected={npcFormIds}
-                loading={npcsLoading}
-                onChange={(ids) => {
-                  setNpcFormIds(ids);
-                  if (!characterName && ids.length) {
-                    const npc = npcs.find((n) => n.formId === ids[0]);
-                    if (npc) setCharacterName(npc.name || npc.editorId);
-                  }
-                }}
-              />
-              {!npcsLoading && !npcs.length && <p className="hint">No NPCs were found in this plugin.</p>}
+              <div className="character-source" role="group" aria-label="Character source">
+                <button
+                  type="button"
+                  aria-pressed={characterSource === 'plugin'}
+                  onClick={() => setCharacterSource('plugin')}
+                >
+                  <strong>NPC in this mod</strong>
+                  <span>Link to an existing NPC in the plugin.</span>
+                </button>
+                <button
+                  type="button"
+                  aria-pressed={characterSource === 'external'}
+                  onClick={() => {
+                    setCharacterSource('external');
+                    setNpcFormIds([]);
+                  }}
+                >
+                  <strong>NPC outside this mod</strong>
+                  <span>Use a character from Skyrim or another mod.</span>
+                </button>
+              </div>
+              {characterSource === 'plugin' ? (
+                <>
+                  <NpcSelector
+                    npcs={npcs}
+                    selected={npcFormIds}
+                    loading={npcsLoading}
+                    onChange={(ids) => {
+                      setNpcFormIds(ids);
+                      if (!characterName && ids.length) {
+                        const npc = npcs.find((n) => n.formId === ids[0]);
+                        if (npc) setCharacterName(npc.name || npc.editorId);
+                      }
+                    }}
+                  />
+                  {!npcsLoading && !npcs.length && <p className="hint">No NPCs were found in this plugin.</p>}
+                </>
+              ) : (
+                <p className="character-source-note">
+                  Add a character by name to assign a voice and organize dialogue. This does not create or
+                  link an Actor in the game.
+                </p>
+              )}
               <label>
                 Character name
                 <input
@@ -1149,7 +1443,7 @@ function App() {
                   maxLength={100}
                   value={characterName}
                   onChange={(e) => setCharacterName(e.target.value)}
-                  placeholder="Character name"
+                  placeholder={characterSource === 'external' ? 'e.g. Stenvar' : 'Character name'}
                 />
               </label>
               {error && (
@@ -1162,7 +1456,14 @@ function App() {
               <button type="button" className="secondary" onClick={() => setAddingCharacter(false)}>
                 Cancel
               </button>
-              <button className="primary" disabled={busy || npcsLoading || !npcFormIds.length}>
+              <button
+                className="primary"
+                disabled={
+                  busy ||
+                  !characterName.trim() ||
+                  (characterSource === 'plugin' && (npcsLoading || !npcFormIds.length))
+                }
+              >
                 Add character
               </button>
             </footer>
@@ -1175,15 +1476,35 @@ function App() {
             <div className="dialog-head">
               <div>
                 <p className="eyebrow">NEW PROJECT</p>
-                <h2>Import a plugin</h2>
+                <h2>{pluginMode === 'new' ? 'Create a plugin' : 'Import a plugin'}</h2>
               </div>
               <button type="button" className="close" aria-label="Close" onClick={() => setCreating(false)}>
                 <X size={24} aria-hidden="true" />
               </button>
             </div>
             <div className="dialog-body">
+              <div className="progress-tabs plugin-mode-tabs" role="tablist" aria-label="Plugin source">
+                {(
+                  [
+                    ['import', 'Existing plugin'],
+                    ['new', 'New plugin'],
+                  ] as const
+                ).map(([mode, label]) => (
+                  <button
+                    key={mode}
+                    type="button"
+                    role="tab"
+                    aria-selected={pluginMode === mode}
+                    onClick={() => choosePluginMode(mode)}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
               <p>
-                Start with an existing plugin. The import identifies its own quests without changing the file.
+                {pluginMode === 'new'
+                  ? 'Creates an empty ESP in your Skyrim Data folder. Activate it in your mod manager or load order to use it in game.'
+                  : 'Start with an existing plugin. The import identifies its own quests without changing the file.'}
               </p>
               <label>
                 Project name
@@ -1195,22 +1516,72 @@ function App() {
                   placeholder="e.g. Bjorn"
                 />
               </label>
-              <div className="plugin-field">
-                <label htmlFor="plugin-path">Plugin file</label>
-                <div className="plugin-picker-row">
-                  <input
-                    id="plugin-path"
-                    required
-                    value={pluginPath}
-                    onChange={(e) => setPluginPath(e.target.value)}
-                    placeholder="C:\...\Data\your-plugin.esp"
-                  />
-                  <button type="button" className="secondary" disabled={busy} onClick={browsePlugin}>
-                    {busy ? 'Opening…' : 'Browse…'}
-                  </button>
-                </div>
-              </div>
-              <p className="hint">Choose an ESP or ESM file, or enter its full path.</p>
+              {pluginMode === 'new' ? (
+                <>
+                  <label>
+                    File name
+                    <input
+                      required
+                      maxLength={64}
+                      value={newFileName}
+                      onChange={(e) => setNewFileName(e.target.value)}
+                      placeholder="e.g. BjornFollower.esp"
+                    />
+                  </label>
+                  <label>
+                    Author
+                    <input
+                      maxLength={100}
+                      value={newAuthor}
+                      onChange={(e) => setNewAuthor(e.target.value)}
+                      placeholder="Optional"
+                    />
+                  </label>
+                  <fieldset className="plugin-masters">
+                    <legend>Masters</legend>
+                    <div className="create-quest-flags">
+                      {(pluginOptions?.masters ?? [{ name: 'Skyrim.esm', available: true }]).map((m) => (
+                        <label key={m.name} className={m.available ? '' : 'unavailable'}>
+                          <input
+                            type="checkbox"
+                            disabled={m.name === 'Skyrim.esm' || !m.available}
+                            checked={m.name === 'Skyrim.esm' || newMasters.includes(m.name)}
+                            onChange={(e) =>
+                              setNewMasters((x) =>
+                                e.target.checked ? [...x, m.name] : x.filter((n) => n !== m.name),
+                              )
+                            }
+                          />
+                          {m.name}
+                        </label>
+                      ))}
+                    </div>
+                  </fieldset>
+                  <p className="hint">
+                    Masters can't be removed later, so only add the ones your follower needs.
+                    {pluginOptions && <> Saved to {pluginOptions.dataDirectory}.</>}
+                  </p>
+                </>
+              ) : (
+                <>
+                  <div className="plugin-field">
+                    <label htmlFor="plugin-path">Plugin file</label>
+                    <div className="plugin-picker-row">
+                      <input
+                        id="plugin-path"
+                        required
+                        value={pluginPath}
+                        onChange={(e) => setPluginPath(e.target.value)}
+                        placeholder="C:\...\Data\your-plugin.esp"
+                      />
+                      <button type="button" className="secondary" disabled={busy} onClick={browsePlugin}>
+                        {busy ? 'Opening…' : 'Browse…'}
+                      </button>
+                    </div>
+                  </div>
+                  <p className="hint">Choose an ESP or ESM file, or enter its full path.</p>
+                </>
+              )}
               {error && (
                 <p className="error" role="alert">
                   {error}
@@ -1222,7 +1593,7 @@ function App() {
                 Cancel
               </button>
               <button disabled={busy} className="primary">
-                {busy ? 'Importing…' : 'Create project'}
+                {busy ? (pluginMode === 'new' ? 'Creating…' : 'Importing…') : 'Create project'}
               </button>
             </footer>
           </form>

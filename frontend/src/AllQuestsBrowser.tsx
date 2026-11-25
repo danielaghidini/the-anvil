@@ -1,20 +1,36 @@
 import { AddIdleDialog } from './AddIdleDialog';
+import type { DialogueTiming, DialogueTimingFields } from '../../shared/dialogue-timing';
+import { DialogueCategories } from './DialogueCategories';
+import { QuestDialogueList } from './QuestDialogueList';
+import { dialogueForQuest, type DialogueView } from '../../shared/dialogue-categories';
+import { RepeatedLine, stageAnchor, stageRanges } from './stageRanges';
 import { DialogueEntry, type VoiceChoice } from './DialogueEntry';
 import { useEffect, useMemo, useState } from 'react';
 import { Search } from 'lucide-react';
 import type { CatalogQuest, PluginQuest } from '../../shared/types';
 import type { StageCondition } from '../../shared/stage-match';
-import { filterStageDialogues, groupStageDialogues, objectiveStageMap } from '../../shared/skyrim-dialogue';
+import {
+  filterStageDialogues,
+  groupStageDialogues,
+  filterStagesByVoice,
+  objectiveStageMap,
+  type VoiceFilter,
+} from '../../shared/skyrim-dialogue';
 import { AssignmentSelect, label } from './QuestDashboard';
 import { QuestCoverage } from './QuestCoverage';
 import { StageObjectives } from './StageObjectives';
 import { StageIgnoreToggle, gameStageKey, pluginStageKey, useIgnoredStages } from './ignoredStages';
 
-type Line = {
+type Line = DialogueTimingFields & {
   info: string;
   response: number;
   text: string;
   topicType: string;
+  topicCategory?: number;
+  topicEditorId?: string;
+  speaker?: string;
+  pendingVoice?: boolean;
+  canDelete?: boolean;
   voices?: VoiceChoice[];
   conditions: StageCondition[];
   modQuest?: string;
@@ -27,7 +43,14 @@ type Detail = { stages: number[]; formId: string | null; objectiveTexts?: Record
 type GameResult = { detail: Detail | null; lines: Line[]; error?: string };
 type PluginResult = { lines: Line[]; error?: string };
 type Props =
-  | { projectId: number; kind: 'skyrim'; quests: CatalogQuest[]; pluginQuests: PluginQuest[]; links: Links }
+  | {
+      projectId: number;
+      kind: 'skyrim';
+      quests: CatalogQuest[];
+      pluginQuests: PluginQuest[];
+      links: Links;
+      initialStatus?: string;
+    }
   | { projectId: number; kind: 'plugin'; quests: PluginQuest[] };
 async function get<T>(url: string, signal: AbortSignal): Promise<T> {
   const response = await fetch(url, { signal });
@@ -36,11 +59,16 @@ async function get<T>(url: string, signal: AbortSignal): Promise<T> {
 }
 const gameKey = (q: CatalogQuest) => `${q.plugin}|${q.id}`;
 export function AllQuestsBrowser(props: Props) {
+  const [dialogueView, setDialogueView] = useState<DialogueView>('stages');
+  const [voiceRevision, setVoiceRevision] = useState(0);
   const [adding, setAdding] = useState<{ quest: PluginQuest; stage: number } | null>(null),
     [saveRefreshError, setSaveRefreshError] = useState('');
   const [query, setQuery] = useState(''),
     [stage, setStage] = useState(''),
-    [status, setStatus] = useState('objectives'),
+    [status, setStatus] = useState(
+      props.kind === 'skyrim' ? (props.initialStatus ?? 'objectives') : 'objectives',
+    ),
+    [voiceFilter, setVoiceFilter] = useState<VoiceFilter>(''),
     [gameResults, setGameResults] = useState<Record<string, GameResult>>({}),
     [pluginResults, setPluginResults] = useState<Record<string, PluginResult>>({}),
     [loaded, setLoaded] = useState(0);
@@ -168,6 +196,7 @@ export function AllQuestsBrowser(props: Props) {
             stageKey: gameStageKey(game.plugin, game.id),
             title: game.name || game.id,
             group: label(game.group),
+            lines: dialogueForQuest(result?.lines ?? [], detail?.formId),
             stages,
             objectives,
             texts: detail?.objectiveTexts,
@@ -193,6 +222,7 @@ export function AllQuestsBrowser(props: Props) {
           stageKey: pluginStageKey(mod.id),
           title: mod.name || mod.id,
           group: '',
+          lines: result?.lines ?? [],
           stages: result && !result.error ? groupStageDialogues(mod.stages, mod.formId, result.lines) : [],
           objectives,
           texts: mod.objectiveTexts,
@@ -218,11 +248,116 @@ export function AllQuestsBrowser(props: Props) {
     [entries, status],
   );
   const ignoredStages = useIgnoredStages(props.projectId);
+  function removeLine(questId: string, line: Line) {
+    const remaining = (items: Line[]) =>
+      items.filter((item) => item.info !== line.info || item.response !== line.response);
+    if (props.kind === 'plugin') {
+      setPluginResults((current) => {
+        const result = current[questId];
+        return result ? { ...current, [questId]: { ...result, lines: remaining(result.lines) } } : current;
+      });
+    } else {
+      setGameResults((current) =>
+        Object.fromEntries(
+          Object.entries(current).map(([key, result]) => [
+            key,
+            { ...result, lines: remaining(result.lines) },
+          ]),
+        ),
+      );
+    }
+  }
+  async function reloadVoice(owner: string, info: string, response: number) {
+    try {
+      setSaveRefreshError('');
+      const data = await get<{ lines: Line[] }>(
+        `/api/projects/${props.projectId}/quests/${encodeURIComponent(owner)}/dialogue`,
+        new AbortController().signal,
+      );
+      const approved = data.lines.find((item) => item.info === info && item.response === response);
+      if (!approved) throw Error('Saved dialogue not found.');
+      if (props.kind === 'plugin') {
+        setPluginResults((current) => ({ ...current, [owner]: { lines: data.lines } }));
+        setVoiceRevision((value) => value + 1);
+        return;
+      }
+      setGameResults((current) =>
+        Object.fromEntries(
+          Object.entries(current).map(([key, result]) => [
+            key,
+            {
+              ...result,
+              lines: result.lines.map((item) =>
+                item.modQuest === owner && item.info === info && item.response === response
+                  ? { ...approved, modQuest: owner }
+                  : item,
+              ),
+            },
+          ]),
+        ),
+      );
+      setVoiceRevision((value) => value + 1);
+    } catch {
+      setSaveRefreshError('Voice saved. Reload to refresh the dialogue.');
+    }
+  }
   const allStages = entries
     .filter((e) => e.canMatch)
     .flatMap((e) => e.stages.map((s) => ({ ...s, ignored: ignoredStages.isIgnored(e.stageKey, s.number) })));
+  function updateTiming(owner: string, line: Line, timing: DialogueTiming) {
+    const update = (items: Line[]) =>
+      items.map((item) =>
+        item.info === line.info && item.modQuest === line.modQuest ? { ...item, ...timing } : item,
+      );
+    if (props.kind === 'plugin')
+      setPluginResults((current) => {
+        const result = current[owner];
+        return result ? { ...current, [owner]: { ...result, lines: update(result.lines) } } : current;
+      });
+    else
+      setGameResults((current) =>
+        Object.fromEntries(
+          Object.entries(current).map(([key, result]) => [key, { ...result, lines: update(result.lines) }]),
+        ),
+      );
+  }
+  const categoryCounts = [
+    ...new Map(
+      entries
+        .flatMap((entry) => entry.lines)
+        .map((line) => [`${line.modQuest ?? ''}|${line.info}|${line.response}`, line]),
+    ).values(),
+  ];
+  function updateText(owner: string, line: Line, text: string) {
+    const update = (items: Line[]) =>
+      items.map((item) =>
+        item.info === line.info && item.response === line.response && item.modQuest === line.modQuest
+          ? { ...item, text }
+          : item,
+      );
+    if (props.kind === 'plugin')
+      setPluginResults((current) => {
+        const result = current[owner];
+        return result ? { ...current, [owner]: { ...result, lines: update(result.lines) } } : current;
+      });
+    else
+      setGameResults((current) =>
+        Object.fromEntries(
+          Object.entries(current).map(([key, result]) => [key, { ...result, lines: update(result.lines) }]),
+        ),
+      );
+  }
   return (
     <>
+      <DialogueCategories
+        lines={categoryCounts}
+        stageLabel={entries.some((entry) => entry.stages.length > 0) ? 'Stages' : 'All'}
+        value={dialogueView}
+        onChange={(value) => {
+          setDialogueView(value);
+          setStage('');
+        }}
+      />
       <div className="skyrim-toolbar">
         <label className="search">
           <Search size={20} strokeWidth={1.6} aria-hidden="true" />
@@ -233,36 +368,55 @@ export function AllQuestsBrowser(props: Props) {
             onChange={(e) => setQuery(e.target.value)}
           />
         </label>
-        <div className="skyrim-stage-picker">
-          <AssignmentSelect
-            value={stage}
-            placeholder="All stages"
-            disabled={!options.length}
-            options={options.map((n) => ({ value: String(n), label: `Stage ${n}` }))}
-            onChange={setStage}
-          />
-        </div>
+        {dialogueView === 'stages' && (
+          <div className="skyrim-stage-picker">
+            <AssignmentSelect
+              value={stage}
+              placeholder="All stages"
+              disabled={!options.length}
+              options={options.map((n) => ({ value: String(n), label: `Stage ${n}` }))}
+              onChange={setStage}
+            />
+          </div>
+        )}
+        {dialogueView === 'stages' && (
+          <div className="skyrim-status-picker">
+            <AssignmentSelect
+              value={status}
+              placeholder="All statuses"
+              placeholderLast
+              disabled={false}
+              options={[
+                { value: 'objectives', label: 'Stages with objectives' },
+                { value: 'missing', label: 'No direct dialogue' },
+                { value: 'present', label: 'Has direct dialogue' },
+                ...(props.kind === 'skyrim' ? [{ value: 'review', label: 'Pending voice approval' }] : []),
+                { value: 'most', label: 'Most dialogues first' },
+                { value: 'fewest', label: 'Fewest dialogues first' },
+              ]}
+              onChange={(value) => {
+                setStatus(value);
+                setStage('');
+              }}
+            />
+          </div>
+        )}
         <div className="skyrim-status-picker">
           <AssignmentSelect
-            value={status}
-            placeholder="All statuses"
-            placeholderLast
+            value={voiceFilter}
+            placeholder="All voices"
             disabled={false}
             options={[
-              { value: 'objectives', label: 'Stages with objectives' },
-              { value: 'missing', label: 'No direct dialogue' },
-              { value: 'present', label: 'Has direct dialogue' },
-              { value: 'most', label: 'Most dialogues first' },
-              { value: 'fewest', label: 'Fewest dialogues first' },
+              { value: 'no-voice', label: 'Voice unavailable' },
+              { value: 'with-voice', label: 'Has voice' },
             ]}
-            onChange={(value) => {
-              setStatus(value);
-              setStage('');
-            }}
+            onChange={(value) => setVoiceFilter(value as VoiceFilter)}
           />
         </div>
       </div>
-      <QuestCoverage stages={allStages} isIgnored={(s) => (s as { ignored?: boolean }).ignored === true} />
+      {dialogueView === 'stages' && (
+        <QuestCoverage stages={allStages} isIgnored={(s) => (s as { ignored?: boolean }).ignored === true} />
+      )}
       {ignoredStages.error && (
         <p className="error" role="alert">
           {ignoredStages.error}
@@ -272,18 +426,19 @@ export function AllQuestsBrowser(props: Props) {
         {props.quests.length} quests ·{' '}
         {loaded < props.quests.length ? `Loading ${loaded} of ${props.quests.length}…` : 'All quests loaded'}
       </p>
-      <p className="skyrim-match-hint">
-        Direct stage conditions only. Quest and objective data load as they become available.
-      </p>
+      {dialogueView === 'stages' && (
+        <p className="skyrim-match-hint">
+          Direct stage conditions only. Quest and objective data load as they become available.
+        </p>
+      )}
       <div className="all-quest-list">
         {entries.map((entry) => {
-          const visible = filterStageDialogues(
-            entry.stages,
-            stage,
-            status,
-            query,
-            new Set(entry.objectives.keys()),
+          const visible = filterStagesByVoice(
+            filterStageDialogues(entry.stages, stage, status, query, new Set(entry.objectives.keys())),
+            voiceFilter,
           );
+          if (dialogueView === 'stages' && status === 'review' && !visible.length) return null;
+          const ranges = stageRanges(entry.stages, visible);
           return (
             <section className="all-quest" key={entry.id}>
               <h3>
@@ -294,6 +449,22 @@ export function AllQuestsBrowser(props: Props) {
                 <p className="muted">Loading quest…</p>
               ) : entry.error ? (
                 <p className="info">{entry.error}</p>
+              ) : dialogueView !== 'stages' ? (
+                <QuestDialogueList
+                  key={`${entry.id}|${dialogueView}|${voiceRevision}`}
+                  projectId={props.projectId}
+                  questId={entry.id}
+                  lines={entry.lines}
+                  category={dialogueView}
+                  query={query}
+                  voiceFilter={voiceFilter}
+                  onTextSaved={(line, text) => updateText(line.modQuest ?? entry.id, line, text)}
+                  onDeleted={(line) => removeLine(line.modQuest ?? entry.id, line)}
+                  onTimingSaved={(line, timing) => updateTiming(line.modQuest ?? entry.id, line, timing)}
+                  onVoiceSaved={(line) =>
+                    void reloadVoice(line.modQuest ?? entry.id, line.info, line.response)
+                  }
+                />
               ) : status === 'objectives' && !entry.objectivesKnown ? (
                 <p className="muted">Objective links unavailable for this quest.</p>
               ) : !entry.stages.length ? (
@@ -306,6 +477,7 @@ export function AllQuestsBrowser(props: Props) {
                     <section
                       className={`panel skyrim-stage ${ignoredStages.isIgnored(entry.stageKey, item.number) ? 'is-ignored' : ''}`}
                       key={item.number}
+                      id={stageAnchor(entry.id, item.number)}
                     >
                       <div className="skyrim-stage-heading">
                         <strong>Stage {item.number}</strong>
@@ -341,15 +513,60 @@ export function AllQuestsBrowser(props: Props) {
                         </div>
                       </div>
                       <StageObjectives numbers={entry.objectives.get(item.number)} texts={entry.texts} />
-                      {item.lines.map((line) => (
-                        <DialogueEntry
-                          key={`${line.modQuest ?? ''}|${line.info}|${line.response}`}
-                          projectId={props.projectId}
-                          questId={line.modQuest ?? entry.id}
-                          line={line}
-                          subtitle={`${line.modQuest ? `${line.modQuest} · ` : ''}${line.topicType}`}
-                        />
-                      ))}
+                      {item.lines.map((line) => {
+                        const shown = ranges.shownIn(line, item.number);
+                        return shown !== undefined ? (
+                          <RepeatedLine
+                            key={`${line.modQuest ?? ''}|${line.info}|${line.response}`}
+                            text={line.text}
+                            label={ranges.label(line)}
+                            stage={shown}
+                            scope={entry.id}
+                          />
+                        ) : (
+                          <DialogueEntry
+                            key={`${line.modQuest ?? ''}|${line.info}|${line.response}`}
+                            projectId={props.projectId}
+                            questId={line.modQuest ?? entry.id}
+                            line={line}
+                            onDeleted={() => removeLine(line.modQuest ?? entry.id, line)}
+                            onTimingSaved={(timing) => updateTiming(line.modQuest ?? entry.id, line, timing)}
+                            onVoiceSaved={
+                              line.modQuest
+                                ? () => void reloadVoice(line.modQuest!, line.info, line.response)
+                                : undefined
+                            }
+                            onTextSaved={(text) => {
+                              const update = (items: Line[]) =>
+                                items.map((item) =>
+                                  item.info === line.info &&
+                                  item.response === line.response &&
+                                  item.modQuest === line.modQuest
+                                    ? { ...item, text }
+                                    : item,
+                                );
+                              if (props.kind === 'plugin')
+                                setPluginResults((current) => {
+                                  const result = current[entry.id];
+                                  return result
+                                    ? { ...current, [entry.id]: { ...result, lines: update(result.lines) } }
+                                    : current;
+                                });
+                              else
+                                setGameResults((current) =>
+                                  Object.fromEntries(
+                                    Object.entries(current).map(([key, result]) => [
+                                      key,
+                                      { ...result, lines: update(result.lines) },
+                                    ]),
+                                  ),
+                                );
+                            }}
+                            subtitle={`${line.modQuest ? `${line.modQuest} · ` : ''}${line.topicType}`}
+                            badge={ranges.label(line)}
+                          />
+                        );
+                      })}
                     </section>
                   ))}
                 </div>

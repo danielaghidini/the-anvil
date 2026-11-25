@@ -105,7 +105,7 @@ export function compareDialogueBaseline(old: DialogueBaseline | null, now: Dialo
       if (a && b && JSON.stringify(a) !== JSON.stringify(b)) {
         const details: string[] = [];
         if (a.text !== b.text) details.push('Text');
-        if (a.topicType !== b.topicType) details.push('Type');
+        if (a.topicType !== b.topicType || a.topicCategory !== b.topicCategory) details.push('Type');
         if (
           JSON.stringify(a.conditions) !== JSON.stringify(b.conditions) ||
           a.conditionSignature !== b.conditionSignature
@@ -113,6 +113,10 @@ export function compareDialogueBaseline(old: DialogueBaseline | null, now: Dialo
           details.push('Conditions');
         if (a.speaker !== b.speaker) details.push('Speaker');
         if (a.emotionType !== b.emotionType || a.emotionValue !== b.emotionValue) details.push('Emotion');
+        if ((a.resetHours ?? 0) !== (b.resetHours ?? 0) || (a.sayOnce ?? false) !== (b.sayOnce ?? false))
+          details.push('Timing');
+        if (a.pendingVoice !== b.pendingVoice) details.push('Voice approval');
+        if (!details.length) continue;
         updated.push({
           quest,
           info: b.info,

@@ -1,14 +1,30 @@
 import { AddIdleDialog } from './AddIdleDialog';
+import type { DialogueTiming, DialogueTimingFields } from '../../shared/dialogue-timing';
+import { DialogueCategories } from './DialogueCategories';
+import { QuestDialogueList } from './QuestDialogueList';
+import { dialogueForQuest, type DialogueView } from '../../shared/dialogue-categories';
+import { RepeatedLine, stageAnchor, stageRanges } from './stageRanges';
 import { DialogueEntry, type VoiceChoice } from './DialogueEntry';
 import { AllQuestsBrowser } from './AllQuestsBrowser';
 import { StageObjectives } from './StageObjectives';
 import { QuestCoverage } from './QuestCoverage';
-import { StageIgnoreToggle, gameStageKey, useIgnoredStages } from './ignoredStages';
+import {
+  IgnoreStagesWithoutObjectives,
+  StageIgnoreToggle,
+  gameStageKey,
+  useIgnoredStages,
+} from './ignoredStages';
 import { useEffect, useMemo, useState } from 'react';
 import { Search } from 'lucide-react';
 import type { CatalogQuest, PluginQuest } from '../../shared/types';
 import type { StageCondition } from '../../shared/stage-match';
-import { groupStageDialogues, filterStageDialogues, objectiveStageMap } from '../../shared/skyrim-dialogue';
+import {
+  groupStageDialogues,
+  filterStageDialogues,
+  filterStagesByVoice,
+  objectiveStageMap,
+  type VoiceFilter,
+} from '../../shared/skyrim-dialogue';
 import { AssignmentSelect, label, sortGroups } from './QuestDashboard';
 
 type Links = {
@@ -16,11 +32,16 @@ type Links = {
   games: { questId: string; gameId: string; gamePlugin: string }[];
 };
 type Catalog = { groups: string[]; quests: CatalogQuest[] };
-type Dialogue = {
+type Dialogue = DialogueTimingFields & {
   info: string;
   response: number;
   text: string;
   topicType: string;
+  topicCategory?: number;
+  topicEditorId?: string;
+  speaker?: string;
+  pendingVoice?: boolean;
+  canDelete?: boolean;
   voices?: VoiceChoice[];
   conditions: StageCondition[];
 };
@@ -35,6 +56,7 @@ type GameDetail = {
   } | null;
 };
 type Line = Dialogue & { modQuest: string };
+const all = '__all__';
 const questKey = (q: CatalogQuest) => `${q.plugin}|${q.id}`;
 async function get<T>(url: string, signal: AbortSignal): Promise<T> {
   const response = await fetch(url, { signal });
@@ -63,8 +85,11 @@ export function SkyrimQuestBrowser({
     [questId, setQuestId] = useState(initialQuest ? `${initialQuest.plugin}|${initialQuest.questId}` : ''),
     [stage, setStage] = useState(''),
     [query, setQuery] = useState(''),
-    [status, setStatus] = useState('objectives');
+    [status, setStatus] = useState('objectives'),
+    [voiceFilter, setVoiceFilter] = useState<VoiceFilter>('');
   const [addingStage, setAddingStage] = useState<number | null>(null);
+  const [dialogueView, setDialogueView] = useState<DialogueView>('stages');
+  const [voiceRevision, setVoiceRevision] = useState(0);
   const [game, setGame] = useState<GameDetail | null>(null),
     [lines, setLines] = useState<Line[]>([]),
     [detailLoading, setDetailLoading] = useState(false),
@@ -107,7 +132,7 @@ export function SkyrimQuestBrowser({
     if (!catalog || !links || !group) return [];
     return catalog.quests.filter(
       (q) =>
-        (group === '__all__' || q.group === group) &&
+        (group === all || q.group === group) &&
         (links.groups.some((x) => x.gameGroup === q.group) ||
           links.games.some(
             (g) =>
@@ -116,24 +141,26 @@ export function SkyrimQuestBrowser({
           )),
     );
   }, [catalog, links, group]);
-  const chosenQuest = group === '__all__' ? undefined : gameQuests.find((q) => questKey(q) === questId);
+  const showingAll = group === all || questId === all;
+  const chosenQuest = showingAll ? undefined : gameQuests.find((q) => questKey(q) === questId);
   useEffect(() => {
     if (!catalog || !links) return;
-    if (groups.length && group !== '__all__' && !groups.includes(group)) setGroup(groups[0]);
+    if (groups.length && group !== all && !groups.includes(group)) setGroup(groups[0]);
     else if (!groups.length) setGroup('');
   }, [groups, group, catalog, links]);
   useEffect(() => {
-    if (!catalog || !links) return;
+    if (!catalog || !links || showingAll) return;
     if (gameQuests.length && !gameQuests.some((q) => questKey(q) === questId)) {
       const preferred =
         group === 'Principal' ? gameQuests.find((q) => q.id.toLowerCase() === 'mq102') : undefined;
       setQuestId(questKey(preferred ?? gameQuests[0]));
     } else if (!gameQuests.length) setQuestId('');
-  }, [gameQuests, questId, group, catalog, links]);
+  }, [gameQuests, questId, group, catalog, links, showingAll]);
   useEffect(() => {
     setStage('');
     setQuery('');
     setStatus('objectives');
+    setVoiceFilter('');
     setGame(null);
     setLines([]);
     setDetailError('');
@@ -203,6 +230,7 @@ export function SkyrimQuestBrowser({
         ...current.filter((line) => line.modQuest !== destination),
         ...updated.lines.map((line) => ({ ...line, modQuest: destination })),
       ]);
+      setVoiceRevision((value) => value + 1);
     } catch {
       setDetailError(
         'The dialogue was saved, but the list could not be refreshed. Reload the page; do not save it again.',
@@ -220,7 +248,19 @@ export function SkyrimQuestBrowser({
   const objectives = useMemo(() => objectiveStageMap(chosenQuest?.stages ?? []), [chosenQuest]);
   const objectiveStages = useMemo(() => new Set(objectives.keys()), [objectives]);
   const stageOptions = filterStageDialogues(stages, '', status, '', objectiveStages);
-  const visible = filterStageDialogues(stages, stage, status, query, objectiveStages);
+  const visible = filterStagesByVoice(
+    filterStageDialogues(stages, stage, status, query, objectiveStages),
+    voiceFilter,
+  );
+  const ranges = stageRanges(stages, visible);
+  function updateTiming(line: Line, timing: DialogueTiming) {
+    setLines((current) =>
+      current.map((item) =>
+        item.modQuest === line.modQuest && item.info === line.info ? { ...item, ...timing } : item,
+      ),
+    );
+  }
+  const questLines = dialogueForQuest(lines, game?.resolved?.formId);
   if (loading) return <p className="muted">Loading quests…</p>;
   if (error)
     return (
@@ -245,78 +285,110 @@ export function SkyrimQuestBrowser({
           placeholder="Choose a Skyrim quest group"
           disabled={detailLoading}
           options={[
-            { value: '__all__', label: 'All quest groups' },
+            { value: all, label: 'All quest groups' },
             ...groups.map((g) => ({ value: g, label: label(g) })),
           ]}
           onChange={(value) => {
             setGroup(value);
-            setQuestId('');
+            setQuestId((previous) => (previous === all || value === all ? all : ''));
           }}
         />
         <AssignmentSelect
-          value={group === '__all__' ? '' : questId}
-          placeholder={group === '__all__' ? 'All quests' : 'Choose a Skyrim quest'}
-          disabled={group === '__all__' || !gameQuests.length}
-          options={gameQuests.map((q) => ({ value: questKey(q), label: q.name || q.id }))}
+          value={group === all ? all : questId}
+          placeholder="Choose a Skyrim quest"
+          disabled={group === all || !gameQuests.length}
+          options={[
+            { value: all, label: 'All quests' },
+            ...gameQuests.map((q) => ({ value: questKey(q), label: q.name || q.id })),
+          ]}
           onChange={setQuestId}
         />
       </div>
-      {group === '__all__' && links ? (
+      {showingAll && links ? (
         <AllQuestsBrowser
           projectId={projectId}
           kind="skyrim"
           quests={gameQuests}
           pluginQuests={quests}
           links={links}
+          initialStatus={status}
         />
       ) : null}
       {chosenQuest && (
         <>
+          <DialogueCategories
+            lines={questLines}
+            value={dialogueView}
+            disabled={detailLoading}
+            onChange={(value) => {
+              setDialogueView(value);
+              setStage('');
+            }}
+          />
           <div className="skyrim-toolbar">
             <label className="search">
               <Search size={20} strokeWidth={1.6} aria-hidden="true" />
               <input
-                aria-label="Search dialogue in selected stages"
+                aria-label={
+                  dialogueView === 'stages' ? 'Search dialogue in selected stages' : 'Search dialogue'
+                }
                 placeholder="Search dialogue"
                 disabled={!chosenQuest || detailLoading || !game?.resolved?.formId}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
               />
             </label>
-            <div className="skyrim-stage-picker">
-              <AssignmentSelect
-                value={stage}
-                placeholder="All stages"
-                disabled={!game?.resolved || detailLoading}
-                options={stageOptions.map((x) => ({ value: String(x.number), label: `Stage ${x.number}` }))}
-                onChange={setStage}
-              />
-            </div>
+            {dialogueView === 'stages' && (
+              <div className="skyrim-stage-picker">
+                <AssignmentSelect
+                  value={stage}
+                  placeholder="All stages"
+                  disabled={!game?.resolved || detailLoading}
+                  options={stageOptions.map((x) => ({ value: String(x.number), label: `Stage ${x.number}` }))}
+                  onChange={setStage}
+                />
+              </div>
+            )}
+            {dialogueView === 'stages' && (
+              <div className="skyrim-status-picker">
+                <AssignmentSelect
+                  value={status}
+                  placeholder="All statuses"
+                  placeholderLast
+                  disabled={!game?.resolved || detailLoading}
+                  options={[
+                    { value: 'objectives', label: 'Stages with objectives' },
+                    ...(game?.resolved?.formId
+                      ? [
+                          { value: 'missing', label: 'No direct dialogue' },
+                          { value: 'present', label: 'Has direct dialogue' },
+                          { value: 'review', label: 'Pending voice approval' },
+                          { value: 'most', label: 'Most dialogues first' },
+                          { value: 'fewest', label: 'Fewest dialogues first' },
+                        ]
+                      : []),
+                  ]}
+                  onChange={(value) => {
+                    setStatus(value);
+                    setStage('');
+                  }}
+                />
+              </div>
+            )}
             <div className="skyrim-status-picker">
               <AssignmentSelect
-                value={status}
-                placeholder="All statuses"
-                placeholderLast
-                disabled={!game?.resolved || detailLoading}
+                value={voiceFilter}
+                placeholder="All voices"
+                disabled={detailLoading || !game?.resolved?.formId}
                 options={[
-                  { value: 'objectives', label: 'Stages with objectives' },
-                  ...(game?.resolved?.formId
-                    ? [
-                        { value: 'missing', label: 'No direct dialogue' },
-                        { value: 'present', label: 'Has direct dialogue' },
-                        { value: 'most', label: 'Most dialogues first' },
-                        { value: 'fewest', label: 'Fewest dialogues first' },
-                      ]
-                    : []),
+                  { value: 'no-voice', label: 'Voice unavailable' },
+                  { value: 'with-voice', label: 'Has voice' },
                 ]}
-                onChange={(value) => {
-                  setStatus(value);
-                  setStage('');
-                }}
+                onChange={(value) => setVoiceFilter(value as VoiceFilter)}
               />
             </div>
           </div>
-          {!detailLoading && !detailError && game?.resolved?.formId && (
+          {dialogueView === 'stages' && !detailLoading && !detailError && game?.resolved?.formId && (
             <QuestCoverage
               stages={stages}
               isIgnored={(s) =>
@@ -337,14 +409,57 @@ export function SkyrimQuestBrowser({
             </p>
           ) : !game?.resolved ? (
             <p className="info">Quest stages could not be read from the installed game files.</p>
+          ) : dialogueView !== 'stages' ? (
+            <QuestDialogueList
+              key={`${questId}|${dialogueView}|${voiceRevision}`}
+              projectId={projectId}
+              questId={chosenQuest.id}
+              lines={questLines}
+              category={dialogueView}
+              onTimingSaved={updateTiming}
+              query={query}
+              voiceFilter={voiceFilter}
+              onTextSaved={(line, text) =>
+                setLines((current) =>
+                  current.map((item) =>
+                    item.modQuest === line.modQuest &&
+                    item.info === line.info &&
+                    item.response === line.response
+                      ? { ...item, text }
+                      : item,
+                  ),
+                )
+              }
+              onDeleted={(line) =>
+                setLines((current) =>
+                  current.filter(
+                    (item) =>
+                      item.modQuest !== line.modQuest ||
+                      item.info !== line.info ||
+                      item.response !== line.response,
+                  ),
+                )
+              }
+              onVoiceSaved={(line) => void reloadDialogue(line.modQuest)}
+            />
           ) : !stages.length ? (
             <p className="empty">No stages found for this quest.</p>
           ) : (
             <>
-              <p className="skyrim-results-caption">
-                {chosenQuest.name || chosenQuest.id} · {visible.length}{' '}
-                {visible.length === 1 ? 'stage' : 'stages'}
-              </p>
+              <div className="stage-results-row">
+                <p className="skyrim-results-caption">
+                  {chosenQuest.name || chosenQuest.id} · {visible.length}{' '}
+                  {visible.length === 1 ? 'stage' : 'stages'}
+                </p>
+                {objectiveStages.size > 0 && (
+                  <IgnoreStagesWithoutObjectives
+                    stages={ignoredStages}
+                    questKey={gameStageKey(chosenQuest.plugin, chosenQuest.id)}
+                    stageNumbers={stages.map((s) => s.number)}
+                    objectiveStages={objectiveStages}
+                  />
+                )}
+              </div>
               {game.resolved.formId ? (
                 <p className="skyrim-match-hint" title="Other dialogue conditions may also apply.">
                   {status === 'objectives' ? 'Catalog objective links · ' : ''}Direct stage conditions only.
@@ -359,6 +474,7 @@ export function SkyrimQuestBrowser({
                   <section
                     className={`panel skyrim-stage ${ignoredStages.isIgnored(gameStageKey(chosenQuest.plugin, chosenQuest.id), item.number) ? 'is-ignored' : ''}`}
                     key={item.number}
+                    id={stageAnchor('quest', item.number)}
                   >
                     <div className="skyrim-stage-heading">
                       <div>
@@ -395,15 +511,47 @@ export function SkyrimQuestBrowser({
                       numbers={objectives.get(item.number)}
                       texts={game.resolved?.objectiveTexts}
                     />
-                    {item.lines.map((line) => (
-                      <DialogueEntry
-                        key={`${line.modQuest}|${line.info}|${line.response}`}
-                        projectId={projectId}
-                        questId={line.modQuest}
-                        line={line}
-                        subtitle={`${line.modQuest}${line.topicType ? ` · ${line.topicType}` : ''}`}
-                      />
-                    ))}
+                    {item.lines.map((line) => {
+                      const shown = ranges.shownIn(line, item.number);
+                      return shown !== undefined ? (
+                        <RepeatedLine
+                          key={`${line.modQuest}|${line.info}|${line.response}`}
+                          text={line.text}
+                          label={ranges.label(line)}
+                          stage={shown}
+                          scope="quest"
+                        />
+                      ) : (
+                        <DialogueEntry
+                          key={`${line.modQuest}|${line.info}|${line.response}`}
+                          projectId={projectId}
+                          questId={line.modQuest}
+                          line={line}
+                          onVoiceSaved={() => void reloadDialogue(line.modQuest)}
+                          onTimingSaved={(timing) => updateTiming(line, timing)}
+                          onDeleted={() =>
+                            setLines((current) =>
+                              current.filter(
+                                (item) => item.info !== line.info || item.response !== line.response,
+                              ),
+                            )
+                          }
+                          onTextSaved={(text) =>
+                            setLines((current) =>
+                              current.map((item) =>
+                                item.modQuest === line.modQuest &&
+                                item.info === line.info &&
+                                item.response === line.response
+                                  ? { ...item, text }
+                                  : item,
+                              ),
+                            )
+                          }
+                          subtitle={`${line.modQuest}${line.topicType ? ` · ${line.topicType}` : ''}`}
+                          badge={ranges.label(line)}
+                        />
+                      );
+                    })}
                   </section>
                 ))}
                 {!visible.length && (

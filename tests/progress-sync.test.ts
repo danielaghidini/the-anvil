@@ -85,7 +85,15 @@ test('dialogue summaries distinguish additions, edits and removals from the last
         ['01000801', [{ ...first, info: '01000901', text: 'Remove me' }]],
       ]),
     );
-  const updated = { ...first, text: 'Edited', speaker: '01000810', emotionType: 5, emotionValue: 60 },
+  const updated = {
+      ...first,
+      text: 'Edited',
+      speaker: '01000810',
+      emotionType: 5,
+      emotionValue: 60,
+      resetHours: 4,
+      sayOnce: false,
+    },
     added = { ...first, info: '01000902', text: 'New line' };
   const next = createDialogueBaseline('m', snapshot, new Map([['01000800', [updated, added]]]));
   assert.equal(compareDialogueBaseline(null, next), null);
@@ -93,6 +101,27 @@ test('dialogue summaries distinguish additions, edits and removals from the last
   assert.equal(diff.added[0].text, 'New line');
   assert.equal(diff.removed[0].text, 'Remove me');
   assert.equal(diff.updated[0].previousText, 'Original');
-  assert.deepEqual(diff.updated[0].details, ['Text', 'Speaker', 'Emotion']);
+  assert.deepEqual(diff.updated[0].details, ['Text', 'Speaker', 'Emotion', 'Timing']);
   assert.equal(compareDialogueBaseline(old, { ...next, mastersVersion: 'changed' }), null);
+  const baseline = createDialogueBaseline('m', snapshot, new Map([['01000800', [first]]]));
+  const withTimingDefaults = createDialogueBaseline(
+    'm',
+    snapshot,
+    new Map([
+      [
+        '01000800',
+        [
+          {
+            ...first,
+            resetHours: 0,
+            sayOnce: false,
+            timingFormat: 'compact',
+            timingEditable: true,
+            responseCount: 1,
+          },
+        ],
+      ],
+    ]),
+  );
+  assert.equal(compareDialogueBaseline(baseline, withTimingDefaults)!.updated.length, 0);
 });

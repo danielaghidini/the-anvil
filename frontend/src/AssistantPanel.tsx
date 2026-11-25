@@ -22,12 +22,15 @@ export function AssistantPanel({
   projectId,
   projectName,
   quest,
+  page,
   onOpenSettings,
   settingsRevision,
 }: {
   projectId: number | null;
   projectName?: string;
   quest?: CatalogQuest | null;
+  /** The screen the user has open, described to the model. */
+  page?: string;
   onOpenSettings: () => void;
   settingsRevision: number;
 }) {
@@ -108,6 +111,7 @@ export function AssistantPanel({
         body: JSON.stringify({
           provider,
           messages: next,
+          ...(page ? { page } : {}),
           ...(includeQuest && quest ? { questId: quest.id, questPlugin: quest.plugin } : {}),
         }),
       });
@@ -198,7 +202,7 @@ export function AssistantPanel({
                   checked={includeQuest}
                   onChange={(e) => setIncludeQuest(e.target.checked)}
                 />{' '}
-                Current quest: {quest.id}
+                Current quest: {quest.name && quest.name !== quest.id ? `${quest.name} (${quest.id})` : quest.id}
               </label>
             )}
             <textarea

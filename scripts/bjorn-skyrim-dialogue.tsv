@@ -1,0 +1,220 @@
+# Quest	Stage	Idle	Hello	Optional destination quest	Locations (Editor IDs separated by |)	Outdoors
+# Previous review exclusions. Leave these stage/type slots out of future batches unless the author asks to revisit them.
+# These texts were removed in The Anvil before the 20 Nov 2026 batch. Blank slots use "-".
+# Quest | Stage | Type | Earlier INFO
+# MQ104 | 80 | HELO | 05179871
+# MQ105 | 8 | IDLE | 05179872
+# MQ105 | 30 | IDLE | 05179873
+# MQ105Ustengrav | 30 | HELO | 05179876
+# MQ105Ustengrav | 50 | HELO | 05179877
+# MQ202 | 10 | IDLE | 05179880
+# MQ202 | 10 | HELO | 05179881
+# MQ204 | 70 | HELO | 05179885
+# MQ204 | 83 | HELO | 05179886
+# MQ204 | 120 | HELO | 05179888
+# MQ204 | 135 | HELO | 05179889
+# MQ204 | 140 | HELO | 0517988A
+# MQ205 | 10 | HELO | 0517988B
+# MQ205 | 30 | HELO | 0517988C
+# MQ301 | 10 | IDLE | 0517988D
+# MQ301 | 120 | HELO | 05179891
+# MQ304 | 300 | HELO | 051798A1
+# MQ305 | 300 | HELO | 051798A3
+# CR09 | 10 | HELO | 0517EA55
+# DB04 | 200 | HELO | 051798D2
+# DB05 | 10 | HELO | 051798D4
+# DB06 | 10 | HELO | 051798D6
+# DB08 | 10 | IDLE | 051798D9
+# DB08 | 10 | HELO | 051798DA
+# DB09 | 10 | IDLE | 051798DB
+# DB09 | 10 | HELO | 051798DC
+# DB10 | 10 | IDLE | 051798DD
+# DB10 | 10 | HELO | 051798DE
+# DB11 | 15 | IDLE | 051798DF
+# DB11 | 15 | HELO | 051798E0
+# DBDestroy | 30 | IDLE | 051798F2
+# DA01 | 30 | IDLE | 051798FF
+# DA02 | 5 | HELO | 05179902
+# DA03 | 25 | HELO | 05179903
+# DA05 | 20 | HELO | 05179905
+# DA06 | 70 | IDLE | 05179906
+# DA06 | 70 | HELO | 05179907
+# DA07 | 13 | HELO | 05179909
+# DA08 | 20 | IDLE | 0517990A
+# DA08 | 20 | HELO | 0517990B
+# DA09 | 150 | IDLE | 0517990C
+# DA09 | 150 | HELO | 0517990D
+# DA10 | 85 | HELO | 0517990E
+# DA14 | 85 | HELO | 05179913
+# DA15 | 45 | HELO | 05179915
+# DA16 | 25 | HELO | 05179916
+# dunForelhostQST | 60 | IDLE | 05179919
+# dunFrostmereCryptQST | 7 | HELO | 0517991C
+# dunGauldursonQST | 100 | IDLE | 0517991D
+# dunGauldursonQST | 100 | HELO | 0517991E
+# dunHighGateRuinsQST | 20 | IDLE | 0517991F
+# dunHighGateRuinsQST | 20 | HELO | 05179920
+# dunNchuandZelQst | 10 | HELO | 05179926
+# MS03 | 25 | HELO | 05179933
+# MS05 | 125 | HELO | 05179936
+# MS09 | 55 | HELO | 0517993E
+# MS10 | 30 | HELO | 05179940
+# MS11 | 60 | HELO | 05179941
+# MS12 | 10 | HELO | 05179942
+# MS12b | 30 | HELO | 05179944
+# MS13 | 35 | HELO | 05179945
+# MS14 | 30 | IDLE | 05179946
+# t02 | 25 | IDLE | 0517994B
+# t02 | 25 | HELO | 0517994C
+# T03 | 50 | IDLE | 0517994D
+# T03 | 50 | HELO | 0517994E
+# VC01 | 150 | IDLE | 0517994F
+MQ102	10	-	If your friend in Riverwood has a spare bed, take it. A dragon can wait while you get some sleep, aye?		RiverwoodLocation
+MQ104	80	-	-		WhiterunWatchtowerLocation
+MQ105	8	-	-		IvarsteadLocation|HighHrothgarLocation|DLC2ThroatoftheWorldPath
+MQ105	30	-	-		HighHrothgarLocation
+MQ105	58	That word sounds like it ought to crack the stones.	How do they get a word into your head without saying it? I was watching and I still missed it.		HighHrothgarLocation
+MQ105	80	-	Those shades don't look like they'll mind another go. Whenever you're ready, I'll be back here.		HighHrothgarLocation
+MQ105	100	-	Borri's got another word for you, aye? Wonder if they have one to get us back down the mountain.		HighHrothgarLocation
+MQ105	120	-	You went through that gate before I even heard you move. Can you teach me the part where you stop?		HighHrothgarLocation
+MQ105	140	-	So what's Arngeir got left to teach you? How to apologize to a door after kicking it in with your voice?		HighHrothgarLocation
+MQ105Ustengrav	20	All that trouble for a note. Whoever wrote it had better be buying the mead.	-		UstengravLocation|RiverwoodLocation
+MQ105Ustengrav	30	-	-		HighHrothgarLocation
+MQ105Ustengrav	50	-	-		HighHrothgarLocation
+MQ106	30	Only Delphine would steal a sacred horn to arrange a quiet chat.	-		RiverwoodSleepingGiantInnLocation
+MQ201	30	Delphine sees the Thalmor's hand in this. Wouldn't be my first guess, but I'd sleep better if she were wrong.	What do you reckon Delphine saw at that burial mound that we didn't? I was a bit busy looking at the dragon.		RiverwoodLocation
+MQ201	40	Can't imagine what the Thalmor do to a servant who helps someone get past their guards.	When you talk to Malborn, ask him what he'd want smuggled in if he were the one walking through those doors.		SolitudeLocation
+MQ201	70	A fine coat, a straight face, and no sword. Nine help you if they ask you to dance.	-		SolitudeStablesLocation
+MQ201	230	Next time Delphine offers you an invitation, we're reading the small print.	There you are. I've been trying to work out what I'd say if you didn't come back. Glad I can forget it.		HaafingarHoldLocation|RiverwoodLocation
+MQ202	10	-	-		RiftenLocation
+MQ202	50	-	I'd bar the door too if the Thalmor knew my name. Let Esbern hear us out before we start banging on it, aye?		RiftenRatwayLocation|RiftenEsbernsVaultLocation
+MQ202	150	-	Give Esbern a minute. After that long alone down here, I'd be slow to believe you were a friendly face too.		RiftenRatwayLocation|RiftenEsbernsVaultLocation
+MQ204	10	-	If anyone knows a Shout that can bring a dragon down, it's Arngeir. Getting him to tell us is another matter.		HighHrothgarLocation
+MQ204	70	-	-		HighHrothgarLocation
+MQ204	83	-	-		HighHrothgarLocation|DLC2ThroatoftheWorldPath|ThroatoftheWorldLocation
+MQ204	90	-	Paarthurnax could have come down any time he wanted. Makes you wonder what he's waiting for up here.		ThroatoftheWorldLocation
+MQ204	120	-	-		ThroatoftheWorldLocation
+MQ204	135	-	-		ThroatoftheWorldLocation
+MQ204	140	-	-		ThroatoftheWorldLocation
+MQ205	10	First we needed an old wall. Now we need an old scroll. One of these days I'd like to save the world with a new axe.	-		ThroatoftheWorldLocation
+MQ205	20	If anyone's kept a note on where the Elder Scroll might be, Esbern will have it. Probably under all the other notes.	-		SkyHavenTempleLocation
+MQ205	30	-	-		HighHrothgarLocation
+MQ206	10	Wish I'd asked what a wound in time looks like before we went looking for one.	-		ThroatoftheWorldLocation
+MQ301	10	-	-		ThroatoftheWorldLocation|HighHrothgarLocation|SkyHavenTempleLocation
+MQ301	25	Wonder what the Jarl will say when he hears what we want to put in his attic.	-		WhiterunLocation
+MQ301	30	Balgruuf's got enough on his hands. I'd want a truce too before I let a dragon loose on the porch.	Think Arngeir will let both armies up the steps? Can't see him being terribly pleased about the boots.		WhiterunDragonsreachLocation|HighHrothgarLocation
+MQ301	70	-	I'd like to know which part of the trap stops him from breathing fire. That's the part I'd like to be standing behind.		WhiterunDragonsreachLocation
+MQ301	120	-	-		WhiterunDragonsreachLocation
+MQ301	150	Those beams had better be as old and stubborn as Balgruuf says they are.	Back up as far as you can. He'll give us his head if he thinks that's all he needs to reach you.		WhiterunDragonsreachLocation
+MQ301	200	Wish one of the old songs had told me what to say to a dragon with his neck in a yoke.	Odahviing can still bite from there, aye? I can hear him just fine from where I'm standing.		WhiterunDragonsreachLocation
+MQ302	10	I've seen feuding men shake hands over a grave when they wouldn't over a table. Let's hope Arngeir can spare us the grave.	-		HighHrothgarLocation
+MQ302	15	-	Offer Tullius and Ulfric the same terms. If one of them hears different, we'll be halfway up the mountain for nothing.		SolitudeLocation|WindhelmLocation
+MQ302	55	I've sat through quieter arguments in taverns where someone had already drawn a knife.	Want me to wait by the door? You'll know where to look when you've had enough of them.		HighHrothgarLocation
+MQ302	60	They talk about holds like there's nobody living in them. I wonder when any of them last asked the folk there what they wanted.	When they start counting what they'll give up, ask how many soldiers they'll get back alive. See if that shuts them up.		HighHrothgarLocation
+MQ303	10	The last time this keep held a dragon, I doubt anybody hurried to let it go again.	So we're taking Odahviing at his word, aye? All right. Keep your hand where you can reach your sword.		WhiterunDragonsreachLocation
+MQ303	40	I'd go with you if there was room for two. Gods, listen to me talking about a dragon like it's somebody's wagon.	You'll come back, aye? I don't care how long it takes. I'll be here to hear what happened.		WhiterunDragonsreachLocation
+MQ304	300	I used to picture the Hall of Valor when I was a boy. Funny how nobody ever expects to hear about it from someone who came back.	-		ThroatoftheWorldLocation
+MQ305	300	Alduin's dead. I keep saying it and it still sounds like something a drunk would tell me for a free drink.	-		ThroatoftheWorldLocation
+MQPaarthurnax	20	I've heard plenty of men ask someone else to do a killing so they can go on calling it justice.	If you go up that mountain, think about what you know of Paarthurnax. You've heard what the Blades know of him.		SkyHavenTempleLocation|HighHrothgarLocation
+MQPaarthurnax	50	It's a strange feeling, owing the dead a debt you can never pay.	What are you going to tell Delphine? I doubt she'll ask what he had to say for himself.		SkyHavenTempleLocation
+C00	20	Vilkas looks like he was born scowling at a training dummy. Let's see if you can get him to smile.	-		WhiterunLocation
+C00	40	A shield's a friend that keeps its mouth shut and still takes a blow for you. Aela's got a good one there.	If Aela asks how you got the shield, you can say Eorlund trusted you with it. That's worth more than the steel.		WhiterunLocation
+C01	10	Skjor must have something in mind if he's waiting to speak to you. He doesn't strike me as the sort who likes a chat.	Do you want me along for this trial? I'll keep out of their way. I just want to see what the Companions call a fair test.		WhiterunJorrvaskrLocation
+C04	30	I don't know whether a witch's head will buy Kodlak any peace. I'd like to think it can.	We should get back to Kodlak. I keep thinking about what it must cost him to ask for help with this.		GlenmorilCovenLocation|WhiterunLocation
+C05	10	I keep thinking about the first time I saw Kodlak at Jorrvaskr. The hall felt bigger with him in it.	We can bring Wuuthrad home. As for the Silver Hand, you tell me how far you want to go, and I'll go that far with you.		DriftshadeSanctuaryLocation|WhiterunJorrvaskrLocation
+C06	10	A hall full of warriors and nobody knows where to put their hands. I know that feeling.	I'll stay for the funeral if you want me there. Kodlak was a good man. There ought to be a few of us there to say so.		WhiterunLocation
+C06	30	My father used to tell the story of Ysgramor. I don't remember him ever telling us what happened after the singing stopped.	They've got Wuuthrad back, aye? Let's see if it can do one more thing for a Companion.		YsgramorsTombLocation|WhiterunJorrvaskrLocation
+CR09	10	The Silver Hand. Fine name for folk who leave such a bloody mess.	-		WhiterunLocation
+CR09	20	I thought I'd feel better once it was done. I ought to know better by now.	Come on, let's tell them it's done. I could use a seat by the fire after that.		WhiterunLocation
+MG03	30	Someone should have told me the hardest part of borrowing a book was getting it back from a fortress full of mages.	-		FellglowKeepLocation
+MG04	40	A college full of clever folk, and the one with the answers lives in the cellar. Aye, I can believe that.	You want company down there? I'm good at keeping quiet around people I don't understand. I've had practice at this College.		WinterholdCollegeLocation|WinterholdCollegeMiddenLocation
+MG05	30	The folk in town have taken enough from that College. Keep those things away from their doors.	If you can draw them out of the street, I'll keep an eye on the houses. There are still people in there.		WinterholdLocation
+mg06	20	-	Mzulft, aye? If the Synod's already inside, try to find out what they came for before they ask us the same thing.		MzulftLocation|WinterholdCollegeLocation
+MG07	10	-	If this is where the College used to send its best, I suppose it's worth asking why nobody wants to go there now.		LabyrinthianLocation
+MG08	10	That Staff had better work. I haven't got anything that can make a hole in a wall made of magic.	You've got the Staff? Good. If it makes enough room for the two of us, I'll be right at your shoulder.		WinterholdCollegeLocation|WinterholdLocation
+MG08	40	Next time someone at the College says they've got it under control, I'm asking them to show me their hands.	Is Tolfdir all right? I'd like to hear him complain about something small. I could do with that right about now.		WinterholdCollegeHallofElementsLocation
+TG00	8	Brynjolf picked the busiest part of the market to whisper about a quiet job. Clever bastard.	If you're going to help Brynjolf, I'll stay where the stallkeepers can see me. They'll have something honest to remember.		RiftenLocation
+TG02	40	-	Three hives, aye? A fire doesn't know how to count. Best have a way out before you start it.		GoldenglowEstateLocation|RiftenRaggedFlagonLocation
+TG03	40	Maven's got a clever way of making a man do her dirty work. She lets him think he got offered a job.	The rats and the brew both need the right dose, aye? If you get the two mixed up, don't tell me which keg it was.		WhiterunHonningbrewMeaderyLocation
+TG04	40	Gulum-Ei knows how to walk slowly enough to see who's keeping up. Give him a little room.	I'm no good at looking inconspicuous on a dock. Want me to hang back until you've seen where he's going?		SolitudeLocation|SolitudeEastEmpireWarehouseLocation|EastEmpireWarehouseLocation
+TG06	20	I wouldn't offer to clean a scholar's desk unless I wanted an argument about where the dust belongs.	Calcelmo might let you in if you give him a reason to show off. In my experience, scholars don't need much of one.		MarkarthLocation
+TG07	40	A locked house and a guard outside it. Mercer knows he has something worth stealing, anyway.	You want us to get past Vald? Find out what Vex knows about him first. There might be a cheaper way than blood.		RiftenLocation
+TG08A	20	I don't like meeting at stones in the middle of nowhere. People tend to ask for more than a handshake.	Ask Karliah what she promised when she stood where you're about to stand. I'd want to hear it from someone who paid.		RiftHoldLocation|NightingaleHallLocation
+TG09	10	A key you can never lose and a lock that opens for anyone with nerve. I'm surprised it took this long for somebody to steal it.	If the Sepulcher only wants you, I'll wait here. You're the one who gets to decide what you owe Nocturnal.		TwilightSepulcherLocation
+TGLeadership	10	Brynjolf used to stand in a market and sell folk a story. Look at him now, trying to persuade you to run the whole bloody Guild.	You want the job, aye? Good. Just remember the first folk who taught you how to do it. The ones who didn't ask for a cut.		RiftenThievesGuildHeadquartersLocation|RiftenRaggedFlagonLocation
+DB01	20	-	If you go to the orphanage, let the children see you walk out. They need to know somebody came back for them.		RiftenLocation
+DB01Misc	5	That jester's got a broken wheel, all right. It's the way he talks to the box that bothers me.	What do you make of the jester? I'll help with the wheel if you ask. I'd rather leave the box where it is.		LoreiusFarmLocation
+DB04	200	A secret's one thing. A secret Astrid is frightened of is something else.	-		FalkreathHoldLocation	outdoors
+DB05	10	I don't know much about weddings. I do know a city remembers who gets killed at one.	-		SolitudeLocation
+DB06	10	Maro travels in the open because he thinks his name will keep him safe. That works right up until it doesn't.	-		DragonBridgeLocation|SolitudeLocation
+DB07	25	If Arnbjorn gave up the chase, I'd like to hear what stopped him before we pick up where he left off.	You'll want to hear it from Arnbjorn first. A wounded man usually knows more about the blade than a witness does.		PaleHoldLocation	outdoors
+DB08	10	-	-		NightgateInnExteriorLocation
+DB09	10	-	-		SolitudeLocation
+DB10	10	-	-		FalkreathHoldLocation	outdoors
+DB11	15	-	-		SolitudeDocksLocation|KatariahLocation
+CW01B	160	Funny thing about an oath. Takes a breath to give it. Takes the rest of your life to find out what it cost.	Want me to wait while you take the oath? I've heard Galmar give speeches before. I'm sure I'll hear this one from out here.	DG04BjornPlayerStormcloaks	WindhelmPalaceOfTheKingsLocation
+CW02B	50	Somebody ought to ask the draugr what a crown is worth. They seem to be the only ones who've had time to think about it.	That crown's been sitting on a dead man's head long enough. Galmar can wear it himself if he wants to fetch it next time.	DG04BjornPlayerStormcloaks	KorvanjundLocation
+C02	10	Some men can walk through a hall full of friends and still look like they're keeping a secret.	I can come along if you like. If they ask you to go on alone, at least make them tell you what for.		WhiterunLocation
+C03	10	If Skjor needed an audience he'd have asked you to meet in the hall. Wonder what only comes out at night.	You've seen what the Companions do in daylight. I'd ask what they keep the Underforge for before you follow him in.		WhiterunLocation
+TG05	10	Mercer wants the door open and Karliah on the other side of it. Funny how little he says about what happens after that.	If Mercer asks you to go ahead of him, make him tell you how he knows the way. I don't like a man who spends other people's steps.		SnowVeilSanctumLocation
+TG08B	10	I've never known anyone to flee into a Dwemer ruin by accident. Mercer must have found something in there he thinks is worth dying for.	Karliah knows what Mercer can do. Talk to her before you go after him, aye? I'd hate to walk into the same trap twice.		IrkngthandLocation
+TG08B	60	I'm going to spend a little while standing in the sun. I'd forgotten how kindly it treats folk who can still breathe.	You all right? Take a minute before you talk to Karliah. I don't reckon she's ready to go back under either.		BronzeWaterCaveLocation|IrkngthandLocation
+DB02	40	A door that asks a question before it opens. I suppose it's a mercy they don't ask you to answer twice.	So you're going to see what's on the other side of that door. If you want me to wait here, just say the word.		FalkreathHoldLocation	outdoors
+DB02a	200	I wonder how long it takes before someone can call another man's death a day's work and still sleep well.	Ask Nazir for the names again if you have to. Best to remember they're names, whatever the Brotherhood calls them.		FalkreathHoldLocation	outdoors
+DBDestroy	30	-	We go together as far as we can. If you have to go on alone, I'll keep the way out clear.		FalkreathHoldLocation	outdoors
+CW01A	100	Rikke sent you to take a fort on your own. Some men get a handshake when they ask for a job.	-	DG04BjornPlayerImperialLegion	SolitudeCastleDourLocation
+CW02A	50	Rikke will tell you the crown belongs to Skyrim. The dead in there will have their own opinion about that, I expect.	-	DG04BjornPlayerImperialLegion	KorvanjundLocation
+CW03	10	Balgruuf's kept his city out of this for as long as he could. I wonder what it's like to see us coming up the steps.	-	DG04BjornPlayerImperialLegion	WhiterunLocation
+CW01A	160	-	If you give Rikke your word today, make sure you know who you're giving it for. It'll be your sword they put behind it.	DG04BjornPlayersQuest	SolitudeCastleDourLocation
+CW02A	180	-	Tullius had better have a dry seat and something hot waiting after all that. If he only wants the crown, I'll keep its weight in mind.	DG04BjornPlayersQuest	SolitudeLocation
+CW03	20	It's a long walk down from Dragonsreach when you don't know whether you'll be allowed to come back.	You gave Balgruuf the message. Let him decide what he'll do with it. That's what I'd want if it were my city.	DG04BjornPlayersQuest	WhiterunLocation
+CWMission03	10	A courier stays alive by being too unimportant to kill. Someone's made this one important without telling him.	If you find the courier first, see if he'll give you the papers. A man can always run faster without a little leather bag.	DG04BjornPlayersQuest	NightgateInnExteriorLocation|DawnstarLocation|WindhelmCandlehearthHallLocation|DragonBridgeLocation|RoriksteadLocation
+CWMission04	10	I don't like leaving folk to count footsteps outside a locked door. Let's get to them before they lose count.	Once the prisoners are out, who's seeing them home? A man can be free and still be too cold to walk.	DG04BjornPlayersQuest	FalkreathHoldLocation|WinterholdHoldLocation
+CWMission07	10	If there's a man in that house who hasn't thought about how he'll explain himself, he must be very sure of the lock.	See what kind of proof they sent us for before you turn the place over. I'd rather not owe somebody a favor for a piece of nothing.	DG04BjornPlayersQuest	MarkarthLocation|RiftenLocation
+DA01	30	-	Take a good look at that Star when you find it. A thing can still be worth saving when it can't do what it used to.		IlinaltasDeepLocation
+DA02	5	Funny how folk who say they're free keep waiting for their Daedra to tell them who to hate.	-		ShrineofBoethiahLocation
+DA03	25	I've met plenty of men who'd make a poor dog. This might be the first dog I've met who'd make a pretty good man.	-		HaemarsShameLocation
+DA05	20	A white stag. I used to think seeing one meant the hunt would go well. Nobody ever told me for whom.	-		FalkreathHoldLocation
+DA06	70	-	-		LargashburLocation
+DA07	13	An old weapon's easier to put back together than the reasons people broke it in the first place.	-		DeadCroneRockLocation|HagRockRedoubtLocation
+DA08	20	-	-		WhiterunDragonsreachLocation
+DA09	150	-	-		KilkreathRuinsLocation
+DA10	85	-	-		ReachHoldLocation
+DA11	10	Eola knows what's in that cave down to the last draugr. What's she been doing while they had the place to themselves?	I'll help you clear the cave. Before we agree to come back for supper, let's find out who else she invited.		ReachcliffCaveLocation
+DA13	40	The Afflicted didn't get to choose what happened to them. Orchendor did get to choose how he treated them after.	When we find Orchendor, I want to know what he told the people who followed him here. I doubt he said a word about leaving them behind.		BthardamzLocation
+DA14	85	-	-		WhiterunLocation
+DA15	45	You'd think a palace would have somewhere nicer to put its troubles than behind a locked door.	-		SolitudeBluePalaceLocation
+DA16	25	An entire town afraid to sleep. I wonder which one of them had the first dream and who believed them.	-		DawnstarLocation|NightcallerTempleLocation
+dunDarklightQST	10	Illia's come a long way down those stairs just to ask us to climb them again.	She's asking us to help her stop her own mother. Give her a moment if she needs one. There's no easy way to take that last step.		DarklightTowerLocation
+dunForelhostQST	60	-	Show him you made it out first. I'd like to see whether he's glad you survived before you tell him what you found.		ForelhostLocation
+dunFrostmereCryptQST	7	They went after a sword and came running out of the crypt without their friend. Something about that bothers me.	-		FrostmereCryptLocation
+dunGauldursonQST	100	-	-		ReachwaterRockLocation
+dunHighGateRuinsQST	20	-	-		HighGateRuinsLocation
+dunHillgrundsTombQST	10	Golldir came here wanting to leave his family at peace. I think I can understand that.	I'll keep an eye on Golldir. If he sees someone he used to know down here, he might not have it in him to raise his sword.		HillgrundsTombLocation
+dunHunterQST	21	Kyne's asked us to hunt a mudcrab. If there's a lesson in that, I hope nobody expects me to look noble learning it.	Froki takes Kyne's trials seriously. Let's give the old man something better than a story about the one that got away.		FrokisShackLocation
+dunNchuandZelQst	10	A man keeps a journal so someone will know he was here. Half the time it turns out he's right to worry.	-		NchuandZelLocation
+dunTrevasWatchQST	10	I've climbed through the back of a fort before. The trouble starts when the men inside know the stairs better than you.	Stalleo's waiting for us to open the way in. I'd rather he heard the gate go up than heard us shouting. Let's see how quiet we can be.		TrevasWatchLocation
+dunValthumeQST	3	Valdar could have passed on a long time ago. What's in those vessels must have been worth staying dead and waiting for.	Before you open anything, hear Valdar out. He spent longer with Hevnoraak than anyone alive's had to think about him.		ValthumeLocation
+dunVolunruudQST	10	Ceremonial weapons, aye. Folk always tell you a blade's ceremonial until they find someone who needs stabbing.	The old Nord who built this place made a lock out of two weapons. I'd draw mine before you find out why.		VolunruudLocation
+dunYngolBarrowQST	50	I've heard the sea in a tomb before. That's usually a sign to get back where you can see the sky.	You got what you came for? Good. That barrow belongs to Yngol again the moment we step out.		YngolBarrowLocation
+MS01	20	Everybody in Markarth has an explanation for what happened in the market. Funny how often the explanation comes with advice to let it go.	Margret was doing something in Markarth besides shopping. See if she left a reason for being here with her things.		MarkarthLocation
+MS02	250	I've seen what the Silver-Bloods do to people who can't afford to argue. I'll hear their side when they've got a better one.	You made it out. Tell me the rest when you're ready. I can wait longer than the city did.		MarkarthLocation
+MS03	25	Stealing a horse is trouble enough. Stealing the paper that says exactly whose horse it is takes a special kind of nerve.	-		BlackBriarLodgeLocation
+MS04	100	The woman was carrying that thing like it could hear her heart beating.	We'll take the Lexicon back to Avanchnzel. If it starts making sense to you, tell me before you listen to it.		AvanchnzelLocation|RiftenLocation
+MS05	125	-	-		SolitudeBardsCollegeLocation
+MS06Start	50	I've been in caves where the dead knew enough to lie still. Would've been nice if Falk had sent us to one of those.	Falk cares what goes on at Wolfskull, aye? Let's see if there's anyone left to tell us why the court ought to care too.		WolfskullCaveLocation
+MS06	50	If Potema's learned to wait centuries, she can wait long enough for us to talk to Styrr.	Ask Styrr what happens if you get Potema's bones out of there. I'd like to know what the plan is after the hard part.		SolitudeLocation
+MS07	50	-	There are people on that ship, you know. If Jaree-Ra only wanted the cargo, why is he so sure nobody will come looking for it?		SolitudeLighthouseLocation
+MS08	20	You can hear the same story from two people and still be short a truth.	Talk to Saadia first. If she has a reason to run, let her tell it to us herself.		WhiterunLocation
+MS09	55	-	-		NorthwatchKeepLocation
+MS10	30	A man called Salt-Plank ought to be easy to find by the water. Unless that's what he wants us to think.	-		DawnstarWindpeakInnLocation
+MS11	60	-	-		WindhelmHjerimLocation
+MS12	10	-	-		ForsakenCaveLocation|WindhelmWhitePhialLocation
+MS12b	30	Unmelting snow. I'd take some home if it didn't sound like the one kind of snow you'd never get off your boots.	-		ThroatoftheWorldLocation
+MS13	35	-	-		BleakFallsBarrowLocation
+MS14	30	-	-		MorthalLocation
+NN01	20	I've spent longer looking for one sock than I'd like to spend looking for thirty plants. Gods help me, I'll count with you.	If you hear the nirnroot, stop walking a second. Down here I can hardly tell what's humming and what's about to wake up.		BlackreachLocation
+T01	70	The Forsworn can fight the whole Reach for all I care. They didn't need to take a child to do it.	When we find Fjotra, let her see you before she sees your blade. She's had enough strangers come rushing at her today.		BrokenTowerRedoubtLocation
+t02	25	-	-		IvarsteadLocation
+T03	50	-	-		EldergleamSanctuaryLocation
+VC01	150	-	You don't have to answer any questions after this is over. When you're ready, I'll be waiting to walk back with you.		HjaalmarchHoldLocation

@@ -34,14 +34,16 @@ export function useIgnoredStages(projectId: number) {
     },
     [set],
   );
-  async function setIgnored(questKey: string, stage: number, ignored: boolean) {
+  async function setIgnored(questKey: string, stage: number | number[], ignored: boolean) {
     setPending(true);
     setError('');
     try {
       const response = await fetch(`/api/projects/${projectId}/ignored-stages`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ questKey, stage, ignored }),
+        body: JSON.stringify(
+          Array.isArray(stage) ? { questKey, stages: stage, ignored } : { questKey, stage, ignored },
+        ),
       });
       if (!response.ok) throw new Error('Request failed');
       const data = (await response.json()) as { stages: IgnoredStage[] };
@@ -76,6 +78,37 @@ export function StageIgnoreToggle({
         onChange={(e) => void stages.setIgnored(questKey, stage, e.target.checked)}
       />
       <span>Ignore</span>
+    </label>
+  );
+}
+
+/** Ignores, or restores, every stage of a quest that has no linked objective. */
+export function IgnoreStagesWithoutObjectives({
+  stages,
+  questKey,
+  stageNumbers,
+  objectiveStages,
+}: {
+  stages: IgnoredStages;
+  questKey: string;
+  stageNumbers: number[];
+  objectiveStages: Set<number>;
+}) {
+  const targets = stageNumbers.filter((n) => !objectiveStages.has(n));
+  if (!targets.length) return null;
+  const all = targets.every((n) => stages.isIgnored(questKey, n));
+  return (
+    <label
+      className="progress-ignore stage-bulk-ignore"
+      title="Exclude every stage without a linked objective from completion percentages"
+    >
+      <input
+        type="checkbox"
+        checked={all}
+        disabled={!stages.loaded || stages.pending}
+        onChange={(e) => void stages.setIgnored(questKey, targets, e.target.checked)}
+      />
+      <span>Ignore stages without objectives ({targets.length})</span>
     </label>
   );
 }

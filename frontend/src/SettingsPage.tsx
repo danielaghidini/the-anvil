@@ -39,7 +39,13 @@ export function SettingsPage({
   const [elevenKey, setElevenKey] = useState(''),
     [hasEleven, setHasEleven] = useState(false),
     [voices, setVoices] = useState<Voice[] | null>(null),
-    [bindings, setBindings] = useState<Record<number, string>>({});
+    [bindings, setBindings] = useState<Record<number, string>>({}),
+    [voiceModels, setVoiceModels] = useState<Record<number, string>>({}),
+    [savedBindings, setSavedBindings] = useState<Record<number, string>>({}),
+    [savedVoiceModels, setSavedVoiceModels] = useState<Record<number, string>>({}),
+    [voiceFolders, setVoiceFolders] = useState<Record<number, string>>({}),
+    [savedVoiceFolders, setSavedVoiceFolders] = useState<Record<number, string>>({}),
+    [availableFolders, setAvailableFolders] = useState<string[]>([]);
   const [busy, setBusy] = useState(false),
     [error, setError] = useState(''),
     [elevenError, setElevenError] = useState(''),
@@ -73,12 +79,37 @@ export function SettingsPage({
   useEffect(() => {
     let active = true;
     setBindings({});
+    setVoiceModels({});
+    setSavedBindings({});
+    setSavedVoiceModels({});
+    setVoiceFolders({});
+    setSavedVoiceFolders({});
+    setAvailableFolders([]);
     if (projectId !== null)
-      api<{ voices: { characterId: number; voiceId: string }[] }>(
-        `/api/projects/${projectId}/synthetic-voices`,
-      )
+      api<{
+        voices: { characterId: number; voiceId: string; modelId: string }[];
+        folders: { characterId: number; voiceFolder: string }[];
+      }>(`/api/projects/${projectId}/synthetic-voices`)
         .then((data) => {
-          if (active) setBindings(Object.fromEntries(data.voices.map((v) => [v.characterId, v.voiceId])));
+          if (active) {
+            const nextBindings = Object.fromEntries(data.voices.map((v) => [v.characterId, v.voiceId]));
+            const nextModels = Object.fromEntries(data.voices.map((v) => [v.characterId, v.modelId]));
+            const nextFolders = Object.fromEntries(data.folders.map((v) => [v.characterId, v.voiceFolder]));
+            setBindings(nextBindings);
+            setVoiceModels(nextModels);
+            setSavedBindings(nextBindings);
+            setSavedVoiceModels(nextModels);
+            setVoiceFolders(nextFolders);
+            setSavedVoiceFolders(nextFolders);
+          }
+        })
+        .catch((e) => {
+          if (active) setError(e.message);
+        });
+    if (projectId !== null)
+      api<{ folders: string[] }>(`/api/projects/${projectId}/voice-drafts/options`)
+        .then((data) => {
+          if (active) setAvailableFolders(data.folders);
         })
         .catch((e) => {
           if (active) setError(e.message);
@@ -87,6 +118,20 @@ export function SettingsPage({
       active = false;
     };
   }, [projectId]);
+  useEffect(() => {
+    if (!hasEleven) return;
+    let active = true;
+    api<{ voices: Voice[] }>('/api/elevenlabs/voices')
+      .then((result) => {
+        if (active) setVoices(result.voices);
+      })
+      .catch(() => {
+        if (active) setElevenError('Could not load voice names. Use Load voices to try again.');
+      });
+    return () => {
+      active = false;
+    };
+  }, [hasEleven]);
   function selectProvider(next: Provider) {
     setProvider(next);
     setModel(saved[next]?.model || '');
@@ -171,15 +216,23 @@ export function SettingsPage({
       }
     });
   }
-  function assign(characterId: number, voiceId: string) {
+  function saveCharacterVoice(characterId: number) {
     if (projectId === null) return;
+    const voiceId = bindings[characterId] || '';
+    const modelId = voiceModels[characterId] || 'eleven_multilingual_v2';
+    const voiceFolder = voiceFolders[characterId] || '';
     void run(async () => {
       await api(
         `/api/projects/${projectId}/characters/${characterId}/synthetic-voice`,
-        json('PUT', { voiceId }),
+        json('PUT', { voiceId, modelId, voiceFolder }),
       );
-      setBindings((current) => ({ ...current, [characterId]: voiceId }));
-      setMessage('Character voice saved.');
+      setSavedBindings((current) => ({ ...current, [characterId]: voiceId }));
+      setSavedVoiceModels((current) => ({
+        ...current,
+        [characterId]: voiceId ? modelId : 'eleven_multilingual_v2',
+      }));
+      setSavedVoiceFolders((current) => ({ ...current, [characterId]: voiceFolder }));
+      setMessage('Character voice settings saved.');
     });
   }
   return (
@@ -338,6 +391,7 @@ export function SettingsPage({
         </form>
         <div className="settings-voices">
           <h3>Character voices</h3>
+          <p>Choose a voice and model, then save each character's settings.</p>
           {projectId === null ? (
             <p>Select a project to assign voices.</p>
           ) : !characters.length ? (
@@ -351,25 +405,90 @@ export function SettingsPage({
               </p>
               {characters.map((character) => {
                 const current = bindings[character.id] || '';
+                const currentModel = voiceModels[character.id] || 'eleven_multilingual_v2';
+                const currentFolder = voiceFolders[character.id] || '';
+                const dirty =
+                  current !== (savedBindings[character.id] || '') ||
+                  (current &&
+                    currentModel !== (savedVoiceModels[character.id] || 'eleven_multilingual_v2')) ||
+                  currentFolder !== (savedVoiceFolders[character.id] || '');
                 return (
-                  <label key={character.id}>
-                    {character.name}
-                    <select
-                      value={current}
-                      disabled={busy || voices === null}
-                      onChange={(e) => assign(character.id, e.target.value)}
-                    >
-                      <option value="">No synthetic voice</option>
-                      {current && !voices?.some((v) => v.id === current) && (
-                        <option value={current}>Saved voice · {current}</option>
+                  <div key={character.id}>
+                    <label>
+                      {character.name}
+                      <select
+                        value={current}
+                        disabled={busy || voices === null}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          setBindings((current) => ({ ...current, [character.id]: value }));
+                        }}
+                      >
+                        <option value="">No synthetic voice</option>
+                        {current && !voices?.some((v) => v.id === current) && (
+                          <option value={current}>
+                            {voices === null
+                              ? 'Loading saved voice…'
+                              : 'Saved voice unavailable in ElevenLabs'}
+                          </option>
+                        )}
+                        {voices?.map((voice) => (
+                          <option key={voice.id} value={voice.id}>
+                            {voice.name}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                    <label>
+                      Default voice folder · {character.name}
+                      <select
+                        value={currentFolder}
+                        disabled={busy}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          setVoiceFolders((current) => ({ ...current, [character.id]: value }));
+                        }}
+                      >
+                        <option value="">Choose when saving audio</option>
+                        {currentFolder && !availableFolders.includes(currentFolder) && (
+                          <option value={currentFolder}>{currentFolder} (not found)</option>
+                        )}
+                        {availableFolders.map((folder) => (
+                          <option key={folder} value={folder}>
+                            {folder}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                    <label>
+                      Model · {character.name}
+                      <select
+                        value={currentModel}
+                        disabled={busy || !current}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          setVoiceModels((current) => ({ ...current, [character.id]: value }));
+                        }}
+                      >
+                        <option value="eleven_multilingual_v2">Eleven Multilingual v2</option>
+                        <option value="eleven_v3">Eleven v3</option>
+                        <option value="eleven_v4">Eleven v4</option>
+                      </select>
+                    </label>
+                    <div className="character-voice-save">
+                      <button
+                        type="button"
+                        className="primary"
+                        disabled={busy || !dirty}
+                        onClick={() => saveCharacterVoice(character.id)}
+                      >
+                        Save
+                      </button>
+                      {!dirty && (!!savedBindings[character.id] || !!savedVoiceFolders[character.id]) && (
+                        <span role="status">Saved</span>
                       )}
-                      {voices?.map((voice) => (
-                        <option key={voice.id} value={voice.id}>
-                          {voice.name} · {voice.id}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
+                    </div>
+                  </div>
                 );
               })}
             </>

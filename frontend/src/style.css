@@ -380,6 +380,7 @@ input {
 .overlay {
   position: fixed;
   inset: 0;
+  z-index: 200;
   background: #080b11cc;
   display: grid;
   place-items: center;
@@ -422,6 +423,55 @@ input {
 .dialog-body .hint {
   font-size: 13px;
   margin-top: -12px;
+}
+.character-source {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: 10px;
+}
+.character-source button {
+  display: grid;
+  gap: 5px;
+  text-align: left;
+  padding: 12px;
+  border: 1px solid #365364;
+  border-radius: 5px;
+  background: #111c26;
+  color: #d4e0e9;
+  cursor: pointer;
+}
+.character-source button[aria-pressed='true'] {
+  border-color: #4fc3f7;
+  background: #17303e;
+}
+.character-source button strong {
+  font-size: 13px;
+}
+.character-voice-save {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0 18px;
+}
+.character-voice-save .primary {
+  min-height: 34px;
+  padding: 6px 14px;
+}
+.character-voice-save span {
+  color: #8bd6b2;
+  font-size: 13px;
+}
+.character-source button span {
+  color: #a8b9c9;
+  font-size: 12px;
+  line-height: 1.4;
+}
+.dialog-body .character-source-note {
+  padding: 12px;
+  border: 1px solid #365364;
+  border-radius: 5px;
+  background: #101e29;
+  font-size: 13px;
 }
 .dialog footer {
   display: flex;
@@ -1883,6 +1933,73 @@ main {
 .quest-setup-intro .quest-setup-description {
   margin: 0;
 }
+.create-quest-field {
+  display: grid;
+  gap: 8px;
+  color: #d4e0e9;
+  font-size: 13px;
+  min-width: 0;
+}
+.stage-results-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin-bottom: 12px;
+}
+.stage-results-row .skyrim-results-caption {
+  margin: 0;
+}
+.create-quest-row {
+  display: grid;
+  grid-template-columns: 1fr 120px;
+  gap: 14px;
+}
+.create-quest-flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+}
+.create-quest-flags label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.create-quest-flags input[type='checkbox'] {
+  flex: none;
+}
+.dialog-body .plugin-mode-tabs {
+  margin: -4px 0 4px;
+  overflow: visible;
+}
+.plugin-masters {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+.plugin-masters legend {
+  padding: 0;
+  margin-bottom: 10px;
+}
+.plugin-masters label.unavailable {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.plugin-masters input[type='checkbox']:disabled {
+  cursor: not-allowed;
+}
+.dialog-body .create-quest-note {
+  margin-top: 0;
+}
+.quest-setup-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
 .quest-setup-add-character {
   display: inline-flex;
   align-items: center;
@@ -2838,6 +2955,63 @@ main {
   gap: 12px;
   margin-bottom: 18px;
 }
+.dialogue-category-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.dialogue-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+.dialogue-categories button {
+  border: 1px solid #30444f;
+  border-radius: 4px;
+  background: transparent;
+  color: #c2cdd4;
+  padding: 9px 14px;
+}
+.dialogue-categories button.active {
+  color: #83e9fa;
+  border-color: #4f9eaf;
+  background: #152a34;
+}
+.dialogue-categories small {
+  margin-left: 6px;
+  opacity: 0.75;
+}
+.dialogue-category-heading > .assignment-picker {
+  width: 240px;
+  max-width: 100%;
+}
+.dialogue-category-heading .skyrim-results-caption {
+  margin-bottom: 0;
+}
+.dialogue-timing-fields,
+.dialogue-timing-editor .dialogue-timing-fields {
+  display: flex;
+  align-items: flex-end;
+  gap: 18px;
+  margin: 0;
+}
+.dialogue-timing-fields > label:first-child {
+  display: grid;
+  gap: 6px;
+  width: 140px;
+}
+.dialogue-timing-fields .dialogue-say-once {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+}
+.dialogue-timing-fields .dialogue-say-once input {
+  flex: none;
+}
 .skyrim-stage-picker {
   width: 180px;
   flex: none;
@@ -3440,7 +3614,7 @@ main {
   padding: 0 0 14px;
   color: #b7c9d9;
   line-height: 1.5;
-  font-size: 14px;
+  font-size: 16px;
 }
 .stage-objectives p {
   margin: 2px 0;
@@ -3575,7 +3749,9 @@ select:not([multiple]):not([size]) {
   background-repeat: no-repeat;
   background-position: right 14px center;
 }
-.npc-selector-list input[type='checkbox'] {
+.npc-selector-list input[type='checkbox'],
+.create-quest-flags input[type='checkbox'],
+.dialogue-say-once input[type='checkbox'] {
   appearance: none;
   display: grid;
   place-content: center;
@@ -3591,7 +3767,9 @@ select:not([multiple]):not([size]) {
     background-color 0.15s,
     border-color 0.15s;
 }
-.npc-selector-list input[type='checkbox']::before {
+.npc-selector-list input[type='checkbox']::before,
+.create-quest-flags input[type='checkbox']::before,
+.dialogue-say-once input[type='checkbox']::before {
   content: '';
   width: 8px;
   height: 5px;
@@ -3600,11 +3778,15 @@ select:not([multiple]):not([size]) {
   transform: rotate(-45deg) scale(0);
   margin-top: -2px;
 }
-.npc-selector-list input[type='checkbox']:checked {
+.npc-selector-list input[type='checkbox']:checked,
+.create-quest-flags input[type='checkbox']:checked,
+.dialogue-say-once input[type='checkbox']:checked {
   background: #4fc3f7;
   border-color: #4fc3f7;
 }
-.npc-selector-list input[type='checkbox']:checked::before {
+.npc-selector-list input[type='checkbox']:checked::before,
+.create-quest-flags input[type='checkbox']:checked::before,
+.dialogue-say-once input[type='checkbox']:checked::before {
   transform: rotate(-45deg) scale(1);
 }
 .assistant.assistant-open {
@@ -3653,7 +3835,7 @@ select:not([multiple]):not([size]) {
   background: #090d12;
 }
 .skyrim-stage-heading:has(+ .stage-objectives) {
-  padding-bottom: 8px;
+  padding-bottom: 2px;
 }
 .dialogue-with-audio {
   display: flex;
@@ -3684,6 +3866,58 @@ select:not([multiple]):not([size]) {
 .dialogue-content {
   min-width: 0;
   flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 18px;
+}
+.dialogue-content > p,
+.dialogue-content > small,
+.dialogue-content > .dialogue-timing > small {
+  flex: 0 0 100%;
+}
+.dialogue-content > .dialogue-timing {
+  display: contents;
+}
+.dialogue-content > .dialogue-voice-edit,
+.dialogue-content > .dialogue-timing > .dialogue-voice-edit {
+  order: 1;
+  margin: 0;
+}
+.dialogue-content > .dialogue-text-editor,
+.dialogue-content > .existing-voice-editor,
+.dialogue-content > .dialogue-timing > .dialogue-timing-editor {
+  order: 2;
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+.dialogue-content > .dialogue-timing > .dialogue-timing-editor {
+  flex: 0 0 auto;
+  width: max-content;
+  grid-template-columns: max-content max-content;
+  align-items: end;
+  gap: 8px 20px;
+}
+.dialogue-content:has(> .dialogue-timing > .dialogue-timing-editor)::after {
+  content: '';
+  order: 1;
+  flex: 0 0 100%;
+  height: 0;
+}
+.dialogue-timing-editor > .dialogue-timing-fields {
+  grid-column: 1;
+  grid-row: 1;
+}
+.dialogue-timing-editor > .dialogue-timing-actions {
+  grid-column: 2;
+  grid-row: 1;
+  align-items: center;
+}
+.dialogue-timing-editor > .dialogue-timing-range,
+.dialogue-timing-editor > .dialogue-timing-note,
+.dialogue-timing-editor > .error {
+  grid-column: 1 / -1;
+  margin: 0;
 }
 .dialogue-content p {
   overflow-wrap: anywhere;
@@ -3999,6 +4233,9 @@ select:not([multiple]):not([size]) {
 }
 .overlay .dialog-body {
   overflow-y: auto;
+}
+.overlay .create-quest-dialog .dialog-body {
+  overflow-y: visible;
 }
 .idle-conditions {
   display: grid;
@@ -4427,4 +4664,398 @@ select:not([multiple]):not([size]) {
 .skyrim-stage.is-ignored .skyrim-stage-heading > :first-child,
 .skyrim-stage.is-ignored .stage-actions > :not(.progress-ignore) {
   opacity: 0.55;
+}
+
+.quest-order-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 12px;
+  padding-left: 12px;
+  border-left: 1px solid #2a3644;
+}
+.quest-order-status .link-button {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: #4fc3f7;
+  font-size: 13px;
+  cursor: pointer;
+}
+.quest-order-status .link-button:hover {
+  color: #8bf6ff;
+  text-decoration: underline;
+}
+.quest-order-row {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 8px;
+  align-items: start;
+}
+.quest-order-row.is-plain {
+  display: block;
+}
+.quest-order-buttons {
+  display: grid;
+  gap: 4px;
+  padding-top: 8px;
+}
+.quest-order-buttons .icon-button {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid #2a3644;
+  border-radius: 6px;
+  background: #121a24;
+  color: #aab5c4;
+  cursor: pointer;
+}
+.quest-order-buttons .icon-button:hover:not(:disabled) {
+  border-color: #4fc3f7;
+  color: #8bf6ff;
+}
+.quest-order-buttons .icon-button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.quest-card-title-row {
+  display: flex;
+  align-items: stretch;
+}
+.quest-card-title-row > .dashboard-card-heading {
+  flex: 1;
+  min-width: 0;
+}
+.quest-rename-button,
+.quest-rename-actions .icon-button {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: none;
+  color: #8796a8;
+  cursor: pointer;
+}
+.quest-rename-button {
+  align-self: center;
+  margin-right: 12px;
+  opacity: 0.55;
+}
+.dashboard-card:hover .quest-rename-button,
+.quest-rename-button:focus-visible {
+  opacity: 1;
+}
+.quest-rename-button:hover,
+.quest-rename-actions .icon-button:hover:not(:disabled) {
+  border-color: #2a3644;
+  background: #121a24;
+  color: #8bf6ff;
+}
+.quest-rename > span:first-child {
+  display: grid;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+.quest-rename input {
+  width: 100%;
+  font: inherit;
+  font-weight: 700;
+}
+.quest-rename-error {
+  color: #ff8a80;
+}
+.quest-rename-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.dialogue-badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 8px;
+  border: 1px solid #2f5b73;
+  border-radius: 999px;
+  background: #102a39;
+  color: #b9e6fb;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+  vertical-align: 1px;
+}
+/* A line already shown in full in an earlier stage: same rhythm as a dialogue entry. */
+.dialogue-repeat {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+  padding: 14px 0;
+  border-top: 1px solid #263b49;
+  color: #d3dbe5;
+  font-size: 14px;
+}
+.dialogue-repeat > svg {
+  flex: none;
+  width: 29px;
+  color: #6f8597;
+}
+.dialogue-repeat-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dialogue-repeat .dialogue-badge {
+  flex: none;
+  margin-left: 0;
+}
+.dialogue-repeat .link-button {
+  flex: none;
+  margin-left: auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #4fc3f7;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.dialogue-repeat .link-button:hover {
+  color: #8bf6ff;
+  text-decoration: underline;
+}
+@media (max-width: 760px) {
+  .dialogue-repeat {
+    flex-wrap: wrap;
+  }
+  .dialogue-repeat-text {
+    flex: 1 1 calc(100% - 40px);
+  }
+}
+.existing-voice-editor {
+  display: grid;
+  gap: 16px;
+  margin-top: 12px;
+  max-width: 800px;
+  padding: 18px;
+  border: 1px solid #33465a;
+  border-radius: 8px;
+  background: #101b25;
+}
+.dialogue-voice-edit {
+  display: inline-block;
+  margin: 4px 0 0;
+  padding: 2px 0;
+  border: 0;
+  background: transparent;
+  color: #84cce8;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.dialogue-voice-edit:hover {
+  color: #c2edff;
+  text-decoration: underline;
+}
+.dialogue-text-edit {
+  margin-right: 14px;
+}
+.dialogue-delete {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: #95a9bc;
+  cursor: pointer;
+}
+.dialogue-delete:hover,
+.dialogue-delete:focus-visible {
+  background: #3a242a;
+  color: #ffd0d6;
+}
+.dialogue-delete-dialog {
+  width: min(500px, calc(100% - 32px));
+  margin: auto;
+  padding: 0;
+  color: inherit;
+}
+.dialogue-delete-dialog::backdrop {
+  background: #000a;
+}
+.dialogue-text-editor {
+  display: grid;
+  gap: 8px;
+  max-width: 650px;
+  margin-top: 10px;
+  padding: 14px;
+  background: #101b25;
+  border: 1px solid #33465a;
+  border-radius: 6px;
+}
+.dialogue-text-editor label {
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+  color: #bbc9d9;
+}
+.dialogue-text-editor textarea {
+  width: 100%;
+  min-height: 70px;
+  padding: 10px 12px;
+  border: 1px solid #365364;
+  border-radius: 4px;
+  background: #10151c;
+  color: #e1e9f1;
+  font: inherit;
+  line-height: 1.5;
+  resize: vertical;
+}
+.dialogue-text-editor textarea:focus-visible {
+  outline: 2px solid #4fc3f7;
+  outline-offset: 1px;
+}
+.idle-save-hint {
+  color: #f4cc86;
+  font-size: 13px;
+}
+.dialogue-text-editor p,
+.dialogue-text-editor small {
+  color: #a8b9ce;
+  font-size: 12px;
+}
+.dialogue-text-editor div {
+  display: flex;
+  gap: 8px;
+}
+.dialogue-text-editor button {
+  min-height: 34px;
+  padding: 7px 12px;
+  font-size: 12px;
+}
+.voice-editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+.voice-editor-header p,
+.existing-voice-editor > p {
+  margin: 4px 0 0;
+  color: #a8b9ce;
+  font-size: 13px;
+  font-weight: 400;
+}
+.voice-editor-close {
+  display: inline-flex;
+  padding: 4px;
+  border: 0;
+  background: transparent;
+  color: #a8b9ce;
+  cursor: pointer;
+}
+.voice-editor-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+  align-items: start;
+  gap: 12px;
+}
+.voice-editor-field {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  color: #bbc9d9;
+  font-size: 12px;
+  font-weight: 600;
+}
+.voice-editor-field .assignment-picker {
+  width: 100%;
+  font-size: 13px;
+}
+.voice-editor-field .assignment-picker summary {
+  min-height: 43px;
+}
+.voice-editor-field:has(.voice-select[open]) {
+  position: relative;
+  z-index: 12;
+}
+.voice-select .assignment-options input {
+  width: 100%;
+  min-height: 36px;
+  margin-bottom: 4px;
+  padding: 7px 10px;
+  font-size: 13px;
+}
+.voice-select-empty {
+  padding: 8px 10px;
+  color: #a8b9ce;
+  font-size: 12px;
+}
+.voice-editor-fields select {
+  width: 100%;
+  min-width: 0;
+}
+.voice-editor-actions,
+.voice-editor-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.voice-editor-actions button,
+.voice-editor-footer button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 34px;
+  padding: 7px 12px;
+  font-size: 12px;
+}
+.voice-editor-footer {
+  padding-top: 12px;
+  border-top: 1px solid #2b3d4d;
+}
+.voice-editor-destination {
+  display: grid;
+  gap: 4px;
+  font-size: 12px;
+  color: #a8b9ce;
+  overflow-wrap: anywhere;
+}
+.voice-editor-destination strong {
+  color: #d4e0e9;
+}
+.voice-editor-preview {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  color: #bbc9d9;
+  font-size: 12px;
+}
+.voice-editor-preview audio {
+  max-width: 100%;
+}
+.voice-editor-preview .idle-audio-preview.is-compact {
+  width: min(260px, 100%);
+  padding: 5px 8px;
+  gap: 8px;
+}
+.voice-editor-preview .is-compact .idle-audio-play {
+  width: 28px;
+  height: 28px;
 }

@@ -62,6 +62,58 @@ test('project snapshots are stored independently', async () => {
     await rm(dir, { recursive: true, force: true });
   }
 });
+test('syncing snapshot quests follows the plugin and drops assignments of removed quests', async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), 'follower-db-quests-'));
+  try {
+    const db = createStore(path.join(dir, 'test.sqlite'));
+    const p = db.create('Follower', {
+      plugin: 'test.esp',
+      masters: ['Skyrim.esm'],
+      quests: [
+        { id: 'Kept', formId: '01000800', stages: [10] },
+        { id: 'GoneFromPlugin', formId: '01000801', stages: [] },
+        { id: 'Recreated', formId: '01000803', stages: [] },
+      ],
+      importedAt: '2026-01-01',
+    });
+    db.setQuestAssignment(p.id, 'Kept', null, null, true, 'side');
+    db.setQuestAssignment(p.id, 'GoneFromPlugin', null, null, true, 'main');
+    db.setQuestAssignment(p.id, 'Recreated', null, null, true, 'misc');
+    const result = db.syncSnapshotQuests(p.id, [
+      { id: 'Kept', formId: '01000800', stages: [10, 20] },
+      { id: 'Fresh', formId: '01000802', stages: [] },
+      { id: 'Recreated', formId: '01000804', stages: [] },
+    ]);
+    assert.deepEqual(
+      result.added.map((q) => q.id),
+      ['Fresh', 'Recreated'],
+    );
+    assert.deepEqual(
+      result.removed.map((q) => q.id),
+      ['GoneFromPlugin', 'Recreated'],
+    );
+    assert.deepEqual(
+      db.snapshot(p.id)?.quests.map((q) => [q.id, q.formId]),
+      [
+        ['Kept', '01000800'],
+        ['Fresh', '01000802'],
+        ['Recreated', '01000804'],
+      ],
+    );
+    assert.deepEqual(
+      db
+        .questLinks(p.id)
+        .mods.map((x) => x.questId)
+        .sort(),
+      ['Kept', 'Recreated'],
+    );
+    assert.deepEqual(db.syncSnapshotQuests(p.id, db.snapshot(p.id)!.quests), { added: [], removed: [] });
+    assert.deepEqual(db.addSnapshotQuests(p.id, [{ id: 'Kept', formId: '01000800', stages: [] }]), []);
+    db.close();
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
 test('characters, lore and scripts settings stay scoped to their project', async () => {
   const dir = await mkdtemp(path.join(tmpdir(), 'follower-projects-'));
   try {
@@ -575,6 +627,53 @@ test('ignored Skyrim quests are scoped to each project and removable', async () 
     await rm(dir, { recursive: true, force: true });
   }
 });
+test('custom quest names are stored per project and cleared by an empty name', async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), 'follower-quest-names-'));
+  let db: ReturnType<typeof createStore> | undefined;
+  try {
+    const file = path.join(dir, 'test.sqlite'),
+      snapshot = { plugin: 'test.esp', masters: [], quests: [], importedAt: '' };
+    db = createStore(file);
+    const a = db.create('A', snapshot),
+      b = db.create('B', snapshot);
+    db.setQuestDisplayName(a.id, 'DG04BjornThinkQuest', 'Quiet Thoughts');
+    db.setQuestDisplayName(a.id, 'dg04bjornthinkquest', 'Deep Thoughts');
+    db.close();
+    db = createStore(file);
+    assert.deepEqual(
+      db.questDisplayNames(a.id).map((x) => ({ ...x })),
+      [{ questId: 'DG04BjornThinkQuest', name: 'Deep Thoughts' }],
+    );
+    assert.deepEqual(db.questDisplayNames(b.id), []);
+    db.setQuestDisplayName(a.id, 'DG04BjornThinkQuest', '');
+    assert.deepEqual(db.questDisplayNames(a.id), []);
+  } finally {
+    db?.close();
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+test('manual quest order is stored per project and can be reset', async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), 'follower-quest-order-'));
+  let db: ReturnType<typeof createStore> | undefined;
+  try {
+    const file = path.join(dir, 'test.sqlite'),
+      snapshot = { plugin: 'test.esp', masters: [], quests: [], importedAt: '' };
+    db = createStore(file);
+    const a = db.create('A', snapshot),
+      b = db.create('B', snapshot);
+    assert.equal(db.questManualOrder(a.id), null);
+    db.saveQuestManualOrder(a.id, ['Second', 'First']);
+    db.close();
+    db = createStore(file);
+    assert.deepEqual(db.questManualOrder(a.id), ['Second', 'First']);
+    assert.equal(db.questManualOrder(b.id), null);
+    db.saveQuestManualOrder(a.id, null);
+    assert.equal(db.questManualOrder(a.id), null);
+  } finally {
+    db?.close();
+    await rm(dir, { recursive: true, force: true });
+  }
+});
 test('ignored quest stages are stored per project and removable', async () => {
   const dir = await mkdtemp(path.join(tmpdir(), 'follower-ignore-stage-'));
   let db: ReturnType<typeof createStore> | undefined;
@@ -636,11 +735,11 @@ test('ignored plugin quests are stored per project and category', async () => {
   }
 });
 import { objectiveLinksFromSource } from '../backend/src/quest-objectives.js';
-test('objective fragment mappings preserve objective numbers per stage', () => {
+test('objective fragment mappings list only displayed objectives per stage', () => {
   const source = `Function Fragment_1()\nSelf.SetObjectiveDisplayed(10)\nSetObjectiveCompleted(20)\nSelf.SetObjectiveDisplayed(10)\nEndFunction`;
   assert.deepEqual(
     objectiveLinksFromSource(source, [{ stage: 30, script: 'QF_Test', fragment: 'Fragment_1' }]),
-    { '30': [10, 20] },
+    { '30': [10] },
   );
 });
 test('plugin import reads objective descriptions', async () => {
@@ -785,6 +884,17 @@ test('synthetic voice selections persist per character and cascade on deletion',
     db.close();
     db = createStore(file);
     assert.equal(db.syntheticVoices(a.id)[0].voiceId, 'voiceA');
+    assert.equal(db.syntheticVoices(a.id)[0].modelId, 'eleven_multilingual_v2');
+    db.setSyntheticVoice(a.id, ca.id, 'voiceA', 'eleven_v4');
+    assert.equal(db.syntheticVoices(a.id)[0].modelId, 'eleven_v4');
+    assert.equal(db.setCharacterVoiceFolder(a.id, ca.id, 'BjornVoice'), true);
+    assert.equal(
+      db.characterVoiceFolders(a.id).find((item) => item.characterId === ca.id)?.voiceFolder,
+      'BjornVoice',
+    );
+    assert.equal(db.setCharacterVoiceFolder(b.id, ca.id, 'Wrong'), false);
+    db.setSyntheticVoice(a.id, ca.id, 'updated');
+    assert.equal(db.syntheticVoices(a.id)[0].modelId, 'eleven_v4');
     assert.equal(db.syntheticVoices(b.id)[0].voiceId, 'voiceB');
     db.setSyntheticVoice(a.id, ca.id, '');
     assert.equal(db.syntheticVoices(a.id).length, 0);
